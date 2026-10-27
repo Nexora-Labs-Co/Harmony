@@ -1,0 +1,15 @@
+build/
+*.o
+*.a
+*.so
+*.exe
+*.deb
+*.rpm
+*.tar.gz
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+Makefile
+compile_commands.json
+.DS_Store
