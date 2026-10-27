@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-
 import 'package:provider/provider.dart';
+
 import '../../../providers/playlist_provider.dart';
-import '../../../providers/library_provider.dart';
 
 class DesktopSidebar extends StatelessWidget {
   final int selectedIndex;
@@ -18,85 +16,30 @@ class DesktopSidebar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final playlistProvider = context.watch<PlaylistProvider>();
-    final libraryProvider = context.watch<LibraryProvider>();
-    
+
     return Container(
       width: 280,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerLow,
         border: Border(
-          right: BorderSide(
-            color: Theme.of(context).colorScheme.outlineVariant,
-          ),
+          right: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Text(
-                  'Nexora',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.folder_open, size: 20),
-                  tooltip: 'Escanear carpeta',
-                  onPressed: () async {
-                    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
-                    if (selectedDirectory != null && context.mounted) {
-                      final library = context.read<LibraryProvider>();
-                      await library.scanLibrary(selectedDirectory);
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('${library.allTracks.length} pistas encontradas')),
-                        );
-                      }
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
+          const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Column(
               children: [
-                _buildNavItem(
-                  context,
-                  icon: Icons.home,
-                  label: 'Inicio',
-                  index: 0,
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.music_note,
-                  label: 'Biblioteca',
-                  index: 1,
-                  subtitle: '${libraryProvider.allTracks.length} canciones',
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.favorite_border,
-                  label: 'Favoritos',
-                  index: 2,
-                  subtitle: '${libraryProvider.favorites.length} canciones',
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.search,
-                  label: 'Buscar',
-                  index: 3,
-                ),
+                _navItem(context, Icons.home, 'Inicio', 0),
+                _navItem(context, Icons.favorite_border, 'Favoritos', 1),
+                _navItem(context, Icons.settings_outlined, 'Configuracion', 2),
               ],
             ),
           ),
-          const Divider(),
+          const Divider(height: 32),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
@@ -104,70 +47,89 @@ class DesktopSidebar extends StatelessWidget {
                 Text(
                   'Playlists',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                        fontWeight: FontWeight.w600,
+                      ),
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: Icon(Icons.add, size: 16),
-                  onPressed: () => _showCreatePlaylistDialog(context, playlistProvider),
+                  icon: const Icon(Icons.add, size: 16),
                   tooltip: 'Crear playlist',
+                  onPressed: () => _showCreatePlaylistDialog(context, playlistProvider),
                 ),
               ],
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              itemCount: playlistProvider.playlists.length,
-              itemBuilder: (context, index) {
-                final playlist = playlistProvider.playlists[index];
-                return ListTile(
-                  dense: true,
-                  leading: Icon(Icons.queue_music, size: 16),
-                  title: Text(
-                    playlist.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+            child: playlistProvider.playlists.isEmpty
+                ? Center(
+                    child: Text(
+                      'Sin playlists',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  )
+                : GridView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8,
+                      childAspectRatio: 1.1,
+                    ),
+                    itemCount: playlistProvider.playlists.length,
+                    itemBuilder: (context, index) {
+                      final playlist = playlistProvider.playlists[index];
+                      return Card(
+                        child: InkWell(
+                          onTap: () {},
+                          borderRadius: BorderRadius.circular(12),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.queue_music, size: 28),
+                                const SizedBox(height: 6),
+                                Text(
+                                  playlist.name,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '${playlist.trackIds.length} pistas',
+                                  style: Theme.of(context).textTheme.labelSmall,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  subtitle: Text(
-                    '${playlist.trackIds.length} pistas',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  onTap: () {},
-                );
-              },
-            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildNavItem(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required int index,
-    String? subtitle,
-  }) {
+  Widget _navItem(BuildContext context, IconData icon, String label, int index) {
     final isSelected = selectedIndex == index;
     return ListTile(
       selected: isSelected,
-      leading: Icon(icon, size: 18),
+      selectedTileColor: Theme.of(context).colorScheme.primaryContainer,
+      leading: Icon(icon, size: 20),
       title: Text(label),
-      subtitle: subtitle != null ? Text(subtitle) : null,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      onTap: () {
-        onItemSelected(index);
-      },
+      onTap: () => onItemSelected(index),
     );
   }
 
   void _showCreatePlaylistDialog(BuildContext context, PlaylistProvider provider) {
     final nameController = TextEditingController();
     final descController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -177,26 +139,18 @@ class DesktopSidebar extends StatelessWidget {
           children: [
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Nombre',
-                hintText: 'Mi playlist',
-              ),
+              decoration: const InputDecoration(labelText: 'Nombre', hintText: 'Mi playlist'),
               autofocus: true,
             ),
             const SizedBox(height: 16),
             TextField(
               controller: descController,
-              decoration: const InputDecoration(
-                labelText: 'Descripción (opcional)',
-              ),
+              decoration: const InputDecoration(labelText: 'Descripcion (opcional)'),
             ),
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
           FilledButton(
             onPressed: () {
               if (nameController.text.isNotEmpty) {

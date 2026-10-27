@@ -1,4 +1,4 @@
-name: nexora_app
+name: harmony
 description: Nexora Music Player - Flutter + Dart + Rust (Beta 26.10.27)
 publish_to: 'none'
 version: 26.10.27+1

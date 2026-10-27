@@ -31,7 +31,7 @@ class NexoraApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SearchProvider()),
       ],
       child: MaterialApp(
-        title: 'Nexora',
+        title: 'Harmony',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light(),
         darkTheme: AppTheme.dark(),

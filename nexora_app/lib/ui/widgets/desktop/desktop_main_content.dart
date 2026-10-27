@@ -18,11 +18,9 @@ class DesktopMainContent extends StatelessWidget {
       case 0:
         return const _HomeTab();
       case 1:
-        return const _LibraryTab();
-      case 2:
         return const _FavoritesTab();
-      case 3:
-        return const _SearchTab();
+      case 2:
+        return const _SettingsTab();
       default:
         return const _HomeTab();
     }
@@ -467,6 +465,47 @@ class _SearchTab extends StatelessWidget {
                           );
                         },
                       ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class _SettingsTab extends StatelessWidget {
+  const _SettingsTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Configuración',
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 24),
+          ListTile(
+            leading: const Icon(Icons.palette_outlined),
+            title: const Text('Tema'),
+            subtitle: const Text('Claro / Oscuro / Sistema'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: const Icon(Icons.folder_outlined),
+            title: const Text('Carpetas de música'),
+            subtitle: const Text('Gestionar directorios escaneados'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: const Text('Acerca de Harmony'),
+            subtitle: const Text('Versión 26.10.27 (Beta)'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {},
           ),
         ],
       ),

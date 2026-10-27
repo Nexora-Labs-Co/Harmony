@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:nexora_app/main.dart';
+import 'package:harmony/main.dart';
 
 void main() {
   testWidgets('App starts smoke test', (WidgetTester tester) async {
