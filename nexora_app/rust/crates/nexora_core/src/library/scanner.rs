@@ -1,6 +1,8 @@
 use crate::models::{LocalTrack, Track};
 use anyhow::Result;
-use lofty::{read_from_path, Probe};
+use lofty::file::{AudioFile, TaggedFileExt};
+use lofty::read_from_path;
+use lofty::tag::Accessor;
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
@@ -50,7 +52,7 @@ impl LibraryScanner {
     }
 
     fn extract_metadata(&self, path: &Path) -> Result<LocalTrack> {
-        let tagged_file = Probe::open(path)?.read()?;
+        let tagged_file = read_from_path(path)?;
         let tag = tagged_file.primary_tag().or_else(|| tagged_file.first_tag());
 
         let title = tag
