@@ -1,6 +1,9 @@
 pub mod api;
 pub mod audio;
+pub mod favorites;
 pub mod library;
 pub mod metadata;
 pub mod models;
+pub mod playlist;
+pub mod search;
 pub mod utils;

@@ -2,6 +2,10 @@ import 'package:flutter/foundation.dart';
 import '../bridge/bridge_generated.dart';
 
 class AudioService extends ChangeNotifier {
+  static final AudioService instance = AudioService._internal();
+  factory AudioService() => instance;
+  AudioService._internal();
+
   bool _initialized = false;
   bool _playing = false;
   double _volume = 1.0;
@@ -20,6 +24,15 @@ class AudioService extends ChangeNotifier {
     } catch (e) {
       _initialized = false;
       notifyListeners();
+    }
+  }
+
+  double getVolume() {
+    try {
+      _volume = nexoraGetVolume();
+      return _volume;
+    } catch (_) {
+      return _volume;
     }
   }
 
