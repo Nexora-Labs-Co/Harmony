@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/player_provider.dart';
+import '../cached_artwork.dart';
 
 class DesktopBottomBar extends StatelessWidget {
   const DesktopBottomBar({super.key});
@@ -15,25 +16,13 @@ class DesktopBottomBar extends StatelessWidget {
   }
 
   Widget _artwork(BuildContext context, String? albumArt) {
-    if (albumArt != null && albumArt.isNotEmpty) {
-      try {
-        final bytes = base64Decode(albumArt);
-        return Image.memory(
-          bytes,
-          width: 56,
-          height: 56,
-          fit: BoxFit.cover,
-          errorBuilder: (ctx, err, st) {
-            debugPrint('Image.memory error: $err');
-            return _genericArt(context);
-          },
-        );
-      } catch (e) {
-        debugPrint('base64Decode error: $e');
-        return _genericArt(context);
-      }
-    }
-    return _genericArt(context);
+    return CachedArtwork(
+      albumArt: albumArt,
+      width: 56,
+      height: 56,
+      borderRadius: BorderRadius.circular(8),
+      fallback: _genericArt(context),
+    );
   }
 
   Widget _genericArt(BuildContext context) {
@@ -70,9 +59,8 @@ class DesktopBottomBar extends StatelessWidget {
             flex: 2,
             child: Row(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: _artwork(context, track.albumArt),
+                RepaintBoundary(
+                  child: _BottomArtwork(albumArt: track.albumArt),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -206,6 +194,30 @@ class DesktopBottomBar extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _BottomArtwork extends StatelessWidget {
+  final String? albumArt;
+  const _BottomArtwork({required this.albumArt});
+
+  @override
+  Widget build(BuildContext context) {
+    return CachedArtwork(
+      albumArt: albumArt,
+      width: 56,
+      height: 56,
+      borderRadius: BorderRadius.circular(8),
+      fallback: Container(
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(Icons.music_note, size: 28, color: Theme.of(context).colorScheme.onSurfaceVariant),
       ),
     );
   }

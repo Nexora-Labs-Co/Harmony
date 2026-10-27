@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import '../../../providers/player_provider.dart';
+import '../cached_artwork.dart';
 
 class DesktopRightPanel extends StatelessWidget {
   const DesktopRightPanel({super.key});
@@ -67,27 +68,17 @@ class DesktopRightPanel extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ClipRRect(
+                        CachedArtwork(
+                          albumArt: player.currentTrack!.albumArt,
+                          width: double.infinity,
+                          height: 280,
                           borderRadius: BorderRadius.circular(12),
-                          child: player.currentTrack!.albumArt != null && player.currentTrack!.albumArt!.isNotEmpty
-                              ? Image.memory(
-                                  base64Decode(player.currentTrack!.albumArt!),
-                                  width: double.infinity,
-                                  height: 280,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => Container(
-                                    width: double.infinity,
-                                    height: 280,
-                                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                                    child: const Icon(Icons.music_note, size: 80),
-                                  ),
-                                )
-                              : Container(
-                                  width: double.infinity,
-                                  height: 280,
-                                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                                  child: const Icon(Icons.music_note, size: 80),
-                                ),
+                          fallback: Container(
+                            width: double.infinity,
+                            height: 280,
+                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                            child: const Icon(Icons.music_note, size: 80),
+                          ),
                         ),
                         const SizedBox(height: 16),
                         Text(

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../bridge/bridge_generated.dart';
+import 'cached_artwork.dart';
 
 class TrackTile extends StatelessWidget {
   final Track track;
@@ -27,21 +28,13 @@ class TrackTile extends StatelessWidget {
   }
 
   Widget _artwork(BuildContext context) {
-    final art = track.albumArt;
-    if (art != null && art.isNotEmpty) {
-      try {
-        return Image.memory(
-          base64Decode(art),
-          width: 40,
-          height: 40,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => _genericArt(context),
-        );
-      } catch (_) {
-        return _genericArt(context);
-      }
-    }
-    return _genericArt(context);
+    return CachedArtwork(
+      albumArt: track.albumArt,
+      width: 40,
+      height: 40,
+      borderRadius: BorderRadius.circular(4),
+      fallback: _genericArt(context),
+    );
   }
 
   Widget _genericArt(BuildContext context) {

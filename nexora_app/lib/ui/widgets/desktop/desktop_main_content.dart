@@ -3,25 +3,19 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/library_provider.dart';
+import '../cached_artwork.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/search_provider.dart';
 
 
 Widget _artworkFor(BuildContext context, String? albumArt) {
-  if (albumArt != null && albumArt.isNotEmpty) {
-    try {
-      return Image.memory(
-        base64Decode(albumArt),
-        width: 48,
-        height: 48,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => _genericArt48(context),
-      );
-    } catch (_) {
-      return _genericArt48(context);
-    }
-  }
-  return _genericArt48(context);
+  return CachedArtwork(
+    albumArt: albumArt,
+    width: 48,
+    height: 48,
+    borderRadius: BorderRadius.circular(4),
+    fallback: _genericArt48(context),
+  );
 }
 
 Widget _genericArt48(BuildContext context) {
