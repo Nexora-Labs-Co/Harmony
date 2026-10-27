@@ -1,6 +1,6 @@
 <p align="center">
   <h1 align="center">Política de Seguridad</h1>
-  <p align="center"><strong>Directrices para la notificación y gestión de vulnerabilidades en Nexora</strong></p>
+  <p align="center"><strong>Directrices para la notificación y gestión de vulnerabilidades en Harmony</strong></p>
 </p>
 
 ---
@@ -27,7 +27,7 @@
 
 ### Entra dentro del alcance:
 
-- Vulnerabilidades directas en el código fuente de Nexora (Flutter/Dart o Rust)
+- Vulnerabilidades directas en el código fuente de Harmony (Flutter/Dart o Rust)
 - Vulnerabilidades explotables en las dependencias del proyecto (`cpal`, `rodio`, `symphonia`, `flutter_rust_bridge`, etc.)
 - Exposición accidental de credenciales, tokens o información sensible
 - Problemas de seguridad en el motor de audio o sistema de archivos
@@ -41,11 +41,11 @@
 
 ## Cómo reportar una vulnerabilidad
 
-La seguridad de Nexora es una prioridad. **No publiques vulnerabilidades en Issues públicos**.
+La seguridad de Harmony es una prioridad. **No publiques vulnerabilidades en Issues públicos**.
 
 Utiliza el canal privado de GitHub:
 
-1. Dirígete a la pestaña **Security** del repositorio [Nexora](https://github.com/Nexora-Company/Nexora)
+1. Dirígete a la pestaña **Security** del repositorio [Harmony](https://github.com/Harmony-Company/Harmony)
 2. Haz clic en **"Report a vulnerability"**
 3. Completa el formulario con todos los detalles
 

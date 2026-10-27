@@ -1,6 +1,6 @@
 <p align="center">
   <h1 align="center">Guía de Contribución</h1>
-  <p align="center"><strong>Directrices y flujos de trabajo para colaborar en Nexora</strong></p>
+  <p align="center"><strong>Directrices y flujos de trabajo para colaborar en Harmony</strong></p>
 </p>
 
 ---
@@ -21,7 +21,7 @@
 
 ## Bienvenida
 
-Agradecemos tu interés en colaborar con **Nexora**. Todas las contribuciones orientadas a mejorar la calidad, arquitectura, rendimiento o experiencia de usuario son bienvenidas.
+Agradecemos tu interés en colaborar con **Harmony**. Todas las contribuciones orientadas a mejorar la calidad, arquitectura, rendimiento o experiencia de usuario son bienvenidas.
 
 ## Antes de empezar
 
@@ -33,8 +33,8 @@ Agradecemos tu interés en colaborar con **Nexora**. Todas las contribuciones or
 1. Realiza un **Fork** del repositorio en tu cuenta de GitHub.
 2. Clona tu fork localmente:
    ```bash
-   git clone https://github.com/tu-usuario/Nexora.git
-   cd Nexora
+   git clone https://github.com/tu-usuario/Harmony.git
+   cd Harmony
    ```
 3. Crea una rama descriptiva siguiendo las convenciones:
    - `feat/nombre-funcionalidad` - Nuevas características
