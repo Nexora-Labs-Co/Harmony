@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import '../bridge/bridge_generated.dart';
 import '../services/audio_service.dart';
+import '../services/music_watcher.dart';
 
 class LibraryProvider extends ChangeNotifier {
   final AudioService _audioService = AudioService.instance;
@@ -60,6 +61,8 @@ class LibraryProvider extends ChangeNotifier {
       _allTracks = _audioService.scanLibrary(directory);
       _favoriteIds = nexoraGetFavoriteIds();
       _favorites = _allTracks.where((t) => _favoriteIds.contains(t.id)).toList();
+      // Inicia watcher en segundo plano (sin bucles constantes)
+      MusicWatcher.instance.start(directory, this);
     } catch (e) {
       _allTracks = [];
       _favorites = [];

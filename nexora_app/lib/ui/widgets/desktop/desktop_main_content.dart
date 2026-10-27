@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/library_provider.dart';
@@ -72,6 +73,17 @@ class _HomeTab extends StatelessWidget {
                   },
                   icon: const Icon(Icons.shuffle, size: 16),
                   label: const Text('Aleatorio'),
+                ),
+                const SizedBox(width: 8),
+                OutlinedButton.icon(
+                  onPressed: () async {
+                    final dir = await FilePicker.platform.getDirectoryPath();
+                    if (dir != null && context.mounted) {
+                      await libraryProvider.scanLibrary(dir);
+                    }
+                  },
+                  icon: const Icon(Icons.folder_open, size: 16),
+                  label: const Text('Escanear'),
                 ),
               ],
             ),
