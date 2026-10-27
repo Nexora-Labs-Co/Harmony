@@ -1,9 +1,40 @@
+import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/library_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/search_provider.dart';
+
+
+Widget _artworkFor(BuildContext context, String? albumArt) {
+  if (albumArt != null && albumArt.isNotEmpty) {
+    try {
+      return Image.memory(
+        base64Decode(albumArt),
+        width: 48,
+        height: 48,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => _genericArt48(context),
+      );
+    } catch (_) {
+      return _genericArt48(context);
+    }
+  }
+  return _genericArt48(context);
+}
+
+Widget _genericArt48(BuildContext context) {
+  return Container(
+    width: 48,
+    height: 48,
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      borderRadius: BorderRadius.circular(4),
+    ),
+    child: Icon(Icons.music_note, color: Theme.of(context).colorScheme.onSurfaceVariant),
+  );
+}
 
 class DesktopMainContent extends StatelessWidget {
   final int selectedIndex;
@@ -120,14 +151,9 @@ class _HomeTab extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final track = libraryProvider.allTracks[index];
                       return ListTile(
-                        leading: Container(
-                          width: 48,
-                          height: 48,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: const Icon(Icons.music_note),
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: _artworkFor(context, track.albumArt),
                         ),
                         title: Text(track.title),
                         subtitle: Text('${track.artist} • ${track.album}'),
@@ -234,14 +260,9 @@ class _LibraryTab extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final track = libraryProvider.allTracks[index];
                       return ListTile(
-                        leading: Container(
-                          width: 48,
-                          height: 48,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: const Icon(Icons.music_note),
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: _artworkFor(context, track.albumArt),
                         ),
                         title: Text(track.title),
                         subtitle: Text('${track.artist} • ${track.album}'),
@@ -325,14 +346,9 @@ class _FavoritesTab extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final track = libraryProvider.favorites[index];
                       return ListTile(
-                        leading: Container(
-                          width: 48,
-                          height: 48,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: const Icon(Icons.music_note),
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: _artworkFor(context, track.albumArt),
                         ),
                         title: Text(track.title),
                         subtitle: Text('${track.artist} • ${track.album}'),
@@ -447,14 +463,9 @@ class _SearchTab extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final track = searchProvider.results[index];
                           return ListTile(
-                            leading: Container(
-                              width: 48,
-                              height: 48,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primaryContainer,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: const Icon(Icons.music_note),
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: _artworkFor(context, track.albumArt),
                             ),
                             title: Text(track.title),
                             subtitle: Text('${track.artist} • ${track.album}'),

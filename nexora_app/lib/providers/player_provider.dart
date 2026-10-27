@@ -74,7 +74,9 @@ class PlayerProvider extends ChangeNotifier {
     super.dispose();
   }
 
-  Future<void> playTrack(Track track) async => _audio.playTrack(track);
+  Future<void> playTrack(Track track) async {
+    await _audio.playTrack(track);
+  }
   void play() => _audio.play();
   void pause() => _audio.pause();
   void stop() => _audio.stop();

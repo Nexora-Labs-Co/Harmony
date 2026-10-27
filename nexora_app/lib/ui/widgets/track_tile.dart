@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../bridge/bridge_generated.dart';
 
@@ -23,15 +26,45 @@ class TrackTile extends StatelessWidget {
     return "$minutes:$seconds";
   }
 
+  Widget _artwork(BuildContext context) {
+    final art = track.albumArt;
+    if (art != null && art.isNotEmpty) {
+      try {
+        return Image.memory(
+          base64Decode(art),
+          width: 40,
+          height: 40,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => _genericArt(context),
+        );
+      } catch (_) {
+        return _genericArt(context);
+      }
+    }
+    return _genericArt(context);
+  }
+
+  Widget _genericArt(BuildContext context) {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Icon(
+        track.trackType == TrackType.Local ? Icons.music_note : Icons.cloud,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        child: Icon(
-          track.trackType == TrackType.Local ? Icons.music_note : Icons.cloud,
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
-        ),
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(4),
+        child: _artwork(context),
       ),
       title: Text(
         track.title,

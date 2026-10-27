@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,14 +17,19 @@ class DesktopBottomBar extends StatelessWidget {
   Widget _artwork(BuildContext context, String? albumArt) {
     if (albumArt != null && albumArt.isNotEmpty) {
       try {
+        final bytes = base64Decode(albumArt);
         return Image.memory(
-          base64Decode(albumArt),
+          bytes,
           width: 56,
           height: 56,
           fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => _genericArt(context),
+          errorBuilder: (ctx, err, st) {
+            debugPrint('Image.memory error: $err');
+            return _genericArt(context);
+          },
         );
-      } catch (_) {
+      } catch (e) {
+        debugPrint('base64Decode error: $e');
         return _genericArt(context);
       }
     }

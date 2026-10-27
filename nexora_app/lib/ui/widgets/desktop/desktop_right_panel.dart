@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -65,14 +67,27 @@ class DesktopRightPanel extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: double.infinity,
-                          height: 280,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(Icons.music_note, size: 80),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: player.currentTrack!.albumArt != null && player.currentTrack!.albumArt!.isNotEmpty
+                              ? Image.memory(
+                                  base64Decode(player.currentTrack!.albumArt!),
+                                  width: double.infinity,
+                                  height: 280,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => Container(
+                                    width: double.infinity,
+                                    height: 280,
+                                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                                    child: const Icon(Icons.music_note, size: 80),
+                                  ),
+                                )
+                              : Container(
+                                  width: double.infinity,
+                                  height: 280,
+                                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                                  child: const Icon(Icons.music_note, size: 80),
+                                ),
                         ),
                         const SizedBox(height: 16),
                         Text(
