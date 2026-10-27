@@ -52,7 +52,7 @@ class DesktopBottomBar extends StatelessWidget {
     final remainingClamped = remaining.isNegative ? Duration.zero : remaining;
 
     return Container(
-      height: 96,
+      height: 104,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,

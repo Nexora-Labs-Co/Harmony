@@ -14,6 +14,7 @@ import 'ui/theme/app_theme.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
+  AudioService.instance.initialize();
   runApp(const NexoraApp());
 }
 
