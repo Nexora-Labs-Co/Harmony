@@ -1,67 +1,49 @@
-<p align="center">
-  <h1 align="center">NexoraTemplate</h1>
-  <p align="center"><strong>Plantilla base para nuevos repositorios de Nexora</strong></p>
-  <p align="center">Punto de partida común para proyectos de Nexora.</p>
-</p>
+# Harmony
 
-<p align="center">
-  <img alt="PolyForm Noncommercial 1.0.0" src="https://img.shields.io/badge/License-PolyForm--Noncommercial--1.0.0-blue" />
-  <img alt="Status: Plantilla" src="https://img.shields.io/badge/Status-Plantilla-22C55E" />
-</p>
+Reproductor de música multiplataforma desarrollado por Nexora Labs Co.
 
-## Estado del proyecto
+## Características
 
-Plantilla.
+- Arquitectura modular (Core/UI separados)
+- Soporte multiplataforma (Linux, Windows)
+- Motor de audio con miniaudio (WASAPI/PulseAudio/ALSA/PipeWire)
+- Preparado para fuentes en la nube (WebDAV, Subsonic/Navidrome, Google Drive)
+- Licencia PolyForm Noncommercial License 1.0.0
 
-## Descripción
+## Compilación
 
-NexoraTemplate es la plantilla base para nuevos repositorios de Nexora. Define la estructura mínima, las convenciones y la documentación estándar compartida por todos los repos.
+### Linux
 
-## Características principales
-
-- Estructura de documentación estándar (README, CONTRIBUTING, SECURITY, CHANGELOG).
-- Convenciones de Nexora aplicadas por defecto.
-- Punto de partida para nuevos proyectos.
-
-## Requisitos
-
-`{{TODO: definir requisitos según el proyecto}}`
-
-## Instalación
-
-`{{TODO: pasos de instalación}}`
-
-## Uso
-
-`{{TODO: ejemplos de uso}}`
-
-## Estructura del proyecto
-
-```text
-README.md
-CONTRIBUTING.md
-SECURITY.md
-CHANGELOG.md
+```bash
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j$(nproc)
 ```
 
-## Hoja de ruta
+### Windows (con MSVC)
 
-- [ ] Completar la plantilla con el stack del proyecto (`{{TODO}}`).
+```bash
+mkdir build && cd build
+cmake .. -G "Visual Studio 17 2022" -A x64
+cmake --build . --config Release
+```
 
-## Contribuir
+## Empaquetado
 
-Ver [CONTRIBUTING.md](./CONTRIBUTING.md).
+### .deb (Linux)
 
-## Seguridad
+```bash
+cd build
+cpack -G DEB
+```
 
-Ver [SECURITY.md](./SECURITY.md).
+### .exe (Windows con NSIS)
 
-## Licencia
+```bash
+cd build
+cpack -G NSIS
+```
 
-Este proyecto se distribuye bajo **PolyForm Noncommercial 1.0.0** ([LICENSE](./LICENSE), SPDX: `PolyForm-Noncommercial-1.0.0`).
+## Arquitectura
 
-Nexora es titular de la marca: el nombre y el logo de Nexora no pueden usarse sin autorización.
-
-## Pie
-
-Un proyecto de Nexora.
+Ver [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) para más detalles.

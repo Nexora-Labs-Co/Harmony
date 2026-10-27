@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Nexora
+Comment=Reproductor de música ligero y modular
+Exec=/opt/nexora/bin/Nexora
+Icon=nexora
+Terminal=false
+Type=Application
+Categories=Audio;Music;Player;
+Keywords=music;player;audio;
+StartupNotify=true
