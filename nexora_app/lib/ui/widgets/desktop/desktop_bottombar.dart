@@ -1,34 +1,62 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../../providers/player_provider.dart';
 
 class DesktopBottomBar extends StatelessWidget {
   const DesktopBottomBar({super.key});
 
-  String _formatDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
-    return "$minutes:$seconds";
+  String _format(Duration d) {
+    String two(int n) => n.toString().padLeft(2, '0');
+    return '${two(d.inMinutes.remainder(60))}:${two(d.inSeconds.remainder(60))}';
+  }
+
+  Widget _artwork(BuildContext context, String? albumArt) {
+    if (albumArt != null && albumArt.isNotEmpty) {
+      try {
+        return Image.memory(
+          base64Decode(albumArt),
+          width: 56,
+          height: 56,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => _genericArt(context),
+        );
+      } catch (_) {
+        return _genericArt(context);
+      }
+    }
+    return _genericArt(context);
+  }
+
+  Widget _genericArt(BuildContext context) {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Icon(Icons.music_note, size: 28, color: Theme.of(context).colorScheme.onSurfaceVariant),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final player = context.watch<PlayerProvider>();
-
     if (player.currentTrack == null) return const SizedBox.shrink();
 
+    final track = player.currentTrack!;
+    final remaining = player.duration - player.position;
+    final remainingClamped = remaining.isNegative ? Duration.zero : remaining;
+
     return Container(
-      height: 90,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      height: 96,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        border: Border(
-          top: BorderSide(
-            color: Theme.of(context).colorScheme.outlineVariant,
-          ),
-        ),
+        border: Border(top: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
       ),
       child: Row(
         children: [
@@ -36,14 +64,9 @@ class DesktopBottomBar extends StatelessWidget {
             flex: 2,
             child: Row(
               children: [
-                Container(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(Icons.music_note, size: 32),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: _artwork(context, track.albumArt),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -52,24 +75,24 @@ class DesktopBottomBar extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        player.currentTrack!.title,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                        track.title,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        player.currentTrack!.artist,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                        track.artist.isEmpty ? 'Artista desconocido' : track.artist,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
                       ),
                     ],
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.favorite_border, size: 18),
+                  icon: const Icon(Icons.favorite_border, size: 20),
                   onPressed: () {},
                 ),
               ],
@@ -84,62 +107,62 @@ class DesktopBottomBar extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.shuffle, size: 16),
+                      icon: const Icon(Icons.shuffle, size: 22),
+                      color: player.shuffle
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
                       onPressed: () => player.toggleShuffle(),
-                      color: player.shuffle ? Theme.of(context).colorScheme.primary : null,
                     ),
+                    const SizedBox(width: 4),
                     IconButton(
-                      icon: Icon(Icons.skip_previous, size: 20),
+                      icon: const Icon(Icons.skip_previous, size: 28),
                       onPressed: () => player.previous(),
                     ),
+                    const SizedBox(width: 4),
                     IconButton(
-                      icon: Icon(
-                        player.isPlaying ? Icons.pause : Icons.play_arrow,
-                        size: 20,
-                      ),
+                      icon: Icon(player.isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled, size: 40),
+                      color: Theme.of(context).colorScheme.primary,
                       onPressed: () => player.togglePlayPause(),
-                      style: IconButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                        padding: const EdgeInsets.all(12),
-                      ),
                     ),
+                    const SizedBox(width: 4),
                     IconButton(
-                      icon: Icon(Icons.skip_next, size: 20),
+                      icon: const Icon(Icons.skip_next, size: 28),
                       onPressed: () => player.next(),
                     ),
+                    const SizedBox(width: 4),
                     IconButton(
                       icon: Icon(
-                        player.repeatMode == PlayerRepeatMode.one
-                            ? Icons.repeat
-                            : Icons.repeat,
-                        size: 16,
+                        player.repeatMode == PlayerRepeatMode.one ? Icons.repeat_one : Icons.repeat,
+                        size: 22,
                       ),
+                      color: player.repeatMode != PlayerRepeatMode.none
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
                       onPressed: () => player.toggleRepeat(),
-                      color: player.repeatMode != PlayerRepeatMode.none ? Theme.of(context).colorScheme.primary : null,
                     ),
                   ],
                 ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Text(
-                      _formatDuration(player.position),
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
+                    Text(_format(player.position), style: Theme.of(context).textTheme.bodySmall),
                     Expanded(
-                      child: Slider(
-                        value: player.position.inMilliseconds.toDouble().clamp(0, player.duration.inMilliseconds.toDouble().clamp(1, double.infinity)),
-                        max: player.duration.inMilliseconds.toDouble().clamp(1, double.infinity),
-                        onChanged: (value) {
-                          player.seek(Duration(milliseconds: value.toInt()));
-                        },
+                      child: SliderTheme(
+                        data: SliderTheme.of(context).copyWith(
+                          trackHeight: 3,
+                          thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                          overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
+                        ),
+                        child: Slider(
+                          value: player.duration.inMilliseconds > 0
+                              ? player.position.inMilliseconds.toDouble().clamp(0, player.duration.inMilliseconds.toDouble())
+                              : 0.0,
+                          max: player.duration.inMilliseconds > 0 ? player.duration.inMilliseconds.toDouble() : 1.0,
+                          onChanged: (v) => player.seek(Duration(milliseconds: v.toInt())),
+                        ),
                       ),
                     ),
-                    Text(
-                      _formatDuration(player.duration),
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
+                    Text(_format(remainingClamped), style: Theme.of(context).textTheme.bodySmall),
                   ],
                 ),
               ],
@@ -151,26 +174,28 @@ class DesktopBottomBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: Icon(Icons.queue_music, size: 16),
+                  icon: const Icon(Icons.queue_music, size: 20),
                   onPressed: () {},
                 ),
-                IconButton(
-                  icon: Icon(Icons.devices, size: 16),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: Icon(Icons.volume_up, size: 16),
-                  onPressed: () {},
-                ),
+                const SizedBox(width: 8),
+                Icon(Icons.volume_down, size: 20, color: Theme.of(context).colorScheme.onSurfaceVariant),
                 SizedBox(
-                  width: 100,
-                  child: Slider(
-                    value: player.volume,
-                    min: 0.0,
-                    max: 1.0,
-                    onChanged: (v) => player.setVolume(v),
+                  width: 110,
+                  child: SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      trackHeight: 3,
+                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
+                      overlayShape: const RoundSliderOverlayShape(overlayRadius: 14),
+                    ),
+                    child: Slider(
+                      value: player.volume,
+                      min: 0.0,
+                      max: 1.0,
+                      onChanged: (v) => player.setVolume(v),
+                    ),
                   ),
                 ),
+                Icon(Icons.volume_up, size: 20, color: Theme.of(context).colorScheme.onSurfaceVariant),
               ],
             ),
           ),

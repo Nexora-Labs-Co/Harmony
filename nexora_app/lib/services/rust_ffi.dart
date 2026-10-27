@@ -25,6 +25,11 @@ class RustFfi {
   late final double Function() _getVolume;
   late final void Function(int) _seek;
   late final int Function(Pointer<Utf8>) _durationMs;
+  late final Pointer<Utf8> Function(Pointer<Utf8>) _artist;
+  late final Pointer<Utf8> Function(Pointer<Utf8>) _album;
+  late final Pointer<Utf8> Function(Pointer<Utf8>) _title;
+  late final Pointer<Utf8> Function(Pointer<Utf8>) _artwork;
+  late final void Function(Pointer<Utf8>) _freeString;
 
   bool load() {
     if (_loaded) return true;
@@ -46,6 +51,11 @@ class RustFfi {
       _getVolume = _lib!.lookupFunction<Double Function(), double Function()>('nexora_ffi_get_volume');
       _seek = _lib!.lookupFunction<Void Function(Uint64), void Function(int)>('nexora_ffi_seek');
       _durationMs = _lib!.lookupFunction<Uint64 Function(Pointer<Utf8>), int Function(Pointer<Utf8>)>('nexora_ffi_duration_ms');
+      _artist = _lib!.lookupFunction<Pointer<Utf8> Function(Pointer<Utf8>), Pointer<Utf8> Function(Pointer<Utf8>)>('nexora_ffi_artist');
+      _album = _lib!.lookupFunction<Pointer<Utf8> Function(Pointer<Utf8>), Pointer<Utf8> Function(Pointer<Utf8>)>('nexora_ffi_album');
+      _title = _lib!.lookupFunction<Pointer<Utf8> Function(Pointer<Utf8>), Pointer<Utf8> Function(Pointer<Utf8>)>('nexora_ffi_title');
+      _artwork = _lib!.lookupFunction<Pointer<Utf8> Function(Pointer<Utf8>), Pointer<Utf8> Function(Pointer<Utf8>)>('nexora_ffi_artwork_base64');
+      _freeString = _lib!.lookupFunction<Void Function(Pointer<Utf8>), void Function(Pointer<Utf8>)>('nexora_ffi_free_string');
       _init();
       _loaded = true;
       return true;
@@ -101,5 +111,32 @@ class RustFfi {
     final r = _durationMs(ptr);
     malloc.free(ptr);
     return r;
+  }
+
+  String _readString(Pointer<Utf8> Function(Pointer<Utf8>) fn, String path, String fallback) {
+    if (!_loaded) return fallback;
+    final ptr = path.toNativeUtf8();
+    final res = fn(ptr);
+    malloc.free(ptr);
+    if (res == nullptr) return fallback;
+    final str = res.toDartString();
+    _freeString(res);
+    return str.isEmpty ? fallback : str;
+  }
+
+  String artist(String path) => _readString(_artist, path, 'Artista desconocido');
+  String album(String path) => _readString(_album, path, 'Album desconocido');
+  String title(String path, String fallback) => _readString(_title, path, fallback);
+
+  /// Returns raw base64 of cover art, or null if none.
+  String? artworkBase64(String path) {
+    if (!_loaded) return null;
+    final ptr = path.toNativeUtf8();
+    final res = _artwork(ptr);
+    malloc.free(ptr);
+    if (res == nullptr) return null;
+    final str = res.toDartString();
+    _freeString(res);
+    return str.isEmpty ? null : str;
   }
 }
