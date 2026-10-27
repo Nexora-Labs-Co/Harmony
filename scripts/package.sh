@@ -7,7 +7,7 @@ set -euo pipefail
 APP_NAME="harmony"
 VERSION="26.10.27"
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-APP_DIR="$PROJECT_DIR/nexora_app"
+APP_DIR="$PROJECT_DIR"
 
 build_linux() {
   echo "==> Building Linux (.deb)..."

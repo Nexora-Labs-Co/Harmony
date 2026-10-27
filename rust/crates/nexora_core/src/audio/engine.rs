@@ -33,6 +33,19 @@ impl AudioEngine {
         *self.current_uri.lock().unwrap() = None;
     }
 
+    pub fn load_path(&self, path: &PathBuf) -> bool {
+        if !*self.initialized.lock().unwrap() {
+            return false;
+        }
+        match self.player.load_path(path) {
+            Ok(_) => {
+                *self.current_uri.lock().unwrap() = Some(format!("file://{}", path.display()));
+                true
+            }
+            Err(_) => false,
+        }
+    }
+
     pub fn load_track(&self, track: &Track) -> bool {
         if !*self.initialized.lock().unwrap() {
             return false;
@@ -93,6 +106,13 @@ impl AudioEngine {
         self.player.get_volume()
     }
 
+    pub fn seek(&self, pos_ms: u64) {
+        if !*self.initialized.lock().unwrap() {
+            return;
+        }
+        self.player.seek(std::time::Duration::from_millis(pos_ms));
+    }
+
     pub fn get_current_source(&self) -> Option<String> {
         self.current_uri.lock().unwrap().clone()
     }
@@ -103,3 +123,6 @@ impl Default for AudioEngine {
         Self::new().expect("Failed to create AudioEngine")
     }
 }
+
+unsafe impl Send for AudioEngine {}
+unsafe impl Sync for AudioEngine {}

@@ -1,6 +1,7 @@
 pub mod api;
 pub mod audio;
 pub mod favorites;
+pub mod ffi;
 pub mod library;
 pub mod metadata;
 pub mod models;

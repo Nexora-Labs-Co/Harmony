@@ -70,7 +70,7 @@ class RustFfi {
     final candidates = <String>[
       '$exeDir/libnexora_core.so',
       'libnexora_core.so',
-      '/home/saaarmyx/Desktop/Nexora-Labs-Co/Harmony/nexora_app/rust/target/debug/libnexora_core.so',
+      '/home/saaarmyx/Desktop/Nexora-Labs-Co/Harmony/rust/target/debug/libnexora_core.so',
       '${Directory.current.path}/rust/target/debug/libnexora_core.so',
     ];
     for (final c in candidates) {
