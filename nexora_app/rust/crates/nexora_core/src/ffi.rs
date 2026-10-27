@@ -1,4 +1,8 @@
 use crate::audio::AudioEngine;
+use crate::library::scanner::LibraryScanner;
+use lofty::file::{AudioFile, TaggedFileExt};
+use lofty::read_from_path;
+use lofty::tag::Accessor;
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::path::PathBuf;
@@ -79,4 +83,21 @@ pub extern "C" fn nexora_ffi_get_volume() -> f32 {
 #[no_mangle]
 pub extern "C" fn nexora_ffi_seek(pos_ms: u64) {
     engine().seek(pos_ms);
+}
+
+#[no_mangle]
+pub extern "C" fn nexora_ffi_duration_ms(path: *const c_char) -> u64 {
+    if path.is_null() {
+        return 0;
+    }
+    let cstr = unsafe { CStr::from_ptr(path) };
+    let path_str = match cstr.to_str() {
+        Ok(s) => s,
+        Err(_) => return 0,
+    };
+    let tagged = match read_from_path(path_str) {
+        Ok(t) => t,
+        Err(_) => return 0,
+    };
+    tagged.properties().duration().as_millis() as u64
 }

@@ -24,6 +24,7 @@ class RustFfi {
   late final void Function(double) _setVolume;
   late final double Function() _getVolume;
   late final void Function(int) _seek;
+  late final int Function(Pointer<Utf8>) _durationMs;
 
   bool load() {
     if (_loaded) return true;
@@ -44,6 +45,7 @@ class RustFfi {
       _setVolume = _lib!.lookupFunction<Void Function(Double), void Function(double)>('nexora_ffi_set_volume');
       _getVolume = _lib!.lookupFunction<Double Function(), double Function()>('nexora_ffi_get_volume');
       _seek = _lib!.lookupFunction<Void Function(Uint64), void Function(int)>('nexora_ffi_seek');
+      _durationMs = _lib!.lookupFunction<Uint64 Function(Pointer<Utf8>), int Function(Pointer<Utf8>)>('nexora_ffi_duration_ms');
       _init();
       _loaded = true;
       return true;
@@ -93,4 +95,11 @@ class RustFfi {
   void setVolume(double v) { if (_loaded) _setVolume(v); }
   double getVolume() => _loaded ? _getVolume() : 1.0;
   void seek(int posMs) { if (_loaded) _seek(posMs); }
+  int durationMs(String path) {
+    if (!_loaded) return 0;
+    final ptr = path.toNativeUtf8();
+    final r = _durationMs(ptr);
+    malloc.free(ptr);
+    return r;
+  }
 }

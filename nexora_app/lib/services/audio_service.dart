@@ -1,5 +1,5 @@
-import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:media_kit/media_kit.dart' hide Track;
 import '../bridge/bridge_generated.dart';
 import 'rust_ffi.dart';
 
@@ -9,6 +9,11 @@ class AudioService extends ChangeNotifier {
   AudioService._internal();
 
   final RustFfi _ffi = RustFfi.instance;
+  Player? _playerInstance;
+  Player get _player {
+    _playerInstance ??= Player();
+    return _playerInstance!;
+  }
 
   bool _initialized = false;
   bool _playing = false;
@@ -16,7 +21,8 @@ class AudioService extends ChangeNotifier {
   Track? _currentTrack;
   Duration _position = Duration.zero;
   Duration _duration = Duration.zero;
-  Timer? _positionTimer;
+
+  Player get player => _player;
 
   bool get initialized => _initialized;
   bool get playing => _playing;
@@ -26,16 +32,30 @@ class AudioService extends ChangeNotifier {
   Duration get duration => _duration;
 
   void initialize() {
-    final ok = _ffi.load();
-    _initialized = ok;
-    if (ok) {
-      _volume = _ffi.getVolume();
-    }
+    _ffi.load();
+    MediaKit.ensureInitialized();
+    _player.stream.playing.listen((playing) {
+      _playing = playing;
+      notifyListeners();
+    });
+    _player.stream.position.listen((pos) {
+      _position = pos;
+      notifyListeners();
+    });
+    _player.stream.duration.listen((dur) {
+      _duration = dur;
+      notifyListeners();
+    });
+    _player.stream.volume.listen((vol) {
+      _volume = (vol / 100.0).clamp(0.0, 1.0);
+      notifyListeners();
+    });
+    _initialized = true;
     notifyListeners();
   }
 
   void teardown() {
-    _ffi.teardown();
+    _player.dispose();
     _initialized = false;
     _playing = false;
     notifyListeners();
@@ -61,71 +81,41 @@ class AudioService extends ChangeNotifier {
     );
   }
 
-  bool loadTrack(Track track) {
+  Future<bool> loadTrack(Track track) async {
     try {
       _currentTrack = track;
-      _duration = Duration(milliseconds: track.durationMs);
-      _position = Duration.zero;
       String path = '';
       if (track.path != null && track.path!.isNotEmpty) {
         path = track.path!;
       } else {
         path = track.sourceUri.replaceFirst('file://', '');
       }
-      final ok = _ffi.loadPath(path);
-      if (ok) {
-        _ffi.play();
-        _playing = true;
-        _startPositionTimer();
-      }
+      await _player.open(Media(path), play: true);
+      _playing = true;
       notifyListeners();
-      return ok;
+      return true;
     } catch (e) {
       debugPrint('Error loading track: $e');
       return false;
     }
   }
 
-  void _startPositionTimer() {
-    _positionTimer?.cancel();
-    _positionTimer = Timer.periodic(const Duration(milliseconds: 250), (_) {
-      if (_playing && _currentTrack != null) {
-        final newPos = _position + const Duration(milliseconds: 250);
-        if (newPos <= _duration || _duration == Duration.zero) {
-          _position = newPos;
-        } else {
-          _position = _duration;
-          // auto next? leave as is
-        }
-        notifyListeners();
-      }
-    });
-  }
-
-  void _stopPositionTimer() {
-    _positionTimer?.cancel();
-    _positionTimer = null;
-  }
-
-  void play() {
-    _ffi.play();
+  Future<void> play() async {
+    await _player.play();
     _playing = true;
-    _startPositionTimer();
     notifyListeners();
   }
 
-  void pause() {
-    _ffi.pause();
+  Future<void> pause() async {
+    await _player.pause();
     _playing = false;
-    _stopPositionTimer();
     notifyListeners();
   }
 
-  void stop() {
-    _ffi.stop();
+  Future<void> stop() async {
+    await _player.stop();
     _playing = false;
     _position = Duration.zero;
-    _stopPositionTimer();
     notifyListeners();
   }
 
@@ -137,22 +127,39 @@ class AudioService extends ChangeNotifier {
     }
   }
 
-  void setVolume(double volume) {
+  Future<void> setVolume(double volume) async {
     final clamped = volume.clamp(0.0, 1.0);
-    _ffi.setVolume(clamped);
+    await _player.setVolume(clamped * 100);
     _volume = clamped;
     notifyListeners();
   }
 
   Future<void> seek(Duration position) async {
-    _ffi.seek(position.inMilliseconds);
-    _position = position;
-    notifyListeners();
+    await _player.seek(position);
   }
 
   double getVolume() => _volume;
 
   String? getCurrentSource() => _currentTrack?.sourceUri;
 
-  List<Track> scanLibrary(String directory) => nexoraScanLibrary(directory: directory);
+  List<Track> scanLibrary(String directory) {
+    final tracks = nexoraScanLibrary(directory: directory);
+    final enriched = <Track>[];
+    for (final t in tracks) {
+      int ms = t.durationMs;
+      if (ms == 0 && t.path != null && t.path!.isNotEmpty) {
+        try { ms = _ffi.durationMs(t.path!); } catch (_) {}
+      }
+      enriched.add(nexoraCreateLocalTrack(
+        id: t.id,
+        title: t.title,
+        artist: t.artist,
+        album: t.album,
+        albumArt: t.albumArt,
+        filePath: t.path ?? t.sourceUri.replaceFirst('file://', ''),
+        durationMs: ms > 0 ? ms : t.durationMs,
+      ));
+    }
+    return enriched;
+  }
 }
