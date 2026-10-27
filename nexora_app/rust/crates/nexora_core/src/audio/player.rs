@@ -80,6 +80,12 @@ impl AudioPlayer {
     pub fn get_volume(&self) -> f32 {
         *self.volume.lock().unwrap()
     }
+
+    pub fn seek(&self, pos: std::time::Duration) {
+        if let Some(sink) = self.sink.lock().unwrap().as_ref() {
+            let _ = sink.try_seek(pos);
+        }
+    }
 }
 
 impl Default for AudioPlayer {
@@ -87,3 +93,6 @@ impl Default for AudioPlayer {
         Self::new().expect("Failed to initialize audio player")
     }
 }
+
+unsafe impl Send for AudioPlayer {}
+unsafe impl Sync for AudioPlayer {}

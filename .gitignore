@@ -1,4 +1,7 @@
 build/
+**/target/
+**/.dart_tool/
+**/build/
 *.o
 *.a
 *.so

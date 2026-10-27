@@ -129,9 +129,11 @@ class DesktopBottomBar extends StatelessWidget {
                     ),
                     Expanded(
                       child: Slider(
-                        value: player.position.inMilliseconds.toDouble(),
+                        value: player.position.inMilliseconds.toDouble().clamp(0, player.duration.inMilliseconds.toDouble().clamp(1, double.infinity)),
                         max: player.duration.inMilliseconds.toDouble().clamp(1, double.infinity),
-                        onChanged: (value) {},
+                        onChanged: (value) {
+                          player.seek(Duration(milliseconds: value.toInt()));
+                        },
                       ),
                     ),
                     Text(

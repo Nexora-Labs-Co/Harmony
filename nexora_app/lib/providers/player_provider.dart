@@ -3,89 +3,55 @@ import '../bridge/bridge_generated.dart';
 import '../services/audio_service.dart';
 
 class PlayerProvider extends ChangeNotifier {
-  final AudioService _audioService = AudioService.instance;
-  
-  Track? _currentTrack;
-  bool _isPlaying = false;
-  bool _isPaused = false;
-  double _volume = 1.0;
-  Duration _position = Duration.zero;
-  Duration _duration = Duration.zero;
+  final AudioService _audio = AudioService.instance;
+
+  Track? get currentTrack => _audio.currentTrack;
+  bool get isPlaying => _audio.playing;
+  bool get isPaused => !_audio.playing && _audio.currentTrack != null;
+  double get volume => _audio.volume;
+  Duration get position => _audio.position;
+  Duration get duration => _audio.duration;
+
   List<Track> _queue = [];
   int _currentIndex = -1;
   bool _shuffle = false;
   PlayerRepeatMode _repeatMode = PlayerRepeatMode.none;
 
-  Track? get currentTrack => _currentTrack;
-  bool get isPlaying => _isPlaying;
-  bool get isPaused => _isPaused;
-  double get volume => _volume;
-  Duration get position => _position;
-  Duration get duration => _duration;
   List<Track> get queue => _queue;
   int get currentIndex => _currentIndex;
   bool get shuffle => _shuffle;
   PlayerRepeatMode get repeatMode => _repeatMode;
 
   PlayerProvider() {
-    _volume = _audioService.getVolume();
+    _audio.addListener(_onAudioChanged);
   }
 
-  void playTrack(Track track) {
-    _audioService.loadTrack(track);
-    _audioService.play();
-    _currentTrack = track;
-    _isPlaying = true;
-    _isPaused = false;
-    _duration = Duration(milliseconds: track.durationMs);
+  void _onAudioChanged() {
     notifyListeners();
   }
 
-  void play() {
-    _audioService.play();
-    _isPlaying = true;
-    _isPaused = false;
-    notifyListeners();
+  @override
+  void dispose() {
+    _audio.removeListener(_onAudioChanged);
+    super.dispose();
   }
 
-  void pause() {
-    _audioService.pause();
-    _isPlaying = false;
-    _isPaused = true;
-    notifyListeners();
+  Future<void> playTrack(Track track) async {
+    await _audio.loadTrack(track);
   }
 
-  void stop() {
-    _audioService.stop();
-    _isPlaying = false;
-    _isPaused = false;
-    _position = Duration.zero;
-    notifyListeners();
-  }
+  void play() => _audio.play();
+  void pause() => _audio.pause();
+  void stop() => _audio.stop();
+  void togglePlayPause() => _audio.togglePlayPause();
 
-  void togglePlayPause() {
-    if (_isPlaying) {
-      pause();
-    } else {
-      play();
-    }
-  }
+  void setVolume(double vol) => _audio.setVolume(vol);
 
-  void setVolume(double vol) {
-    final clamped = vol.clamp(0.0, 1.0);
-    _audioService.setVolume(clamped);
-    _volume = clamped;
-    notifyListeners();
-  }
+  Future<void> seek(Duration position) => _audio.seek(position);
 
   void next() {
     if (_queue.isEmpty) return;
-    if (_shuffle) {
-      // Simple shuffle
-      _currentIndex = (_currentIndex + 1) % _queue.length;
-    } else {
-      _currentIndex = (_currentIndex + 1) % _queue.length;
-    }
+    _currentIndex = (_currentIndex + 1) % _queue.length;
     if (_currentIndex >= 0 && _currentIndex < _queue.length) {
       playTrack(_queue[_currentIndex]);
     }
@@ -102,7 +68,7 @@ class PlayerProvider extends ChangeNotifier {
   void setQueue(List<Track> tracks, {int startIndex = 0}) {
     _queue = tracks;
     _currentIndex = startIndex;
-    if (tracks.isNotEmpty) {
+    if (tracks.isNotEmpty && startIndex < tracks.length) {
       playTrack(tracks[startIndex]);
     }
     notifyListeners();

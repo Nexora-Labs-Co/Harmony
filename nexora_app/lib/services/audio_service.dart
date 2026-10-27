@@ -1,45 +1,41 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../bridge/bridge_generated.dart';
+import 'rust_ffi.dart';
 
 class AudioService extends ChangeNotifier {
   static final AudioService instance = AudioService._internal();
   factory AudioService() => instance;
   AudioService._internal();
 
+  final RustFfi _ffi = RustFfi.instance;
+
   bool _initialized = false;
   bool _playing = false;
   double _volume = 1.0;
   Track? _currentTrack;
+  Duration _position = Duration.zero;
+  Duration _duration = Duration.zero;
+  Timer? _positionTimer;
 
   bool get initialized => _initialized;
   bool get playing => _playing;
   double get volume => _volume;
   Track? get currentTrack => _currentTrack;
+  Duration get position => _position;
+  Duration get duration => _duration;
 
   void initialize() {
-    try {
-      _initialized = nexoraInit();
-      _volume = nexoraGetVolume();
-      notifyListeners();
-    } catch (e) {
-      _initialized = false;
-      notifyListeners();
+    final ok = _ffi.load();
+    _initialized = ok;
+    if (ok) {
+      _volume = _ffi.getVolume();
     }
-  }
-
-  double getVolume() {
-    try {
-      _volume = nexoraGetVolume();
-      return _volume;
-    } catch (_) {
-      return _volume;
-    }
+    notifyListeners();
   }
 
   void teardown() {
-    try {
-      nexoraTeardown();
-    } catch (_) {}
+    _ffi.teardown();
     _initialized = false;
     _playing = false;
     notifyListeners();
@@ -67,39 +63,70 @@ class AudioService extends ChangeNotifier {
 
   bool loadTrack(Track track) {
     try {
-      final result = nexoraLoadTrack(track: track);
-      if (result) {
-        _currentTrack = track;
-        notifyListeners();
+      _currentTrack = track;
+      _duration = Duration(milliseconds: track.durationMs);
+      _position = Duration.zero;
+      String path = '';
+      if (track.path != null && track.path!.isNotEmpty) {
+        path = track.path!;
+      } else {
+        path = track.sourceUri.replaceFirst('file://', '');
       }
-      return result;
+      final ok = _ffi.loadPath(path);
+      if (ok) {
+        _ffi.play();
+        _playing = true;
+        _startPositionTimer();
+      }
+      notifyListeners();
+      return ok;
     } catch (e) {
+      debugPrint('Error loading track: $e');
       return false;
     }
   }
 
+  void _startPositionTimer() {
+    _positionTimer?.cancel();
+    _positionTimer = Timer.periodic(const Duration(milliseconds: 250), (_) {
+      if (_playing && _currentTrack != null) {
+        final newPos = _position + const Duration(milliseconds: 250);
+        if (newPos <= _duration || _duration == Duration.zero) {
+          _position = newPos;
+        } else {
+          _position = _duration;
+          // auto next? leave as is
+        }
+        notifyListeners();
+      }
+    });
+  }
+
+  void _stopPositionTimer() {
+    _positionTimer?.cancel();
+    _positionTimer = null;
+  }
+
   void play() {
-    try {
-      nexoraPlay();
-      _playing = nexoraIsPlaying();
-      notifyListeners();
-    } catch (_) {}
+    _ffi.play();
+    _playing = true;
+    _startPositionTimer();
+    notifyListeners();
   }
 
   void pause() {
-    try {
-      nexoraPause();
-      _playing = false;
-      notifyListeners();
-    } catch (_) {}
+    _ffi.pause();
+    _playing = false;
+    _stopPositionTimer();
+    notifyListeners();
   }
 
   void stop() {
-    try {
-      nexoraStop();
-      _playing = false;
-      notifyListeners();
-    } catch (_) {}
+    _ffi.stop();
+    _playing = false;
+    _position = Duration.zero;
+    _stopPositionTimer();
+    notifyListeners();
   }
 
   void togglePlayPause() {
@@ -111,27 +138,21 @@ class AudioService extends ChangeNotifier {
   }
 
   void setVolume(double volume) {
-    try {
-      final clamped = volume.clamp(0.0, 1.0);
-      nexoraSetVolume(volume: clamped);
-      _volume = clamped;
-      notifyListeners();
-    } catch (_) {}
+    final clamped = volume.clamp(0.0, 1.0);
+    _ffi.setVolume(clamped);
+    _volume = clamped;
+    notifyListeners();
   }
 
-  String? getCurrentSource() {
-    try {
-      return nexoraGetCurrentSource();
-    } catch (_) {
-      return null;
-    }
+  Future<void> seek(Duration position) async {
+    _ffi.seek(position.inMilliseconds);
+    _position = position;
+    notifyListeners();
   }
 
-  List<Track> scanLibrary(String directory) {
-    try {
-      return nexoraScanLibrary(directory: directory);
-    } catch (_) {
-      return [];
-    }
-  }
+  double getVolume() => _volume;
+
+  String? getCurrentSource() => _currentTrack?.sourceUri;
+
+  List<Track> scanLibrary(String directory) => nexoraScanLibrary(directory: directory);
 }
