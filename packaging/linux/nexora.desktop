@@ -1,10 +1,11 @@
 [Desktop Entry]
 Name=Nexora
-Comment=Reproductor de música ligero y modular
-Exec=/opt/nexora/bin/Nexora
+Comment=Reproductor de música multiplataforma - Flutter + Rust
+Exec=nexora_app
 Icon=nexora
 Terminal=false
 Type=Application
 Categories=Audio;Music;Player;
-Keywords=music;player;audio;
+Keywords=music;player;audio;nexora;
 StartupNotify=true
+```
