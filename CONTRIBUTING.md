@@ -1,49 +1,126 @@
-# Contribuir a NexoraTemplate
+<p align="center">
+  <h1 align="center">Guía de Contribución</h1>
+  <p align="center"><strong>Directrices y flujos de trabajo para colaborar en Nexora</strong></p>
+</p>
 
-Bienvenido. Este repositorio es una plantilla: el código es visible y las contribuciones son bienvenidas.
+---
+
+## Tabla de Contenidos
+
+- [Bienvenida](#bienvenida)
+- [Antes de empezar](#antes-de-empezar)
+- [Flujo de trabajo](#flujo-de-trabajo)
+- [Entorno de desarrollo](#entorno-de-desarrollo)
+- [Estándares de código](#estándares-de-código)
+- [Checklist del Pull Request](#checklist-del-pull-request)
+- [Proceso de revisión](#proceso-de-revisión)
+- [Código de conducta](#código-de-conducta)
+- [Licencia](#licencia)
+
+---
+
+## Bienvenida
+
+Agradecemos tu interés en colaborar con **Nexora**. Todas las contribuciones orientadas a mejorar la calidad, arquitectura, rendimiento o experiencia de usuario son bienvenidas.
 
 ## Antes de empezar
 
-Abre un issue para discutir cambios grandes antes de implementarlos.
+- **Cambios menores** (correcciones, typos): Puedes abrir directamente un Pull Request.
+- **Cambios mayores o nuevas características:** Abre primero un **Issue** para discutir la propuesta con el equipo mantenedor antes de escribir código.
 
 ## Flujo de trabajo
 
-1. Fork del repositorio.
-2. Crea una rama: `feat/`, `fix/`, `docs/`.
-3. Commits con Conventional Commits.
-4. Abre un Pull Request.
+1. Realiza un **Fork** del repositorio en tu cuenta de GitHub.
+2. Clona tu fork localmente:
+   ```bash
+   git clone https://github.com/tu-usuario/Nexora.git
+   cd Nexora
+   ```
+3. Crea una rama descriptiva siguiendo las convenciones:
+   - `feat/nombre-funcionalidad` - Nuevas características
+   - `fix/descripcion-error` - Correcciones de bugs
+   - `docs/nombre-documento` - Mejoras en documentación
+   - `refactor/zona-afectada` - Refactorización sin cambio de comportamiento
+   - `perf/mejora-rendimiento` - Optimizaciones
+   - `chore/tarea-mantenimiento` - Tareas de mantenimiento
+4. Realiza tus cambios siguiendo los estándares del proyecto.
+5. Haz commit usando **[Conventional Commits](https://www.conventionalcommits.org/)**:
+   ```bash
+   git commit -m "feat(audio): agregar soporte para reproducción en segundo plano"
+   ```
+6. Sube tu rama y abre un **Pull Request** hacia `main`.
 
 ## Entorno de desarrollo
 
-`{{TODO: comandos reales de instalación, desarrollo y pruebas según el proyecto}}`
+### Flutter + Dart
+```bash
+cd nexora_app
+flutter pub get
+flutter run -d linux  # o windows
+```
+
+### Rust
+```bash
+cd rust
+cargo build
+cargo test
+cargo clippy
+cargo fmt
+```
+
+### Generar bindings
+```bash
+cd nexora_app
+flutter_rust_bridge_codegen generate
+```
 
 ## Estándares de código
 
-`{{TODO: linters, formato, tipado y tests detectados o definidos para el proyecto}}`
+### Dart/Flutter
+- Seguir las reglas de [Effective Dart](https://dart.dev/guides/language/effective-dart)
+- Usar `flutter_lints` configurado en el proyecto
+- Mantener widgets pequeños y reutilizables
+- Usar `Provider` para gestión de estado
+- Nombrado en `snake_case` para archivos, `PascalCase` para clases
+
+### Rust
+- Formatear con `cargo fmt`
+- Verificar con `cargo clippy` sin warnings
+- Seguir [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/)
+- Usar `thiserror`/`anyhow` para manejo de errores
+- Documentar APIs públicas con comentarios `///`
+- Mantener separación entre módulos (`audio`, `library`, `models`, `api`)
+
+### General
+- Mensajes de commit en inglés siguiendo Conventional Commits
+- Código autoexplicativo, comentar solo lógica compleja
+- Mantener arquitectura modular (UI desacoplada del core Rust)
+- No incluir código comentado o debug innecesario
 
 ## Checklist del Pull Request
 
-- [ ] `main` actualizado y rebaseado/mergeado.
-- [ ] Commits atómicos + Conventional Commits.
-- [ ] Tests y comprobaciones del proyecto pasan (`{{TODO}}`).
-- [ ] Documentación actualizada si cambia configuración, uso o arquitectura.
-- [ ] Sin secretos, `.env`, artefactos ni logs en el diff.
-- [ ] PR explica qué y por qué.
+Antes de enviar tu Pull Request, verifica:
+
+- [ ] El código compila correctamente (`flutter build` / `cargo build`)
+- [ ] Los tests pasan (`flutter test` / `cargo test`)
+- [ ] `cargo fmt` y `cargo clippy` sin errores
+- [ ] `dart format` aplicado
+- [ ] Documentación actualizada si es necesario
+- [ ] Commits siguen Conventional Commits
+- [ ] Sin archivos innecesarios (`target/`, `build/`, `.dart_tool/`)
+- [ ] Cambios enfocados y atómicos
 
 ## Proceso de revisión
 
-El mantenedor revisa los PRs. Espera comentarios y solicitudes de cambio antes de la fusión.
-
-## Acuerdo de contribución (CLA)
-
-Al enviar una contribución, la persona declara que es autora o tiene derecho a aportarla y concede a Nexora una licencia perpetua, mundial, no exclusiva, gratuita e irrevocable para usar, modificar, sublicenciar, relicenciar y comercializar la contribución, incluso bajo otras licencias.
-
-<!-- TODO: revisión legal del texto del CLA -->
+1. Un mantenedor revisará tu PR lo antes posible
+2. Se pueden solicitar cambios o aclaraciones
+3. Una vez aprobado, será mergeado a la rama principal
+4. Se actualizará el CHANGELOG en releases correspondientes
 
 ## Código de conducta
 
-Reglas breves de respeto y convivencia: trato respetuoso, sin acoso, sin ataques personales. Los conflictos se resuelven con diálogo.
+Este proyecto se adhiere a un código de conducta respetuoso e inclusivo. Esperamos que todos los colaboradores mantengan un ambiente colaborativo, profesional y libre de acoso.
 
 ## Licencia
 
-Las contribuciones quedan bajo **PolyForm Noncommercial 1.0.0**, sujetas al acuerdo anterior.
+Al contribuir a este proyecto, aceptas que tus contribuciones se licencien bajo la **PolyForm Noncommercial License 1.0.0**.
