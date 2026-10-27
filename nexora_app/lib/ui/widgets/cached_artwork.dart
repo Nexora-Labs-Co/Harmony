@@ -51,6 +51,22 @@ class CachedArtwork extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Soporte para carátulas remotas (URL de YouTube) y locales (base64)
+    if (albumArt != null && albumArt!.startsWith('http')) {
+      return RepaintBoundary(
+        child: ClipRRect(
+          borderRadius: borderRadius ?? BorderRadius.zero,
+          child: Image.network(
+            albumArt!,
+            width: width,
+            height: height,
+            fit: BoxFit.cover,
+            gaplessPlayback: true,
+            errorBuilder: (_, __, ___) => fallback,
+          ),
+        ),
+      );
+    }
     final provider = _ArtworkCache.instance.get(albumArt);
     return RepaintBoundary(
       child: ClipRRect(

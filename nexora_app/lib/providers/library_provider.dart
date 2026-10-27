@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../bridge/bridge_generated.dart';
 import '../services/audio_service.dart';
 import '../services/music_watcher.dart';
@@ -13,10 +15,28 @@ class LibraryProvider extends ChangeNotifier {
   bool _isScanning = false;
 
   LibraryProvider() {
+    _loadFavorites();
     // Auto-scan common music folders on startup
     Future.delayed(const Duration(milliseconds: 500), () {
       autoScanMusicFolders();
     });
+  }
+
+  Future<void> _loadFavorites() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final stored = prefs.getStringList('favorite_ids') ?? [];
+      _favoriteIds = stored;
+      _favorites = _allTracks.where((t) => _favoriteIds.contains(t.id)).toList();
+      notifyListeners();
+    } catch (_) {}
+  }
+
+  Future<void> _saveFavorites() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList('favorite_ids', _favoriteIds);
+    } catch (_) {}
   }
 
   List<Track> get allTracks => _allTracks;
@@ -59,7 +79,10 @@ class LibraryProvider extends ChangeNotifier {
     
     try {
       _allTracks = _audioService.scanLibrary(directory);
-      _favoriteIds = nexoraGetFavoriteIds();
+      // Merge persisted favorites
+      final prefs = await SharedPreferences.getInstance();
+      final stored = prefs.getStringList('favorite_ids');
+      if (stored != null) _favoriteIds = stored;
       _favorites = _allTracks.where((t) => _favoriteIds.contains(t.id)).toList();
       // Inicia watcher en segundo plano (sin bucles constantes)
       MusicWatcher.instance.start(directory, this);
@@ -82,6 +105,7 @@ class LibraryProvider extends ChangeNotifier {
       _favoriteIds.remove(trackId);
     }
     _favorites = _allTracks.where((t) => _favoriteIds.contains(t.id)).toList();
+    _saveFavorites();
     notifyListeners();
   }
 

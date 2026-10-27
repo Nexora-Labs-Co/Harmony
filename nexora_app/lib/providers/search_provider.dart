@@ -1,37 +1,60 @@
 import 'package:flutter/foundation.dart';
+
 import '../bridge/bridge_generated.dart';
+import '../services/youtube_service.dart';
 
 class SearchProvider extends ChangeNotifier {
   String _query = '';
-  List<Track> _results = [];
+  List<Track> _localResults = [];
+  List<YouTubeTrack> _youtubeResults = [];
   bool _isSearching = false;
+  bool _searchYouTube = true;
 
   String get query => _query;
-  List<Track> get results => _results;
+  List<Track> get localResults => _localResults;
+  List<YouTubeTrack> get youtubeResults => _youtubeResults;
   bool get isSearching => _isSearching;
+  bool get searchYouTube => _searchYouTube;
 
-  void search(String query, List<Track> allTracks) {
+  void toggleYouTube(bool value) {
+    _searchYouTube = value;
+    notifyListeners();
+  }
+
+  Future<void> search(String query, List<Track> allTracks) async {
     _query = query;
     _isSearching = query.isNotEmpty;
-    
+
     if (query.isEmpty) {
-      _results = [];
+      _localResults = [];
+      _youtubeResults = [];
       notifyListeners();
       return;
     }
 
-    try {
-      _results = nexoraSearchTracks(query: query, tracks: allTracks);
-    } catch (e) {
-      _results = [];
+    // Búsqueda local
+    final q = query.toLowerCase();
+    _localResults = allTracks
+        .where((t) =>
+            t.title.toLowerCase().contains(q) ||
+            t.artist.toLowerCase().contains(q) ||
+            t.album.toLowerCase().contains(q))
+        .toList();
+
+    // Búsqueda en YouTube
+    if (_searchYouTube) {
+      _youtubeResults = await YouTubeService.instance.search(query);
+    } else {
+      _youtubeResults = [];
     }
-    
+
     notifyListeners();
   }
 
   void clear() {
     _query = '';
-    _results = [];
+    _localResults = [];
+    _youtubeResults = [];
     _isSearching = false;
     notifyListeners();
   }

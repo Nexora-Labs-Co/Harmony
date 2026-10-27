@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/library_provider.dart';
+import '../../../services/youtube_service.dart';
 import '../cached_artwork.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/search_provider.dart';
@@ -379,20 +380,13 @@ class _SearchTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Buscar',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text('Buscar', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
           TextField(
             decoration: InputDecoration(
-              hintText: 'Buscar canciones, artistas, álbumes...',
+              hintText: 'Buscar canciones, artistas, albumes o YouTube...',
               prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               filled: true,
             ),
             onChanged: (value) {
@@ -406,89 +400,86 @@ class _SearchTab extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.search,
-                          size: 64,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                        Icon(Icons.search, size: 64, color: Theme.of(context).colorScheme.primary),
                         const SizedBox(height: 16),
-                        Text(
-                          'Buscar música',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
+                        Text('Buscar musica', style: Theme.of(context).textTheme.titleLarge),
                         const SizedBox(height: 8),
-                        Text(
-                          'Busca por título, artista o álbum',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                        ),
+                        Text('Busca en tu biblioteca o en YouTube',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
                       ],
                     ),
                   )
-                : searchProvider.results.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.music_off,
-                              size: 64,
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Sin resultados',
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'No se encontraron canciones para "${searchProvider.query}"',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                : ListView(
+                    children: [
+                      if (searchProvider.localResults.isNotEmpty) ...[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 8, 0, 4),
+                          child: Text('Biblioteca local', style: Theme.of(context).textTheme.titleMedium),
                         ),
-                      )
-                    : ListView.builder(
-                        itemCount: searchProvider.results.length,
-                        itemBuilder: (context, index) {
-                          final track = searchProvider.results[index];
-                          return ListTile(
-                            leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(4),
-                              child: _artworkFor(context, track.albumArt),
-                            ),
-                            title: Text(track.title),
-                            subtitle: Text('${track.artist} • ${track.album}'),
-                            trailing: IconButton(
-                              icon: Icon(
-                                libraryProvider.isFavorite(track.id)
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: libraryProvider.isFavorite(track.id)
-                                    ? Colors.red
-                                    : null,
+                        ...searchProvider.localResults.map((track) => ListTile(
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(4),
+                                child: _artworkFor(context, track.albumArt),
                               ),
-                              onPressed: () {
-                                libraryProvider.toggleFavorite(track.id);
+                              title: Text(track.title),
+                              subtitle: Text('${track.artist} • ${track.album}'),
+                              trailing: IconButton(
+                                icon: Icon(
+                                  libraryProvider.isFavorite(track.id) ? Icons.favorite : Icons.favorite_border,
+                                  color: libraryProvider.isFavorite(track.id) ? Colors.red : null,
+                                ),
+                                onPressed: () => libraryProvider.toggleFavorite(track.id),
+                              ),
+                              onTap: () => playerProvider.setQueue(searchProvider.localResults, startIndex: searchProvider.localResults.indexOf(track)),
+                            )),
+                      ],
+                      if (searchProvider.youtubeResults.isNotEmpty) ...[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 12, 0, 4),
+                          child: Text('YouTube', style: Theme.of(context).textTheme.titleMedium),
+                        ),
+                        ...searchProvider.youtubeResults.map((yt) => ListTile(
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(4),
+                                child: CachedArtwork(
+                                  albumArt: yt.thumbnailUrl,
+                                  width: 48,
+                                  height: 48,
+                                  borderRadius: BorderRadius.circular(4),
+                                  fallback: Container(
+                                    width: 48,
+                                    height: 48,
+                                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                                    child: const Icon(Icons.play_circle),
+                                  ),
+                                ),
+                              ),
+                              title: Text(yt.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+                              subtitle: Text('${yt.artist} • ${_fmt(yt.duration)}'),
+                              trailing: const Icon(Icons.play_arrow),
+                              onTap: () async {
+                                await YouTubeService.instance.playTrack(yt);
                               },
-                            ),
-                            onTap: () {
-                              playerProvider.setQueue(searchProvider.results, startIndex: index);
-                            },
-                          );
-                        },
-                      ),
+                            )),
+                      ],
+                      if (searchProvider.localResults.isEmpty && searchProvider.youtubeResults.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(32),
+                          child: Center(child: Text('Sin resultados para "${searchProvider.query}"')),
+                        ),
+                    ],
+                  ),
           ),
         ],
       ),
     );
   }
-}
 
+  String _fmt(Duration d) {
+    String two(int n) => n.toString().padLeft(2, '0');
+    return '${two(d.inMinutes.remainder(60))}:${two(d.inSeconds.remainder(60))}';
+  }
+}
 
 class _SettingsTab extends StatelessWidget {
   const _SettingsTab();

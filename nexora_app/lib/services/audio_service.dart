@@ -84,6 +84,28 @@ class AudioService extends ChangeNotifier {
     );
   }
 
+  /// Reproduce una URL directa (ej. stream de YouTube) usando media_kit.
+  Future<bool> playUrl(String url, {String? title, String? artist, String? thumbnailUrl, int durationMs = 0}) async {
+    try {
+      _currentTrack = nexoraCreateLocalTrack(
+        id: 'yt-${url.hashCode}',
+        title: title ?? 'YouTube',
+        artist: artist ?? 'YouTube',
+        album: 'YouTube',
+        albumArt: thumbnailUrl,
+        filePath: '',
+        durationMs: durationMs,
+      );
+      await _player.open(Media(url), play: true);
+      _playing = true;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      debugPrint('Error loading url: $e');
+      return false;
+    }
+  }
+
   Future<bool> loadTrack(Track track) async {
     try {
       _currentTrack = track;

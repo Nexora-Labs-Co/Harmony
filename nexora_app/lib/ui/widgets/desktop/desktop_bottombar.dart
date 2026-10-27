@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/player_provider.dart';
+import '../../../providers/playlist_provider.dart';
+import '../../../providers/library_provider.dart';
 import '../cached_artwork.dart';
 
 class DesktopBottomBar extends StatelessWidget {
@@ -84,10 +86,21 @@ class DesktopBottomBar extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(width: 8),
+                Consumer<LibraryProvider>(
+                  builder: (context, lib, _) {
+                    final isFav = track.id.isNotEmpty && lib.isFavorite(track.id);
+                    return IconButton(
+                      icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, size: 20,
+                          color: isFav ? Colors.red : null),
+                      tooltip: 'Favorito',
+                      onPressed: () => lib.toggleFavorite(track.id),
+                    );
+                  },
+                ),
                 IconButton(
-                  icon: const Icon(Icons.favorite_border, size: 20),
-                  tooltip: 'Favorito',
-                  onPressed: () {},
+                  icon: const Icon(Icons.library_add, size: 20),
+                  tooltip: 'Anadir a album',
+                  onPressed: () => _showAddToAlbumMenu(context, track),
                 ),
                 const Spacer(),
               ],
@@ -198,6 +211,55 @@ class DesktopBottomBar extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showAddToAlbumMenu(BuildContext context, dynamic track) {
+  final provider = context.read<PlaylistProvider>();
+  showModalBottomSheet(
+    context: context,
+    builder: (ctx) {
+      if (provider.playlists.isEmpty) {
+        return Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('No hay albumes creados'),
+              const SizedBox(height: 12),
+              FilledButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  // create
+                },
+                child: const Text('Crear album'),
+              ),
+            ],
+          ),
+        );
+      }
+      return ListView(
+        shrinkWrap: true,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text('Anadir a album', style: Theme.of(context).textTheme.titleMedium),
+          ),
+          ...provider.playlists.map((p) => ListTile(
+                leading: const Icon(Icons.queue_music),
+                title: Text(p.name),
+                subtitle: Text('${p.trackIds.length} pistas'),
+                onTap: () {
+                  provider.addTrackToPlaylist(p.id, track.id);
+                  Navigator.pop(ctx);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Anadido a ${p.name}')),
+                  );
+                },
+              )),
+        ],
+      );
+    },
+  );
 }
 
 class _BottomArtwork extends StatelessWidget {
