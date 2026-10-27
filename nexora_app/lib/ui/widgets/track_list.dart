@@ -8,4 +8,3 @@ class TrackList extends StatelessWidget {
     return const SizedBox.shrink();
   }
 }
-```

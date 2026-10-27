@@ -24,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: const Icon(Icons.folder_open),
             onPressed: () async {
-              // Demo: escanear /tmp
               final tracks = audio.scanLibrary('/tmp');
               if (tracks.isNotEmpty && mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -89,4 +88,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-```

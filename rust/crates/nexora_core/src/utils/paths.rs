@@ -11,4 +11,3 @@ pub fn get_config_dir() -> Option<PathBuf> {
 pub fn get_cache_dir() -> Option<PathBuf> {
     dirs::cache_dir().map(|d| d.join("Nexora"))
 }
-```

@@ -4,6 +4,3 @@ pub mod library;
 pub mod metadata;
 pub mod models;
 pub mod utils;
-
-flutter_rust_bridge::frb_codegen!();
-```

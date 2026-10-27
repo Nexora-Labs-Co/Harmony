@@ -3,7 +3,7 @@ use anyhow::Result;
 use lofty::{read_from_path, Probe};
 use std::collections::HashMap;
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use uuid::Uuid;
 
 #[derive(Default)]
@@ -14,13 +14,9 @@ pub struct LibraryScanner {
 impl LibraryScanner {
     pub fn new() -> Self {
         let mut supported_exts = HashMap::new();
-        supported_exts.insert("mp3".to_string(), true);
-        supported_exts.insert("flac".to_string(), true);
-        supported_exts.insert("ogg".to_string(), true);
-        supported_exts.insert("m4a".to_string(), true);
-        supported_exts.insert("wav".to_string(), true);
-        supported_exts.insert("opus".to_string(), true);
-        supported_exts.insert("aac".to_string(), true);
+        for ext in ["mp3", "flac", "ogg", "m4a", "wav", "opus", "aac"] {
+            supported_exts.insert(ext.to_string(), true);
+        }
         Self { supported_exts }
     }
 
@@ -55,9 +51,7 @@ impl LibraryScanner {
 
     fn extract_metadata(&self, path: &Path) -> Result<LocalTrack> {
         let tagged_file = Probe::open(path)?.read()?;
-        let tag = tagged_file
-            .primary_tag()
-            .or_else(|| tagged_file.first_tag());
+        let tag = tagged_file.primary_tag().or_else(|| tagged_file.first_tag());
 
         let title = tag
             .and_then(|t| t.title())
@@ -79,10 +73,7 @@ impl LibraryScanner {
             .map(|s| s.to_string())
             .unwrap_or_else(|| "Unknown Album".to_string());
 
-        let duration_ms = tagged_file
-            .properties()
-            .duration()
-            .as_millis() as u64;
+        let duration_ms = tagged_file.properties().duration().as_millis() as u64;
 
         Ok(LocalTrack::new(
             Uuid::new_v4().to_string(),
@@ -99,4 +90,3 @@ impl LibraryScanner {
         local.to_track()
     }
 }
-```

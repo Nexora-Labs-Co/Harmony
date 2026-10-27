@@ -10,4 +10,3 @@ name = "rust_lib_nexora_app"
 [dependencies]
 nexora_core = { path = "../rust/crates/nexora_core" }
 flutter_rust_bridge = { workspace = true }
-```

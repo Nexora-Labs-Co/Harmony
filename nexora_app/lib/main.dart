@@ -29,4 +29,3 @@ class NexoraApp extends StatelessWidget {
     );
   }
 }
-```

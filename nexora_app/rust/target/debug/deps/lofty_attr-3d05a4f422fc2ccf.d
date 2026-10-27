@@ -1,0 +1,10 @@
+/home/saaarmyx/Desktop/Nexora-Labs-Co/Harmony/rust/target/debug/deps/lofty_attr-3d05a4f422fc2ccf.d: /home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/lib.rs /home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/attribute.rs /home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/internal.rs /home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/lofty_file.rs /home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/lofty_tag.rs /home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/util.rs
+
+/home/saaarmyx/Desktop/Nexora-Labs-Co/Harmony/rust/target/debug/deps/liblofty_attr-3d05a4f422fc2ccf.so: /home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/lib.rs /home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/attribute.rs /home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/internal.rs /home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/lofty_file.rs /home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/lofty_tag.rs /home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/util.rs
+
+/home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/lib.rs:
+/home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/attribute.rs:
+/home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/internal.rs:
+/home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/lofty_file.rs:
+/home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/lofty_tag.rs:
+/home/saaarmyx/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/lofty_attr-0.11.1/src/util.rs:

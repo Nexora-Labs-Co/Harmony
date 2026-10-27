@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import '../bridge_generated.dart';
+import '../bridge/bridge_generated.dart';
 
 class AudioService extends ChangeNotifier {
   bool _initialized = false;
@@ -122,4 +122,3 @@ class AudioService extends ChangeNotifier {
     }
   }
 }
-```

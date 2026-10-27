@@ -1,9 +1,8 @@
 use crate::audio::player::AudioPlayer;
 use crate::models::Track;
 use anyhow::Result;
-use parking_lot::Mutex;
 use std::path::PathBuf;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 #[derive(Clone)]
 pub struct AudioEngine {
@@ -23,66 +22,56 @@ impl AudioEngine {
     }
 
     pub fn init(&self) -> bool {
-        *self.initialized.lock() = true;
-        tracing::info!("[NexoraAudioEngine] Inicializado (cpal + rodio + symphonia)");
+        *self.initialized.lock().unwrap() = true;
+        tracing::info!("[NexoraAudioEngine] Initialized");
         true
     }
 
     pub fn teardown(&self) {
         self.player.stop();
-        *self.initialized.lock() = false;
-        *self.current_uri.lock() = None;
-        tracing::info!("[NexoraAudioEngine] Teardown completado");
+        *self.initialized.lock().unwrap() = false;
+        *self.current_uri.lock().unwrap() = None;
     }
 
     pub fn load_track(&self, track: &Track) -> bool {
-        if !*self.initialized.lock() {
+        if !*self.initialized.lock().unwrap() {
             return false;
         }
-
         let uri = track.source_uri.clone();
         if uri.starts_with("file://") {
             let path_str = uri.trim_start_matches("file://").to_string();
             let path = PathBuf::from(path_str);
             match self.player.load_path(&path) {
                 Ok(_) => {
-                    *self.current_uri.lock() = Some(uri.clone());
-                    tracing::info!("[NexoraAudioEngine] Cargado: {}", uri);
+                    *self.current_uri.lock().unwrap() = Some(uri);
                     true
                 }
-                Err(e) => {
-                    tracing::error!("[NexoraAudioEngine] Error al cargar: {}", e);
-                    false
-                }
+                Err(_) => false,
             }
         } else {
-            tracing::warn!("[NexoraAudioEngine] Solo se soportan URIs file:// por ahora");
             false
         }
     }
 
     pub fn play(&self) {
-        if !*self.initialized.lock() {
+        if !*self.initialized.lock().unwrap() {
             return;
         }
         self.player.play();
-        tracing::debug!("[NexoraAudioEngine] Play");
     }
 
     pub fn pause(&self) {
-        if !*self.initialized.lock() {
+        if !*self.initialized.lock().unwrap() {
             return;
         }
         self.player.pause();
-        tracing::debug!("[NexoraAudioEngine] Pause");
     }
 
     pub fn stop(&self) {
-        if !*self.initialized.lock() {
+        if !*self.initialized.lock().unwrap() {
             return;
         }
         self.player.stop();
-        tracing::debug!("[NexoraAudioEngine] Stop");
     }
 
     pub fn is_playing(&self) -> bool {
@@ -90,15 +79,14 @@ impl AudioEngine {
     }
 
     pub fn is_initialized(&self) -> bool {
-        *self.initialized.lock()
+        *self.initialized.lock().unwrap()
     }
 
     pub fn set_volume(&self, volume: f32) {
-        if !*self.initialized.lock() {
+        if !*self.initialized.lock().unwrap() {
             return;
         }
         self.player.set_volume(volume);
-        tracing::debug!("[NexoraAudioEngine] Volumen: {:.2}", volume.clamp(0.0, 1.0));
     }
 
     pub fn get_volume(&self) -> f32 {
@@ -106,7 +94,7 @@ impl AudioEngine {
     }
 
     pub fn get_current_source(&self) -> Option<String> {
-        self.current_uri.lock().clone()
+        self.current_uri.lock().unwrap().clone()
     }
 }
 
@@ -115,4 +103,3 @@ impl Default for AudioEngine {
         Self::new().expect("Failed to create AudioEngine")
     }
 }
-```

@@ -48,4 +48,3 @@ impl Track {
         self.path.as_deref()
     }
 }
-```
