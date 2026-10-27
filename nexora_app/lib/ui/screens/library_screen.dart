@@ -27,7 +27,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
             icon: const Icon(Icons.create_new_folder),
             tooltip: 'Escanear carpeta',
             onPressed: () async {
-              String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+              String? selectedDirectory = await FilePicker.getDirectoryPath();
               if (selectedDirectory != null && context.mounted) {
                 await library.scanLibrary(selectedDirectory);
                 if (context.mounted) {
@@ -86,7 +86,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       const SizedBox(height: 24),
                       FilledButton.icon(
                         onPressed: () async {
-                          String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+                          String? selectedDirectory = await FilePicker.getDirectoryPath();
                           if (selectedDirectory != null && context.mounted) {
                             await library.scanLibrary(selectedDirectory);
                           }

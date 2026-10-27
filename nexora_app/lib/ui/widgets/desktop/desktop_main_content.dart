@@ -102,7 +102,7 @@ class _HomeTab extends StatelessWidget {
                 const SizedBox(width: 8),
                 OutlinedButton.icon(
                   onPressed: () async {
-                    final dir = await FilePicker.platform.getDirectoryPath();
+                    final dir = await FilePicker.getDirectoryPath();
                     if (dir != null && context.mounted) {
                       await libraryProvider.scanLibrary(dir);
                     }
