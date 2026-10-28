@@ -45,13 +45,13 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
           IconButton(
             icon: Icon(
               widget.leftSidebarVisible ? Icons.chevron_left : Icons.chevron_right,
-              color: NexoraColors.mutedStrong,
-              size: 20,
+              color: const Color(0xFFEBF5EE),
+              size: 24,
             ),
             onPressed: widget.onToggleLeft,
           ),
           IconButton(
-            icon: const Icon(Icons.settings_outlined, color: NexoraColors.mutedStrong, size: 20),
+            icon: const Icon(Icons.settings_outlined, color: Color(0xFFEBF5EE), size: 24),
             onPressed: () {},
           ),
         ],
@@ -105,15 +105,15 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: NexoraColors.mutedStrong, size: 20),
+            icon: const Icon(Icons.notifications_outlined, color: Color(0xFFEBF5EE), size: 24),
             tooltip: 'Notificaciones',
             onPressed: () {},
           ),
           IconButton(
             icon: Icon(
               widget.rightPanelVisible ? Icons.chevron_right : Icons.chevron_left,
-              color: NexoraColors.mutedStrong,
-              size: 20,
+              color: const Color(0xFFEBF5EE),
+              size: 24,
             ),
             onPressed: widget.onToggleRight,
           ),
