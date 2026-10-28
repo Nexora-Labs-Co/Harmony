@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1000 1000">
+  <defs>
+    <style>
+      .cls-1{fill:#a50021}
+      .cls-2{fill:#ebf5ee}
+    </style>
+  </defs>
+  <title>Logo-Favoritos</title>
+  <g id="Layer_1" data-name="Layer 1">
+    <path d="M0 0 L1000 0 L1000 1000 L0 1000 Z" class="cls-1"/>
+    <path d="M485 331.1 L500 351.8 L515 331.1 C540 296.5 580.2 276 622.9 276 C696.4 276 756 335.6 756 409.1 L756 411.7 C756 523.9 616.1 654.2 543.1 709.9 C530.7 719.3 515.5 724 500 724 C484.5 724 469.2 719.4 456.9 709.9 C383.9 654.2 244 523.9 244 411.7 L244 409.1 C244 335.6 303.6 276 377.1 276 C419.8 276 460 296.5 485 331.1 Z" class="cls-2"/>
+  </g>
+</svg>

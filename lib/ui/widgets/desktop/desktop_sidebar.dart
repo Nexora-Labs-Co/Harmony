@@ -52,14 +52,14 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
               children: [
                 _gridTile(
                   context,
-                  assetPath: 'assets/icons/home.svg',
+                  assetPath: 'assets/icons/Logo-Inicio.svg',
                   label: 'Inicio',
                   selected: widget.selectedIndex == 0,
                   onTap: () => widget.onItemSelected(0),
                 ),
                 _gridTile(
                   context,
-                  assetPath: 'assets/icons/favorite.svg',
+                  assetPath: 'assets/icons/Logo-Favoritos.svg',
                   label: 'Favoritos',
                   selected: widget.selectedIndex == 1,
                   onTap: () => widget.onItemSelected(1),
