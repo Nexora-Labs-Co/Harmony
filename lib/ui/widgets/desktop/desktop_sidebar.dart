@@ -52,25 +52,25 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
               children: [
                 _gridTile(
                   context,
-                  assetPath: 'assets/icons/Logo-Inicio.svg',
+                  assetPath: 'assets/icons/Logo-Inicio.png',
                   selected: widget.selectedIndex == 0,
                   onTap: () => widget.onItemSelected(0),
                 ),
                 _gridTile(
                   context,
-                  assetPath: 'assets/icons/Logo-Favoritos.svg',
+                  assetPath: 'assets/icons/Logo-Favoritos.png',
                   selected: widget.selectedIndex == 1,
                   onTap: () => widget.onItemSelected(1),
                 ),
                 _gridTile(
                   context,
-                  assetPath: 'assets/icons/Logo-Harmony.svg',
+                  assetPath: 'assets/icons/Logo-Harmony-512.png',
                   selected: widget.selectedIndex == 2,
                   onTap: () => widget.onItemSelected(2),
                 ),
                 _gridTile(
                   context,
-                  assetPath: 'assets/icons/Logo-Harmony.svg',
+                  assetPath: 'assets/icons/Logo-Harmony-512.png',
                   selected: widget.selectedIndex == 3,
                   onTap: () => _handlePinnedAlbum(context, playlistProvider),
                 ),
@@ -168,11 +168,21 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
             ),
           ),
           child: assetPath != null
-              ? SvgPicture.asset(
-                  assetPath,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
+              ? SizedBox.expand(
+                  child: assetPath.toLowerCase().endsWith('.svg')
+                      ? SvgPicture.asset(
+                          assetPath,
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center,
+                        )
+                      : Image.asset(
+                          assetPath,
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center,
+                          errorBuilder: (_, __, ___) => const Center(
+                            child: Icon(Icons.broken_image, color: NexoraColors.muted),
+                          ),
+                        ),
                 )
               : (icon != null
                   ? Icon(icon, size: 32, color: NexoraColors.foreground)
