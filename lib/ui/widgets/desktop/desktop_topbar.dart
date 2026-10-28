@@ -45,32 +45,31 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
           IconButton(
             icon: Icon(
               widget.leftSidebarVisible ? Icons.chevron_left : Icons.chevron_right,
+              color: NexoraColors.mutedStrong,
+              size: 20,
             ),
             onPressed: widget.onToggleLeft,
           ),
           IconButton(
-            icon: const Icon(Icons.settings_outlined),
+            icon: const Icon(Icons.settings_outlined, color: NexoraColors.mutedStrong, size: 20),
             onPressed: () {},
           ),
         ],
       ),
-      center: Container(
+      center: SizedBox(
         height: 40,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(8),
-        ),
         child: TextField(
           controller: _searchController,
+          style: const TextStyle(fontSize: 13, color: NexoraColors.foreground),
           decoration: InputDecoration(
             hintText: 'Buscar canciones, artistas, albumes...',
             prefixIcon: const Padding(
               padding: EdgeInsets.all(10),
-              child: Icon(Icons.search, size: 18),
+              child: Icon(Icons.search, size: 18, color: NexoraColors.muted),
             ),
             suffixIcon: _searchController.text.isNotEmpty
                 ? IconButton(
-                    icon: const Icon(Icons.close, size: 16),
+                    icon: const Icon(Icons.close, size: 16, color: NexoraColors.muted),
                     onPressed: () {
                       _searchController.clear();
                       searchProvider.clear();
@@ -78,8 +77,23 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
                     },
                   )
                 : null,
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(vertical: 10),
+            isDense: true,
+            filled: true,
+            fillColor: NexoraColors.surfaceAlt,
+            hintStyle: const TextStyle(color: NexoraColors.muted, fontSize: 13),
+            contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: NexoraColors.border),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: NexoraColors.border),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: NexoraColors.foreground),
+            ),
           ),
           onChanged: (value) {
             searchProvider.search(value, libraryProvider.allTracks);
@@ -91,13 +105,15 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: const Icon(Icons.notifications_outlined),
+            icon: const Icon(Icons.notifications_outlined, color: NexoraColors.mutedStrong, size: 20),
             tooltip: 'Notificaciones',
             onPressed: () {},
           ),
           IconButton(
             icon: Icon(
               widget.rightPanelVisible ? Icons.chevron_right : Icons.chevron_left,
+              color: NexoraColors.mutedStrong,
+              size: 20,
             ),
             onPressed: widget.onToggleRight,
           ),
