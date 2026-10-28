@@ -25,6 +25,7 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es/1.1.
 ## [Sin publicar]
 
 ### Añadido
+
 - Migración completa de C++/CMake a Flutter + Dart + Rust
 - Motor de audio nativo con `cpal`, `rodio` y `symphonia`
 - Soporte para WASAPI (Windows), PipeWire/PulseAudio/ALSA (Linux)
@@ -37,19 +38,22 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es/1.1.
 - Documentación adaptada al estándar HarmonyTemplate
 
 ### Cambiado
+
 - Reestructuración completa del proyecto
 - README, CONTRIBUTING, CHANGELOG y SECURITY adaptados al formato Harmony
 
 ### Eliminado
+
 - Código C++ completo (`src/`, `CMakeLists.txt`, `cmake/`)
 - Dependencias CMake/CPack
 - `third_party/miniaudio.h`
 
 ---
 
-## [0.1.0] - 2026-10-27
+## [2026.10.27] - 2026-10-27
 
 ### Añadido
+
 - Estructura base del proyecto Harmony
 - Licencia PolyForm Noncommercial License 1.0.0
 - Documentación inicial
