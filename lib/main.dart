@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 import 'services/audio_service.dart';
+import 'services/update_service.dart';
 import 'providers/player_provider.dart';
 import 'providers/library_provider.dart';
 import 'providers/playlist_provider.dart';
@@ -16,6 +17,14 @@ void main() {
   MediaKit.ensureInitialized();
   AudioService.instance.initialize();
   runApp(const NexoraApp());
+  // Comprobacion de actualizaciones en segundo plano
+  UpdateService.instance.setcurrentVersion('26.10.27');
+  Future.delayed(const Duration(seconds: 5), () async {
+    final info = await UpdateService.instance.checkForUpdate();
+    if (info != null) {
+      debugPrint('Update available: ${info['version']}');
+    }
+  });
 }
 
 class NexoraApp extends StatelessWidget {
