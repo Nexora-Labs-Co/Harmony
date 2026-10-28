@@ -24,12 +24,15 @@ build_linux() {
   BUNDLE="$APP_DIR/build/linux/x64/release/bundle"
   DEB_ROOT="/tmp/opencode/${APP_NAME}_${VERSION}_amd64"
   rm -rf "$DEB_ROOT"
-  mkdir -p "$DEB_ROOT/DEBIAN" "$DEB_ROOT/usr/bin" "$DEB_ROOT/usr/share/applications" "$DEB_ROOT/usr/share/icons/hicolor/256x256/apps" "$DEB_ROOT/opt/$APP_NAME"
+  mkdir -p "$DEB_ROOT/DEBIAN" "$DEB_ROOT/usr/bin" "$DEB_ROOT/usr/share/applications" "$DEB_ROOT/usr/share/icons/hicolor/256x256/apps" "$DEB_ROOT/usr/share/icons/hicolor/scalable/apps" "$DEB_ROOT/opt/$APP_NAME"
 
   cp -r "$BUNDLE"/* "$DEB_ROOT/opt/$APP_NAME/"
   ln -sf "/opt/$APP_NAME/$APP_NAME" "$DEB_ROOT/usr/bin/$APP_NAME"
-  # Icono
+  # Icono (PNG + SVG si existe)
   cp "$PROJECT_DIR/linux/packaging/icons/harmony.png" "$DEB_ROOT/usr/share/icons/hicolor/256x256/apps/harmony.png"
+  if [ -f "$PROJECT_DIR/assets/icons/Logo-Harmony.svg" ]; then
+    cp "$PROJECT_DIR/assets/icons/Logo-Harmony.svg" "$DEB_ROOT/usr/share/icons/hicolor/scalable/apps/harmony.svg"
+  fi
 
   cat > "$DEB_ROOT/DEBIAN/control" <<EOF
 Package: $APP_NAME
@@ -50,8 +53,11 @@ EOF
 Name=Harmony
 Exec=/opt/$APP_NAME/$APP_NAME
 Icon=$APP_NAME
+Terminal=false
 Type=Application
 Categories=Audio;Music;Player;
+StartupNotify=true
+StartupWMClass=com.nexoralabs.harmony
 EOF
 
   dpkg-deb --build "$DEB_ROOT" "$PROJECT_DIR/${APP_NAME}_${VERSION}_amd64.deb"
