@@ -79,36 +79,7 @@ class _HomeTab extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           if (libraryProvider.allTracks.isNotEmpty) ...[
-            Row(
-              children: [
-                FilledButton.icon(
-                  onPressed: () => playerProvider.setQueue(libraryProvider.allTracks),
-                  icon: const Icon(Icons.play_arrow, size: 16),
-                  label: const Text('Reproducir todo'),
-                ),
-                const SizedBox(width: 8),
-                OutlinedButton.icon(
-                  onPressed: () {
-                    playerProvider.setQueue(libraryProvider.allTracks);
-                    playerProvider.toggleShuffle();
-                  },
-                  icon: const Icon(Icons.shuffle, size: 16),
-                  label: const Text('Aleatorio'),
-                ),
-                const SizedBox(width: 8),
-                OutlinedButton.icon(
-                  onPressed: () async {
-                    final dir = await FilePicker.getDirectoryPath();
-                    if (dir != null && context.mounted) {
-                      await libraryProvider.scanLibrary(dir);
-                    }
-                  },
-                  icon: const Icon(Icons.folder_open, size: 16),
-                  label: const Text('Escanear'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
           ],
           Expanded(
             child: libraryProvider.allTracks.isEmpty
@@ -135,10 +106,10 @@ class _HomeTab extends StatelessWidget {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4,
-                            mainAxisSpacing: 12,
-                            crossAxisSpacing: 12,
-                            childAspectRatio: 0.75,
+                            crossAxisCount: 6,
+                            mainAxisSpacing: 8,
+                            crossAxisSpacing: 8,
+                            childAspectRatio: 0.8,
                           ),
                           itemCount: libraryProvider.allTracks.length.clamp(0, 8),
                           itemBuilder: (context, index) {
@@ -158,10 +129,10 @@ class _HomeTab extends StatelessWidget {
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 4,
-                              mainAxisSpacing: 12,
-                              crossAxisSpacing: 12,
-                              childAspectRatio: 0.75,
+                              crossAxisCount: 6,
+                              mainAxisSpacing: 8,
+                              crossAxisSpacing: 8,
+                              childAspectRatio: 0.8,
                             ),
                             itemCount: libraryProvider.favorites.length.clamp(0, 8),
                             itemBuilder: (context, index) {

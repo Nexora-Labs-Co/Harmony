@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart' hide Track;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../bridge/bridge_generated.dart';
 import 'rust_ffi.dart';
@@ -37,6 +38,12 @@ class AudioService extends ChangeNotifier {
   void initialize() {
     _ffi.load();
     MediaKit.ensureInitialized();
+    // Restaurar volumen guardado
+    SharedPreferences.getInstance().then((prefs) {
+      final v = prefs.getDouble('volume');
+      if (v != null) _volume = v.clamp(0.0, 1.0);
+      _player.setVolume(_volume * 100);
+    });
     _player.stream.playing.listen((isPlaying) {
       _playing = isPlaying;
       notifyListeners();
@@ -112,6 +119,12 @@ class AudioService extends ChangeNotifier {
       final path = (track.path != null && track.path!.isNotEmpty)
           ? track.path!
           : track.sourceUri.replaceFirst('file://', '');
+      SharedPreferences.getInstance().then((prefs) {
+        prefs.setString('last_track_path', path);
+        prefs.setString('last_track_title', track.title);
+        prefs.setString('last_track_artist', track.artist);
+        prefs.setInt('last_track_duration', track.durationMs);
+      });
       await _player.open(Media(path), play: true);
       _playing = true;
       notifyListeners();
@@ -150,6 +163,7 @@ class AudioService extends ChangeNotifier {
     await _player.setVolume(clamped * 100);
     _volume = clamped;
     notifyListeners();
+    SharedPreferences.getInstance().then((prefs) => prefs.setDouble('volume', clamped));
   }
 
   Future<void> seek(Duration position) async {

@@ -39,21 +39,12 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
         children: [
           Text(
             'Harmony',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            icon: const Icon(Icons.arrow_back),
-            tooltip: 'Atras',
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.arrow_forward),
-            tooltip: 'Adelante',
-            onPressed: () {},
+            style: TextStyle(
+              fontFamily: 'Gliker',
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
           Expanded(
             child: Center(

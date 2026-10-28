@@ -35,6 +35,11 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+  fonts:
+    - family: Gliker
+      fonts:
+        - asset: assets/fonts/Gliker-Bold.ttf
+          weight: 700
 
 flutter_launcher_icons:
   android: true
