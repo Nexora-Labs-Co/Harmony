@@ -5,7 +5,14 @@ set -euo pipefail
 # Usage: ./scripts/package.sh [linux|android|windows|all]
 
 APP_NAME="harmony"
-VERSION="26.10.27"
+BASE_VERSION="26.10.27"
+# Incremento automatico: base + numero de commit git (o timestamp si no hay git)
+if git -C "$(dirname "$0")/.." rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  BUILD_NUM=$(git -C "$(dirname "$0")/.." rev-list --count HEAD)
+else
+  BUILD_NUM=$(date +%Y%m%d%H%M)
+fi
+VERSION="${BASE_VERSION}+${BUILD_NUM}"
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 APP_DIR="$PROJECT_DIR"
 
@@ -31,6 +38,8 @@ Section: sound
 Priority: optional
 Architecture: amd64
 Depends: libgtk-3-0, libgstreamer1.0-0, libmpv2
+Replaces: $APP_NAME
+Breaks: $APP_NAME (<< $VERSION)
 Maintainer: Nexora Labs <dev@nexora.local>
 Description: Harmony Music Player
  Cross-platform music player built with Flutter and Rust.
@@ -80,7 +89,3 @@ case "${1:-all}" in
     exit 1
     ;;
 esac
-```
-
-Also rename the binary? The binary is named `harmony` (from CMake BINARY_NAME). Let me update CMakeLists.txt BINARY_NAME to `harmony` for consistency. Actually the user renamed app to Harmony. Let me update the Linux binary name.<|end|><|start|>start of thinking<|message|>Update CMake binary name to harmony.<|end|><|start|><|start|>assistant to=edit<|channel|>analysis <|constrain|>xml<|message|><rfl:parameter name="path">
-/home/saaarmyx/Desktop/Nexora-Labs-Co/Harmony/harmony/linux/CMakeLists.txt
