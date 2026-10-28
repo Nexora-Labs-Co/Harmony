@@ -23,6 +23,11 @@ class _DesktopShellState extends State<DesktopShell> {
   String? _selectedPlaylistId;
   bool _sidebarVisible = true;
   bool _rightPanelVisible = true;
+  double _leftWidth = 280;
+  double _rightWidth = 320;
+  static const double _minPanelWidth = 120;
+  static const double _maxPanelWidth = 420;
+  static const double _autoHideThreshold = 90;
 
   @override
   Widget build(BuildContext context) {
@@ -44,28 +49,63 @@ class _DesktopShellState extends State<DesktopShell> {
           Expanded(
             child: Row(
               children: [
-                if (_sidebarVisible)
-                  DesktopSidebar(
-                    selectedIndex: _selectedIndex,
-                  onItemSelected: (index) {
-                    setState(() {
-                      _selectedIndex = index;
-                      _selectedPlaylistId = null;
-                    });
-                  },
-                  onPlaylistSelected: (id) {
-                    setState(() {
-                      _selectedPlaylistId = id;
-                    });
-                  },
-                ),
+                if (_sidebarVisible) ...[
+                  SizedBox(
+                    width: _leftWidth,
+                    child: DesktopSidebar(
+                      selectedIndex: _selectedIndex,
+                      onItemSelected: (index) {
+                        setState(() {
+                          _selectedIndex = index;
+                          _selectedPlaylistId = null;
+                        });
+                      },
+                      onPlaylistSelected: (id) {
+                        setState(() {
+                          _selectedPlaylistId = id;
+                        });
+                      },
+                    ),
+                  ),
+                  _PanelResizeHandle(
+                    onDragUpdate: (delta) {
+                      setState(() {
+                        final next = _leftWidth + delta;
+                        if (next < _autoHideThreshold) {
+                          _sidebarVisible = false;
+                          _leftWidth = 280;
+                        } else {
+                          _leftWidth = next.clamp(_minPanelWidth, _maxPanelWidth);
+                        }
+                      });
+                    },
+                  ),
+                ],
                 Expanded(
                   flex: 3,
                   child: _selectedPlaylistId != null
                       ? AlbumDetailContent(playlistId: _selectedPlaylistId!)
                       : DesktopMainContent(selectedIndex: _selectedIndex),
                 ),
-                if (_rightPanelVisible) const DesktopRightPanel(),
+                if (_rightPanelVisible) ...[
+                  _PanelResizeHandle(
+                    onDragUpdate: (delta) {
+                      setState(() {
+                        final next = _rightWidth - delta;
+                        if (next < _autoHideThreshold) {
+                          _rightPanelVisible = false;
+                          _rightWidth = 320;
+                        } else {
+                          _rightWidth = next.clamp(_minPanelWidth, _maxPanelWidth);
+                        }
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    width: _rightWidth,
+                    child: const DesktopRightPanel(),
+                  ),
+                ],
               ],
             ),
           ),
@@ -105,6 +145,34 @@ class _DesktopShellState extends State<DesktopShell> {
         ],
       ),
     )
+    );
+  }
+}
+
+
+class _PanelResizeHandle extends StatelessWidget {
+  const _PanelResizeHandle({required this.onDragUpdate});
+
+  final ValueChanged<double> onDragUpdate;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.resizeColumn,
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onHorizontalDragUpdate: (details) => onDragUpdate(details.delta.dx),
+        child: Container(
+          width: 6,
+          color: Colors.transparent,
+          child: Center(
+            child: Container(
+              width: 2,
+              color: NexoraColors.border,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
