@@ -53,28 +53,24 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                 _gridTile(
                   context,
                   assetPath: 'assets/icons/Logo-Inicio.svg',
-                  label: 'Inicio',
                   selected: widget.selectedIndex == 0,
                   onTap: () => widget.onItemSelected(0),
                 ),
                 _gridTile(
                   context,
                   assetPath: 'assets/icons/Logo-Favoritos.svg',
-                  label: 'Favoritos',
                   selected: widget.selectedIndex == 1,
                   onTap: () => widget.onItemSelected(1),
                 ),
                 _gridTile(
                   context,
-                  icon: Icons.smart_toy_outlined,
-                  label: 'Cari',
+                  assetPath: 'assets/icons/Logo-Harmony.svg',
                   selected: widget.selectedIndex == 2,
                   onTap: () => widget.onItemSelected(2),
                 ),
                 _gridTile(
                   context,
-                  icon: Icons.push_pin_outlined,
-                  label: 'Album fijado',
+                  assetPath: 'assets/icons/Logo-Harmony.svg',
                   selected: widget.selectedIndex == 3,
                   onTap: () => _handlePinnedAlbum(context, playlistProvider),
                 ),
@@ -128,17 +124,19 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                       return InkWell(
                         onTap: () => widget.onPlaylistSelected(playlist.id),
                         borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: NexoraColors.surfaceHover,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: NexoraColors.border),
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.album,
-                              size: 40,
-                              color: NexoraColors.mutedStrong,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: NexoraColors.surfaceHover,
+                              border: Border.all(color: NexoraColors.border),
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.album,
+                                size: 40,
+                                color: NexoraColors.mutedStrong,
+                              ),
                             ),
                           ),
                         ),
@@ -155,39 +153,30 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
     BuildContext context, {
     IconData? icon,
     String? assetPath,
-    required String label,
     required bool selected,
     required VoidCallback onTap,
   }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
-      child: Container(
-        decoration: BoxDecoration(
-          color: selected ? NexoraColors.surfaceHover : NexoraColors.surface,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: selected ? NexoraColors.foreground : NexoraColors.border,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (assetPath != null)
-              SvgPicture.asset(assetPath, width: 22, height: 22)
-            else
-              Icon(icon, size: 22, color: NexoraColors.foreground),
-            const SizedBox(height: 6),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: NexoraColors.foreground,
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-              ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: selected ? NexoraColors.foreground : NexoraColors.border,
             ),
-          ],
+          ),
+          child: assetPath != null
+              ? SvgPicture.asset(
+                  assetPath,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                )
+              : (icon != null
+                  ? Icon(icon, size: 32, color: NexoraColors.foreground)
+                  : const SizedBox.shrink()),
         ),
       ),
     );
