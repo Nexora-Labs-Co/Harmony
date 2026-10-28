@@ -28,7 +28,10 @@ class _DesktopShellState extends State<DesktopShell> {
   Widget build(BuildContext context) {
     final player = context.watch<PlayerProvider>();
     
-    return Scaffold(
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(14),
+      clipBehavior: Clip.antiAlias,
+      child: Scaffold(
       body: Column(
         children: [
           const NexoraWindowHeader(subtitle: 'HARMONY'),
@@ -101,6 +104,7 @@ class _DesktopShellState extends State<DesktopShell> {
           ),
         ],
       ),
+    )
     );
   }
 }

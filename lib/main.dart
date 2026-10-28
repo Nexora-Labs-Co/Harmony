@@ -17,6 +17,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
   await windowManager.setTitleBarStyle(TitleBarStyle.hidden);
+  await windowManager.setBackgroundColor(Colors.transparent);
 
   const windowOptions = WindowOptions(
     size: Size(1280, 800),
