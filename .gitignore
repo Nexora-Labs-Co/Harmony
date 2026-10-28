@@ -1,18 +1,65 @@
+# Flutter / Dart
 build/
-**/target/
-**/.dart_tool/
 **/build/
-*.o
-*.a
+.dart_tool/
+**/.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+pubspec.lock.bak
+
+# Rust / Cargo
+target/
+**/target/
+Cargo.lock.bak
+*.rlib
+*.rmeta
+
+# Native libraries and binaries
 *.so
+*.so.*
+*.dll
+*.dylib
+*.a
+*.lib
+*.o
+*.obj
 *.exe
+*.pdb
+*.exp
+*.node
+
+# Package artifacts
 *.deb
 *.rpm
+*.apk
+*.aab
+*.ipa
 *.tar.gz
+*.tgz
+*.zip
+*.7z
+
+# CMake
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 install_manifest.txt
 Makefile
 compile_commands.json
+*.vcxproj*
+*.sln
+*.slnx
+
+# OS / editor
 .DS_Store
+Thumbs.db
+*.swp
+*.tmp
+*.log
+
+# Harmony packaging output
+harmony_*_windows/
+harmony_*_windows.zip
+harmony_*.deb
+harmony_*.apk

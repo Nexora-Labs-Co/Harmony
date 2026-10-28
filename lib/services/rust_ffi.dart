@@ -67,12 +67,30 @@ class RustFfi {
 
   String? _findLibrary() {
     final exeDir = File(Platform.resolvedExecutable).parent.path;
-    final candidates = <String>[
-      '$exeDir/libnexora_core.so',
-      'libnexora_core.so',
-      '/home/saaarmyx/Desktop/Nexora-Labs-Co/Harmony/rust/target/debug/libnexora_core.so',
-      '${Directory.current.path}/rust/target/debug/libnexora_core.so',
-    ];
+    final candidates = <String>[];
+    if (Platform.isWindows) {
+      candidates.addAll(<String>[
+        '$exeDir/nexora_core.dll',
+        '$exeDir/libnexora_core.dll',
+        'nexora_core.dll',
+        'libnexora_core.dll',
+        '${Directory.current.path}/rust/target/release/nexora_core.dll',
+        '${Directory.current.path}/rust/target/debug/nexora_core.dll',
+      ]);
+    } else if (Platform.isLinux) {
+      candidates.addAll(<String>[
+        '$exeDir/libnexora_core.so',
+        'libnexora_core.so',
+        '${Directory.current.path}/rust/target/release/libnexora_core.so',
+        '${Directory.current.path}/rust/target/debug/libnexora_core.so',
+        '/home/saaarmyx/Desktop/Nexora-Labs-Co/Harmony/rust/target/debug/libnexora_core.so',
+      ]);
+    } else {
+      candidates.addAll(<String>[
+        '$exeDir/libnexora_core.so',
+        'libnexora_core.so',
+      ]);
+    }
     for (final c in candidates) {
       final f = File(c);
       if (f.existsSync()) return f.absolute.path;
@@ -80,8 +98,9 @@ class RustFfi {
     // Search upwards
     try {
       final dir = Directory.current;
+      final suffix = Platform.isWindows ? 'nexora_core.dll' : 'libnexora_core.so';
       for (final entity in dir.listSync(recursive: true)) {
-        if (entity is File && entity.path.endsWith('libnexora_core.so')) {
+        if (entity is File && entity.path.endsWith(suffix)) {
           return entity.absolute.path;
         }
       }

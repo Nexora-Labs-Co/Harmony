@@ -74,11 +74,30 @@ build_android() {
 }
 
 build_windows() {
-  echo "==> Building Windows (.exe)..."
+  echo "==> Building Rust core (release)..."
+  cd "$APP_DIR/rust"
+  cargo build -p nexora_core --release
   cd "$APP_DIR"
+
+  echo "==> Building Windows (.exe)..."
   flutter build windows --release
-  echo "==> Windows build ready in: $APP_DIR/build/windows/x64/runner/Release/"
-  echo "    Zip the Release folder to distribute as .exe package."
+
+  echo "==> Copying native libraries..."
+  cp "$APP_DIR/rust/target/release/nexora_core.dll" \
+     "$APP_DIR/build/windows/x64/runner/Release/nexora_core.dll"
+
+  RELEASE_DIR="$APP_DIR/build/windows/x64/runner/Release"
+  ZIP_PATH="$PROJECT_DIR/${APP_NAME}_${VERSION}_windows.zip"
+  echo "==> Creating Windows package: $ZIP_PATH"
+  if command -v cygpath >/dev/null 2>&1; then
+    WIN_RELEASE_DIR="$(cygpath -w "$RELEASE_DIR")"
+    WIN_ZIP_PATH="$(cygpath -w "$ZIP_PATH")"
+  else
+    WIN_RELEASE_DIR="$RELEASE_DIR"
+    WIN_ZIP_PATH="$ZIP_PATH"
+  fi
+  powershell -NoProfile -Command "Compress-Archive -Path '$WIN_RELEASE_DIR' -DestinationPath '$WIN_ZIP_PATH' -Force"
+  echo "==> Windows package created: $ZIP_PATH"
 }
 
 case "${1:-all}" in
