@@ -38,15 +38,6 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
       ),
       child: Row(
         children: [
-          Text(
-            'HARMONY',
-            style: TextStyle(
-              fontFamily: 'Gliker',
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
           Expanded(
             child: Center(
               child: ConstrainedBox(

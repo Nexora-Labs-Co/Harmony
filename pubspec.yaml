@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  window_manager: ^0.5.2
+  nexora_ui_kit:
+    path: ../NexoraUi-Kit
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
   path_provider: ^2.1.4

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 import 'package:provider/provider.dart';
 import '../../providers/player_provider.dart';
 import '../widgets/desktop/album_detail_content.dart';
@@ -26,6 +27,7 @@ class _DesktopShellState extends State<DesktopShell> {
     return Scaffold(
       body: Column(
         children: [
+          const NexoraWindowHeader(subtitle: 'HARMONY'),
           const DesktopTopBar(),
           Expanded(
             child: Row(
