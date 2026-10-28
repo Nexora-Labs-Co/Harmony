@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import '../../providers/player_provider.dart';
 import '../widgets/desktop/album_detail_content.dart';
@@ -58,6 +60,37 @@ class _DesktopShellState extends State<DesktopShell> {
           ),
           if (player.currentTrack != null)
             const DesktopBottomBar(),
+          NexoraFooterBar(
+            left: const Text(
+              'v26.10.27+1',
+              style: TextStyle(color: NexoraColors.muted, fontSize: 11.5),
+            ),
+            right: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const FaIcon(FontAwesomeIcons.github, size: 16),
+                  color: NexoraColors.mutedStrong,
+                  onPressed: () async {
+                    final uri = Uri.parse('https://github.com/Nexora-Labs-Co');
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    }
+                  },
+                ),
+                IconButton(
+                  icon: const FaIcon(FontAwesomeIcons.xTwitter, size: 16),
+                  color: NexoraColors.mutedStrong,
+                  onPressed: () async {
+                    final uri = Uri.parse('https://x.com');
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
