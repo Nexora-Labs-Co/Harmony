@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../bridge/bridge_generated.dart';
 import '../../../providers/library_provider.dart';
 import '../../../services/youtube_service.dart';
 import '../cached_artwork.dart';
@@ -68,26 +69,20 @@ class _HomeTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Bienvenido a Nexora',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            'Bienvenido a Harmony',
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Text(
-            'Tu reproductor de música',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+            'Tu musica, tu ritmo',
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
           const SizedBox(height: 24),
           if (libraryProvider.allTracks.isNotEmpty) ...[
             Row(
               children: [
                 FilledButton.icon(
-                  onPressed: () {
-                    playerProvider.setQueue(libraryProvider.allTracks);
-                  },
+                  onPressed: () => playerProvider.setQueue(libraryProvider.allTracks),
                   icon: const Icon(Icons.play_arrow, size: 16),
                   label: const Text('Reproducir todo'),
                 ),
@@ -121,241 +116,261 @@ class _HomeTab extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.library_music,
-                          size: 64,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                        Icon(Icons.library_music, size: 64, color: Theme.of(context).colorScheme.primary),
                         const SizedBox(height: 16),
-                        Text(
-                          'Sin canciones',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
+                        Text('Sin canciones', style: Theme.of(context).textTheme.titleLarge),
                         const SizedBox(height: 8),
-                        Text(
-                          'Escanea una carpeta desde la barra lateral',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                        ),
+                        Text('Escanea una carpeta para comenzar',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
                       ],
                     ),
                   )
-                : ListView.builder(
-                    itemCount: libraryProvider.allTracks.length,
-                    itemBuilder: (context, index) {
-                      final track = libraryProvider.allTracks[index];
-                      return ListTile(
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: _artworkFor(context, track.albumArt),
+                : SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Tus canciones', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 12),
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12,
+                            childAspectRatio: 0.75,
+                          ),
+                          itemCount: libraryProvider.allTracks.length.clamp(0, 8),
+                          itemBuilder: (context, index) {
+                            final track = libraryProvider.allTracks[index];
+                            return _TrackCard(track: track, onTap: () {
+                              playerProvider.setQueue(libraryProvider.allTracks, startIndex: index);
+                            });
+                          },
                         ),
-                        title: Text(track.title),
-                        subtitle: Text('${track.artist} • ${track.album}'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              _formatDuration(track.durationMs),
-                              style: Theme.of(context).textTheme.bodySmall,
+                        const SizedBox(height: 24),
+                        Text('Favoritos', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 12),
+                        if (libraryProvider.favorites.isEmpty)
+                          Text('Sin favoritos aun', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant))
+                        else
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 4,
+                              mainAxisSpacing: 12,
+                              crossAxisSpacing: 12,
+                              childAspectRatio: 0.75,
                             ),
-                            const SizedBox(width: 8),
-                            IconButton(
-                              icon: Icon(
-                                libraryProvider.isFavorite(track.id)
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                size: 18,
-                                color: libraryProvider.isFavorite(track.id)
-                                    ? Colors.red
-                                    : null,
-                              ),
-                              onPressed: () {
-                                libraryProvider.toggleFavorite(track.id);
-                              },
-                            ),
-                          ],
-                        ),
-                        onTap: () {
-                          playerProvider.setQueue(libraryProvider.allTracks, startIndex: index);
-                        },
-                      );
-                    },
+                            itemCount: libraryProvider.favorites.length.clamp(0, 8),
+                            itemBuilder: (context, index) {
+                              final track = libraryProvider.favorites[index];
+                              return _TrackCard(track: track, onTap: () {
+                                playerProvider.setQueue(libraryProvider.favorites, startIndex: index);
+                              });
+                            },
+                          ),
+                      ],
+                    ),
                   ),
           ),
         ],
       ),
     );
-  }
-
-  String _formatDuration(int ms) {
-    final duration = Duration(milliseconds: ms);
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
-    return "$minutes:$seconds";
   }
 }
 
-class _LibraryTab extends StatelessWidget {
-  const _LibraryTab();
+class _TrackCard extends StatelessWidget {
+  final Track track;
+  final VoidCallback onTap;
+  const _TrackCard({required this.track, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    final libraryProvider = context.watch<LibraryProvider>();
-    final playerProvider = context.watch<PlayerProvider>();
-
-    return Container(
-      padding: const EdgeInsets.all(24),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Biblioteca',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: CachedArtwork(
+                albumArt: track.albumArt,
+                width: double.infinity,
+                height: double.infinity,
+                borderRadius: BorderRadius.circular(8),
+                fallback: Container(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  child: const Icon(Icons.music_note, size: 32),
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            '${libraryProvider.allTracks.length} canciones',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 24),
-          Expanded(
-            child: libraryProvider.allTracks.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.library_music,
-                          size: 64,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Sin canciones',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Escanea una carpeta desde la barra lateral',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: libraryProvider.allTracks.length,
-                    itemBuilder: (context, index) {
-                      final track = libraryProvider.allTracks[index];
-                      return ListTile(
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: _artworkFor(context, track.albumArt),
-                        ),
-                        title: Text(track.title),
-                        subtitle: Text('${track.artist} • ${track.album}'),
-                        trailing: Text(_formatDuration(track.durationMs)),
-                        onTap: () {
-                          playerProvider.setQueue(libraryProvider.allTracks, startIndex: index);
-                        },
-                      );
-                    },
-                  ),
-          ),
+          Text(track.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+          Text(track.artist.isEmpty ? 'Artista desconocido' : track.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
         ],
       ),
     );
-  }
-
-  String _formatDuration(int ms) {
-    final duration = Duration(milliseconds: ms);
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
-    return "$minutes:$seconds";
   }
 }
 
 class _FavoritesTab extends StatelessWidget {
   const _FavoritesTab();
 
+  String _formatMs(int ms) {
+    final d = Duration(milliseconds: ms);
+    String two(int n) => n.toString().padLeft(2, '0');
+    return '${two(d.inMinutes.remainder(60))}:${two(d.inSeconds.remainder(60))}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final libraryProvider = context.watch<LibraryProvider>();
     final playerProvider = context.watch<PlayerProvider>();
+
+    final tracks = libraryProvider.favorites;
+    final totalMs = tracks.fold<int>(0, (s, t) => s + t.durationMs);
+    final totalDur = Duration(milliseconds: totalMs);
 
     return Container(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Favoritos',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.favorite, size: 48, color: Colors.red),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('PLAYLIST', style: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: 2)),
+                    const SizedBox(height: 6),
+                    Text('Favoritos', style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 6),
+                    Text('${tracks.length} pistas • ${_formatMs(totalMs)}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              FilledButton.icon(
+                onPressed: () {
+                  if (tracks.isNotEmpty) playerProvider.setQueue(tracks);
+                },
+                icon: const Icon(Icons.play_arrow, size: 18),
+                label: const Text('Reproducir todo'),
+              ),
+              const SizedBox(width: 8),
+              OutlinedButton.icon(
+                onPressed: () {
+                  if (tracks.isNotEmpty) {
+                    playerProvider.setQueue(tracks);
+                    playerProvider.toggleShuffle();
+                  }
+                },
+                icon: const Icon(Icons.shuffle, size: 18),
+                label: const Text('Aleatorio'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Cabecera de tabla
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
+            ),
+            child: Row(
+              children: [
+                SizedBox(width: 32, child: Text('#', style: Theme.of(context).textTheme.labelSmall)),
+                const SizedBox(width: 44),
+                Expanded(flex: 4, child: Text('Titulo', style: Theme.of(context).textTheme.labelSmall)),
+                Expanded(flex: 2, child: Text('Album', style: Theme.of(context).textTheme.labelSmall)),
+                SizedBox(width: 60, child: Text('Duracion', style: Theme.of(context).textTheme.labelSmall, textAlign: TextAlign.right)),
+                const SizedBox(width: 40),
+              ],
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            '${libraryProvider.favorites.length} canciones',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 24),
           Expanded(
-            child: libraryProvider.favorites.isEmpty
+            child: tracks.isEmpty
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.favorite_border,
-                          size: 64,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                        Icon(Icons.favorite_border, size: 64, color: Theme.of(context).colorScheme.primary),
                         const SizedBox(height: 16),
-                        Text(
-                          'Sin favoritos',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
+                        Text('Sin favoritos', style: Theme.of(context).textTheme.titleLarge),
                         const SizedBox(height: 8),
-                        Text(
-                          'Marca canciones como favoritas',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                        ),
+                        Text('Marca canciones como favoritas',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
                       ],
                     ),
                   )
                 : ListView.builder(
-                    itemCount: libraryProvider.favorites.length,
+                    itemCount: tracks.length,
                     itemBuilder: (context, index) {
-                      final track = libraryProvider.favorites[index];
-                      return ListTile(
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: _artworkFor(context, track.albumArt),
+                      final track = tracks[index];
+                      final isFav = libraryProvider.isFavorite(track.id);
+                      return InkWell(
+                        onTap: () => playerProvider.setQueue(tracks, startIndex: index),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                          decoration: BoxDecoration(
+                            border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.4))),
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(width: 32, child: Text('${index + 1}', style: Theme.of(context).textTheme.bodySmall)),
+                              const SizedBox(width: 8),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(4),
+                                child: _artworkFor(context, track.albumArt),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                flex: 4,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(track.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+                                    Text(track.artist.isEmpty ? 'Artista desconocido' : track.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Text(track.album, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                              ),
+                              SizedBox(width: 60, child: Text(_formatMs(track.durationMs), textAlign: TextAlign.right, style: Theme.of(context).textTheme.bodySmall)),
+                              SizedBox(
+                                width: 40,
+                                child: IconButton(
+                                  icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, size: 16, color: isFav ? Colors.red : null),
+                                  onPressed: () => libraryProvider.toggleFavorite(track.id),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        title: Text(track.title),
-                        subtitle: Text('${track.artist} • ${track.album}'),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.favorite, color: Colors.red),
-                          onPressed: () {
-                            libraryProvider.toggleFavorite(track.id);
-                          },
-                        ),
-                        onTap: () {
-                          playerProvider.setQueue(libraryProvider.favorites, startIndex: index);
-                        },
                       );
                     },
                   ),

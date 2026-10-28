@@ -53,13 +53,15 @@ Agradecemos tu interés en colaborar con **Harmony**. Todas las contribuciones o
 ## Entorno de desarrollo
 
 ### Flutter + Dart
+
 ```bash
-cd nexora_app
+cd harmony
 flutter pub get
 flutter run -d linux  # o windows
 ```
 
 ### Rust
+
 ```bash
 cd rust
 cargo build
@@ -69,14 +71,16 @@ cargo fmt
 ```
 
 ### Generar bindings
+
 ```bash
-cd nexora_app
+cd harmony
 flutter_rust_bridge_codegen generate
 ```
 
 ## Estándares de código
 
 ### Dart/Flutter
+
 - Seguir las reglas de [Effective Dart](https://dart.dev/guides/language/effective-dart)
 - Usar `flutter_lints` configurado en el proyecto
 - Mantener widgets pequeños y reutilizables
@@ -84,6 +88,7 @@ flutter_rust_bridge_codegen generate
 - Nombrado en `snake_case` para archivos, `PascalCase` para clases
 
 ### Rust
+
 - Formatear con `cargo fmt`
 - Verificar con `cargo clippy` sin warnings
 - Seguir [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/)
@@ -92,6 +97,7 @@ flutter_rust_bridge_codegen generate
 - Mantener separación entre módulos (`audio`, `library`, `models`, `api`)
 
 ### General
+
 - Mensajes de commit en inglés siguiendo Conventional Commits
 - Código autoexplicativo, comentar solo lógica compleja
 - Mantener arquitectura modular (UI desacoplada del core Rust)

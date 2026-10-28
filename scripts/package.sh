@@ -80,5 +80,5 @@ case "${1:-all}" in
 esac
 ```
 
-Also rename the binary? The binary is named `nexora_app` (from CMake BINARY_NAME). Let me update CMakeLists.txt BINARY_NAME to `harmony` for consistency. Actually the user renamed app to Harmony. Let me update the Linux binary name.<|end|><|start|>start of thinking<|message|>Update CMake binary name to harmony.<|end|><|start|><|start|>assistant to=edit<|channel|>analysis <|constrain|>xml<|message|><rfl:parameter name="path">
-/home/saaarmyx/Desktop/Nexora-Labs-Co/Harmony/nexora_app/linux/CMakeLists.txt
+Also rename the binary? The binary is named `harmony` (from CMake BINARY_NAME). Let me update CMakeLists.txt BINARY_NAME to `harmony` for consistency. Actually the user renamed app to Harmony. Let me update the Linux binary name.<|end|><|start|>start of thinking<|message|>Update CMake binary name to harmony.<|end|><|start|><|start|>assistant to=edit<|channel|>analysis <|constrain|>xml<|message|><rfl:parameter name="path">
+/home/saaarmyx/Desktop/Nexora-Labs-Co/Harmony/harmony/linux/CMakeLists.txt

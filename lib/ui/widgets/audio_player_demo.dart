@@ -166,7 +166,7 @@ class AudioPlayerDemo extends StatelessWidget {
 
 ```bash
 flutter build linux --debug   # ✅ compila
-./build/linux/x64/debug/bundle/nexora_app  # ✅ carga .so y reproduce
+./build/linux/x64/debug/bundle/harmony  # ✅ carga .so y reproduce
 ```
 
 El código está listo para integrar directamente en `lib/ui/widgets/`. ¿Quieres que lo conecte a los widgets existentes (`PlayerBar`, `DesktopBottomBar`) o que cree un screen completo de demo?|<|start|>user<|channel|>Para que la app pueda reproducir música de verdad, necesita tener archivos de audio reales en la carpeta ~/Music. Por favor:

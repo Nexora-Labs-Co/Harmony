@@ -1,5 +1,5 @@
 name: rust_builder
-description: Rust builder for nexora_app
+description: Rust builder for harmony
 version: 0.1.0
 publish_to: 'none'
 

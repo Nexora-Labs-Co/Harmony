@@ -5,7 +5,7 @@ edition = "2021"
 
 [lib]
 crate-type = ["staticlib", "cdylib"]
-name = "rust_lib_nexora_app"
+name = "rust_lib_harmony"
 
 [dependencies]
 nexora_core = { path = "../rust/crates/nexora_core" }

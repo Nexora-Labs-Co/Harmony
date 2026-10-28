@@ -6,11 +6,13 @@ import '../../../providers/playlist_provider.dart';
 class DesktopSidebar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onItemSelected;
+  final ValueChanged<String> onPlaylistSelected;
 
   const DesktopSidebar({
     super.key,
     required this.selectedIndex,
     required this.onItemSelected,
+    required this.onPlaylistSelected,
   });
 
   @override
@@ -80,7 +82,7 @@ class DesktopSidebar extends StatelessWidget {
                       final playlist = playlistProvider.playlists[index];
                       return Card(
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () => onPlaylistSelected(playlist.id),
                           borderRadius: BorderRadius.circular(12),
                           child: Padding(
                             padding: const EdgeInsets.all(8),

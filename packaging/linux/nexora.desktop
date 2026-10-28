@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Nexora
 Comment=Reproductor de música multiplataforma - Flutter + Rust
-Exec=nexora_app
+Exec=harmony
 Icon=nexora
 Terminal=false
 Type=Application
