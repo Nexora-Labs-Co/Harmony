@@ -7,7 +7,7 @@ set -euo pipefail
 APP_NAME="harmony"
 # Allow overriding the full version (e.g. VERSION=26.10.27+1 ./scripts/package.sh ...)
 if [ -z "${VERSION:-}" ]; then
-  BASE_VERSION="26.10.27"
+  BASE_VERSION="26.10.28"
   # Incremento automatico: base + numero de commit git (o timestamp si no hay git)
   if git -C "$(dirname "$0")/.." rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     BUILD_NUM=$(git -C "$(dirname "$0")/.." rev-list --count HEAD)
