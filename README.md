@@ -145,6 +145,17 @@ Harmony/
 ./scripts/package.sh all
 ```
 
+### Actualizaciones automáticas
+
+Harmony consulta automáticamente las releases de GitHub (`Nexora-Labs-Co/Harmony`) al iniciar.
+Si hay una versión más nueva, descarga el paquete correspondiente (`.deb`/`.exe`) e
+instala con `sudo apt install` (Linux) o lanza el instalador (Windows).
+
+Para publicar una nueva versión:
+1. Incrementa `version` en `pubspec.yaml` y `rust/crates/nexora_core/Cargo.toml`.
+2. Compila: `./scripts/package.sh linux` (y/o android/windows).
+3. Crea una release en GitHub con tag `vX.Y.Z` y adjunta los artefactos.
+
 ## Hoja de ruta
 
 - [x] Migración a Flutter + Rust

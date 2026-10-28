@@ -27,14 +27,20 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es/1.1.
 ### Añadido
 
 - Migración completa de C++/CMake a Flutter + Dart + Rust
-- Motor de audio nativo con `cpal`, `rodio` y `symphonia`
+- Motor de audio real con `media_kit` (mpv) + backend Rust (rodio/cpal/symphonia)
 - Soporte para WASAPI (Windows), PipeWire/PulseAudio/ALSA (Linux)
-- Escaneo de biblioteca con extracción de metadatos via `lofty`
-- Interfaz Flutter con Material 3, tema claro/oscuro
-- Bindings Rust-Dart mediante `flutter_rust_bridge` v2.4.0
+- Escaneo de biblioteca con extracción de metadatos via `lofty` (duración, artista, álbum, carátula)
+- Interfaz Flutter con Material 3, tema monocromático (claro/oscuro)
+- Layout dual: desktop (sidebar + topbar + contenido + panel derecho + bottombar) y móvil
+- Favoritos con persistencia en SharedPreferences
+- Playlists (álbumes) con vista en grid y detalle con tabla de pistas
+- Búsqueda local + integración YouTube (youtube_explode_dart) con streaming en tiempo real
+- Watcher de sistema de archivos para recarga automática de biblioteca
+- Auto-actualizador usando GitHub Releases (sudo apt install)
+- Bindings Rust-Dart mediante FFI (dart:ffi) + flutter_rust_bridge (stubs)
 - Arquitectura modular: UI desacoplada del core Rust
-- Preparado para empaquetado `.deb` (Linux) y `.exe` (Windows)
-- Soporte para fuentes futuras: WebDAV, Subsonic/Navidrome, Google Drive
+- Empaquetado multiplataforma: `.deb` (Linux), `.apk` (Android), `.exe` (Windows)
+- Icono oficial Harmony para Android, Linux y Windows
 - Documentación adaptada al estándar HarmonyTemplate
 
 ### Cambiado
