@@ -12,6 +12,7 @@ dependencies:
   window_manager: ^0.5.2
   nexora_ui_kit:
     path: ../NexoraUi-Kit
+  flutter_svg: ^2.0.0
   font_awesome_flutter: ^11.0.0
   cupertino_icons: ^1.0.8
   provider: ^6.1.2

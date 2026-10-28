@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 import 'package:provider/provider.dart';
 
@@ -51,14 +52,14 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
               children: [
                 _gridTile(
                   context,
-                  icon: Icons.home,
+                  assetPath: 'assets/icons/home.svg',
                   label: 'Inicio',
                   selected: widget.selectedIndex == 0,
                   onTap: () => widget.onItemSelected(0),
                 ),
                 _gridTile(
                   context,
-                  icon: Icons.favorite_border,
+                  assetPath: 'assets/icons/favorite.svg',
                   label: 'Favoritos',
                   selected: widget.selectedIndex == 1,
                   onTap: () => widget.onItemSelected(1),
@@ -152,7 +153,8 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
 
   Widget _gridTile(
     BuildContext context, {
-    required IconData icon,
+    IconData? icon,
+    String? assetPath,
     required String label,
     required bool selected,
     required VoidCallback onTap,
@@ -171,7 +173,10 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 22, color: NexoraColors.foreground),
+            if (assetPath != null)
+              SvgPicture.asset(assetPath, width: 22, height: 22)
+            else
+              Icon(icon, size: 22, color: NexoraColors.foreground),
             const SizedBox(height: 6),
             Text(
               label,
