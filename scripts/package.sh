@@ -5,14 +5,17 @@ set -euo pipefail
 # Usage: ./scripts/package.sh [linux|android|windows|all]
 
 APP_NAME="harmony"
-BASE_VERSION="26.10.27"
-# Incremento automatico: base + numero de commit git (o timestamp si no hay git)
-if git -C "$(dirname "$0")/.." rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  BUILD_NUM=$(git -C "$(dirname "$0")/.." rev-list --count HEAD)
-else
-  BUILD_NUM=$(date +%Y%m%d%H%M)
+# Allow overriding the full version (e.g. VERSION=26.10.27+1 ./scripts/package.sh ...)
+if [ -z "${VERSION:-}" ]; then
+  BASE_VERSION="26.10.27"
+  # Incremento automatico: base + numero de commit git (o timestamp si no hay git)
+  if git -C "$(dirname "$0")/.." rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    BUILD_NUM=$(git -C "$(dirname "$0")/.." rev-list --count HEAD)
+  else
+    BUILD_NUM=$(date +%Y%m%d%H%M)
+  fi
+  VERSION="${BASE_VERSION}+${BUILD_NUM}"
 fi
-VERSION="${BASE_VERSION}+${BUILD_NUM}"
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 APP_DIR="$PROJECT_DIR"
 
