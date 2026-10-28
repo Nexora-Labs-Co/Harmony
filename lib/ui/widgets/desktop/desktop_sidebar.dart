@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/playlist_provider.dart';
 
-class DesktopSidebar extends StatelessWidget {
+class DesktopSidebar extends StatefulWidget {
   final int selectedIndex;
   final ValueChanged<int> onItemSelected;
   final ValueChanged<String> onPlaylistSelected;
@@ -16,57 +17,100 @@ class DesktopSidebar extends StatelessWidget {
   });
 
   @override
+  State<DesktopSidebar> createState() => _DesktopSidebarState();
+}
+
+class _DesktopSidebarState extends State<DesktopSidebar> {
+  String? _pinnedAlbumId;
+
+  @override
   Widget build(BuildContext context) {
     final playlistProvider = context.watch<PlaylistProvider>();
 
     return Container(
       width: 280,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
+      decoration: const BoxDecoration(
+        color: NexoraColors.surfaceAlt,
         border: Border(
-          right: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
+          right: BorderSide(color: NexoraColors.border),
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
+            child: GridView.count(
+              crossAxisCount: 2,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              childAspectRatio: 1.0,
               children: [
-                _navItem(context, Icons.home, 'Inicio', 0),
-                _navItem(context, Icons.favorite_border, 'Favoritos', 1),
-                _navItem(context, Icons.settings_outlined, 'Configuracion', 2),
+                _gridTile(
+                  context,
+                  icon: Icons.home,
+                  label: 'Inicio',
+                  selected: widget.selectedIndex == 0,
+                  onTap: () => widget.onItemSelected(0),
+                ),
+                _gridTile(
+                  context,
+                  icon: Icons.favorite_border,
+                  label: 'Favoritos',
+                  selected: widget.selectedIndex == 1,
+                  onTap: () => widget.onItemSelected(1),
+                ),
+                _gridTile(
+                  context,
+                  icon: Icons.smart_toy_outlined,
+                  label: 'Cari',
+                  selected: widget.selectedIndex == 2,
+                  onTap: () => widget.onItemSelected(2),
+                ),
+                _gridTile(
+                  context,
+                  icon: Icons.push_pin_outlined,
+                  label: 'Album fijado',
+                  selected: widget.selectedIndex == 3,
+                  onTap: () => _handlePinnedAlbum(context, playlistProvider),
+                ),
               ],
             ),
           ),
-          const Divider(height: 32),
+          const SizedBox(height: 16),
+          const Divider(height: 1, color: NexoraColors.border),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               children: [
-                Text(
-                  'Playlists',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                const Text(
+                  'Albumes',
+                  style: TextStyle(
+                    color: NexoraColors.foreground,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.add, size: 16),
-                  tooltip: 'Crear playlist',
-                  onPressed: () => _showCreatePlaylistDialog(context, playlistProvider),
+                  icon: const Icon(Icons.add, size: 16, color: NexoraColors.foreground),
+                  tooltip: 'Crear album',
+                  onPressed: playlistProvider.playlists.length >= 500
+                      ? null
+                      : () => _showCreatePlaylistDialog(context, playlistProvider),
                 ),
               ],
             ),
           ),
           Expanded(
             child: playlistProvider.playlists.isEmpty
-                ? Center(
+                ? const Center(
                     child: Text(
-                      'Sin playlists',
-                      style: Theme.of(context).textTheme.bodySmall,
+                      'Sin albumes',
+                      style: TextStyle(color: NexoraColors.muted, fontSize: 12),
                     ),
                   )
                 : GridView.builder(
@@ -75,35 +119,25 @@ class DesktopSidebar extends StatelessWidget {
                       crossAxisCount: 2,
                       mainAxisSpacing: 8,
                       crossAxisSpacing: 8,
-                      childAspectRatio: 1.1,
+                      childAspectRatio: 1.0,
                     ),
-                    itemCount: playlistProvider.playlists.length,
+                    itemCount: playlistProvider.playlists.length.clamp(0, 500),
                     itemBuilder: (context, index) {
                       final playlist = playlistProvider.playlists[index];
-                      return Card(
-                        child: InkWell(
-                          onTap: () => onPlaylistSelected(playlist.id),
-                          borderRadius: BorderRadius.circular(12),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.queue_music, size: 28),
-                                const SizedBox(height: 6),
-                                Text(
-                                  playlist.name,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  '${playlist.trackIds.length} pistas',
-                                  style: Theme.of(context).textTheme.labelSmall,
-                                ),
-                              ],
+                      return InkWell(
+                        onTap: () => widget.onPlaylistSelected(playlist.id),
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: NexoraColors.surfaceHover,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: NexoraColors.border),
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.album,
+                              size: 40,
+                              color: NexoraColors.mutedStrong,
                             ),
                           ),
                         ),
@@ -116,16 +150,62 @@ class DesktopSidebar extends StatelessWidget {
     );
   }
 
-  Widget _navItem(BuildContext context, IconData icon, String label, int index) {
-    final isSelected = selectedIndex == index;
-    return ListTile(
-      selected: isSelected,
-      selectedTileColor: Theme.of(context).colorScheme.primaryContainer,
-      leading: Icon(icon, size: 20),
-      title: Text(label),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      onTap: () => onItemSelected(index),
+  Widget _gridTile(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: selected ? NexoraColors.surfaceHover : NexoraColors.surface,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: selected ? NexoraColors.foreground : NexoraColors.border,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 22, color: NexoraColors.foreground),
+            const SizedBox(height: 6),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: NexoraColors.foreground,
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
+  }
+
+  void _handlePinnedAlbum(BuildContext context, PlaylistProvider provider) {
+    if (provider.playlists.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No hay albumes para fijar.')),
+      );
+      return;
+    }
+    if (_pinnedAlbumId != null) {
+      final pinned = provider.playlists.firstWhere(
+        (p) => p.id == _pinnedAlbumId,
+        orElse: () => provider.playlists.first,
+      );
+      widget.onPlaylistSelected(pinned.id);
+      return;
+    }
+    // Pick first album as pinned by default.
+    setState(() => _pinnedAlbumId = provider.playlists.first.id);
+    widget.onPlaylistSelected(provider.playlists.first.id);
   }
 
   void _showCreatePlaylistDialog(BuildContext context, PlaylistProvider provider) {
@@ -135,13 +215,13 @@ class DesktopSidebar extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Crear playlist'),
+        title: const Text('Crear album'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(labelText: 'Nombre', hintText: 'Mi playlist'),
+              decoration: const InputDecoration(labelText: 'Nombre', hintText: 'Mi album'),
               autofocus: true,
             ),
             const SizedBox(height: 16),
