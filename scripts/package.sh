@@ -21,6 +21,8 @@ build_linux() {
 
   cp -r "$BUNDLE"/* "$DEB_ROOT/opt/$APP_NAME/"
   ln -sf "/opt/$APP_NAME/$APP_NAME" "$DEB_ROOT/usr/bin/$APP_NAME"
+  # Icono
+  cp "$PROJECT_DIR/linux/packaging/icons/harmony.png" "$DEB_ROOT/usr/share/icons/hicolor/256x256/apps/harmony.png"
 
   cat > "$DEB_ROOT/DEBIAN/control" <<EOF
 Package: $APP_NAME

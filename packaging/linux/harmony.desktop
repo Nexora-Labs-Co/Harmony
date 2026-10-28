@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Harmony
+Comment=Reproductor de musica multiplataforma - Flutter + Rust
+Exec=harmony
+Icon=harmony
+Terminal=false
+Type=Application
+Categories=Audio;Music;Player;
+Keywords=music;player;audio;harmony;
+StartupNotify=true
+```
+
+Now update package.sh to use harmony.desktop and copy icon. Let me update.<|end|><|start|>start of thinking<|message|>Update package.sh. Let me edit.<|end|><|start|><|start|>assistant to=edit<|channel|>analysis <|constrain|>xml<|message|><rfl:parameter name="path">
+/home/saaarmyx/Desktop/Nexora-Labs-Co/Harmony/scripts/package.sh
