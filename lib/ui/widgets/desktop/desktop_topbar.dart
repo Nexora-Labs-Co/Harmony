@@ -32,13 +32,14 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         border: Border(
-          bottom: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
+          bottom:
+              BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
         ),
       ),
       child: Row(
         children: [
           Text(
-            'Harmony',
+            'HARMONY',
             style: TextStyle(
               fontFamily: 'Gliker',
               fontSize: 24,
@@ -53,7 +54,8 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    color:
+                        Theme.of(context).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: TextField(
@@ -95,7 +97,8 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
           CircleAvatar(
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Theme.of(context).colorScheme.onPrimary,
-            child: const Text('H', style: TextStyle(fontWeight: FontWeight.bold)),
+            child:
+                const Text('H', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
