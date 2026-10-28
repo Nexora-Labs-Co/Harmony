@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../providers/library_provider.dart';
 import '../../../providers/search_provider.dart';
@@ -9,12 +8,16 @@ import '../../../providers/search_provider.dart';
 class DesktopTopBar extends StatefulWidget {
   const DesktopTopBar({
     super.key,
-    this.sidebarVisible = true,
-    this.onToggleSidebar,
+    this.leftSidebarVisible = true,
+    this.rightPanelVisible = true,
+    this.onToggleLeft,
+    this.onToggleRight,
   });
 
-  final bool sidebarVisible;
-  final VoidCallback? onToggleSidebar;
+  final bool leftSidebarVisible;
+  final bool rightPanelVisible;
+  final VoidCallback? onToggleLeft;
+  final VoidCallback? onToggleRight;
 
   @override
   State<DesktopTopBar> createState() => _DesktopTopBarState();
@@ -35,14 +38,15 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
     final libraryProvider = context.watch<LibraryProvider>();
 
     return NexoraActionBar(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       left: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
             icon: Icon(
-              widget.sidebarVisible ? Icons.chevron_left : Icons.chevron_right,
+              widget.leftSidebarVisible ? Icons.chevron_left : Icons.chevron_right,
             ),
-            onPressed: widget.onToggleSidebar,
+            onPressed: widget.onToggleLeft,
           ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
@@ -54,7 +58,7 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
         height: 40,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: TextField(
           controller: _searchController,
@@ -93,9 +97,9 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
           ),
           IconButton(
             icon: Icon(
-              widget.sidebarVisible ? Icons.chevron_right : Icons.chevron_left,
+              widget.rightPanelVisible ? Icons.chevron_right : Icons.chevron_left,
             ),
-            onPressed: widget.onToggleSidebar,
+            onPressed: widget.onToggleRight,
           ),
           const SizedBox(width: 8),
           const CircleAvatar(

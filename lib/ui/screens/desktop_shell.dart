@@ -22,6 +22,7 @@ class _DesktopShellState extends State<DesktopShell> {
   int _selectedIndex = 0;
   String? _selectedPlaylistId;
   bool _sidebarVisible = true;
+  bool _rightPanelVisible = true;
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +33,10 @@ class _DesktopShellState extends State<DesktopShell> {
         children: [
           const NexoraWindowHeader(subtitle: 'HARMONY'),
           DesktopTopBar(
-            sidebarVisible: _sidebarVisible,
-            onToggleSidebar: () => setState(() => _sidebarVisible = !_sidebarVisible),
+            leftSidebarVisible: _sidebarVisible,
+            rightPanelVisible: _rightPanelVisible,
+            onToggleLeft: () => setState(() => _sidebarVisible = !_sidebarVisible),
+            onToggleRight: () => setState(() => _rightPanelVisible = !_rightPanelVisible),
           ),
           Expanded(
             child: Row(
@@ -59,7 +62,7 @@ class _DesktopShellState extends State<DesktopShell> {
                       ? AlbumDetailContent(playlistId: _selectedPlaylistId!)
                       : DesktopMainContent(selectedIndex: _selectedIndex),
                 ),
-                const DesktopRightPanel(),
+                if (_rightPanelVisible) const DesktopRightPanel(),
               ],
             ),
           ),
