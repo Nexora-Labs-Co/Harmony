@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/player_provider.dart';
@@ -58,9 +59,9 @@ class DesktopBottomBar extends StatelessWidget {
     return Container(
       height: 104,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        border: Border(top: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
+      decoration: const BoxDecoration(
+        color: NexoraColors.surface,
+        border: Border(top: BorderSide(color: NexoraColors.border)),
       ),
       child: Row(
         children: [
