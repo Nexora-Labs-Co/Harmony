@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../providers/player_provider.dart';
 import '../../providers/library_provider.dart';
 import '../widgets/desktop/album_detail_content.dart';
-import '../widgets/desktop/desktop_sidebar.dart';
+import '../widgets/harmony_sidebar.dart';
 import '../widgets/desktop/desktop_topbar.dart';
 import '../screens/notifications_screen.dart';
 import '../screens/favorites_screen.dart';
@@ -61,9 +61,11 @@ class _DesktopShellState extends State<DesktopShell> {
             child: Row(
               children: [
                 if (_sidebarVisible)
-                  SizedBox(
+                  NexoraSidebar(
                     width: 280,
-                    child: DesktopSidebar(
+                    padding: EdgeInsets.zero,
+                    scrollable: false,
+                    child: HarmonySidebar(
                       selectedIndex: _selectedIndex,
                       onItemSelected: (index) {
                         setState(() {

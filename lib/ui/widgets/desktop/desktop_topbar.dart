@@ -44,19 +44,27 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
+            iconSize: 18,
+            padding: const EdgeInsets.all(8),
             icon: FaIcon(
-              widget.leftSidebarVisible ? FontAwesomeIcons.chevronLeft : FontAwesomeIcons.chevronRight,
+              widget.leftSidebarVisible
+                  ? FontAwesomeIcons.chevronLeft
+                  : FontAwesomeIcons.chevronRight,
               color: const Color(0xFFEBF5EE),
-              size: 18,
             ),
             onPressed: widget.onToggleLeft,
           ),
           IconButton(
-            icon: FaIcon(FontAwesomeIcons.gear, color: const Color(0xFFEBF5EE), size: 18),
+            iconSize: 18,
+            padding: const EdgeInsets.all(8),
+            icon: const FaIcon(FontAwesomeIcons.gear, color: Color(0xFFEBF5EE)),
             onPressed: () {},
           ),
           IconButton(
-            icon: FaIcon(FontAwesomeIcons.magnifyingGlass, color: const Color(0xFFEBF5EE), size: 18),
+            iconSize: 18,
+            padding: const EdgeInsets.all(8),
+            icon: const FaIcon(FontAwesomeIcons.magnifyingGlass,
+                color: Color(0xFFEBF5EE)),
             onPressed: widget.onOpenSearch,
           ),
         ],
@@ -67,15 +75,20 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           IconButton(
-            icon: FaIcon(FontAwesomeIcons.bell, color: const Color(0xFFEBF5EE), size: 18),
+            iconSize: 18,
+            padding: const EdgeInsets.all(8),
+            icon: const FaIcon(FontAwesomeIcons.bell, color: Color(0xFFEBF5EE)),
             tooltip: 'Notificaciones',
             onPressed: widget.onToggleNotifications,
           ),
           IconButton(
+            iconSize: 18,
+            padding: const EdgeInsets.all(8),
             icon: FaIcon(
-              widget.rightPanelVisible ? FontAwesomeIcons.chevronRight : FontAwesomeIcons.chevronLeft,
+              widget.rightPanelVisible
+                  ? FontAwesomeIcons.chevronRight
+                  : FontAwesomeIcons.chevronLeft,
               color: const Color(0xFFEBF5EE),
-              size: 18,
             ),
             onPressed: widget.onToggleRight,
           ),
@@ -88,9 +101,18 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
                 return CircleAvatar(
                   radius: 14,
                   backgroundColor: NexoraColors.surfaceHover,
-                  backgroundImage: profile.avatarPath != null ? FileImage(File(profile.avatarPath!)) : null,
+                  backgroundImage: profile.avatarPath != null
+                      ? FileImage(File(profile.avatarPath!))
+                      : null,
                   child: profile.avatarPath == null
-                      ? Text(profile.name.isNotEmpty ? profile.name[0].toUpperCase() : 'H', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: NexoraColors.foreground))
+                      ? Text(
+                          profile.name.isNotEmpty
+                              ? profile.name[0].toUpperCase()
+                              : 'H',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              color: NexoraColors.foreground))
                       : null,
                 );
               },
