@@ -1,6 +1,8 @@
 use crate::models::{LocalTrack, Track};
 use anyhow::Result;
+use base64::Engine as _;
 use lofty::file::{AudioFile, TaggedFileExt};
+use lofty::picture::PictureType;
 use lofty::read_from_path;
 use lofty::tag::Accessor;
 use std::collections::HashMap;
@@ -77,12 +79,31 @@ impl LibraryScanner {
 
         let duration_ms = tagged_file.properties().duration().as_millis() as u64;
 
+        // Extract embedded cover art (base64) if present.
+        let album_art = tag.and_then(|t| {
+            t.pictures().iter().find(|p| p.pic_type() == lofty::picture::PictureType::CoverFront)
+                .or_else(|| t.pictures().first())
+        }).map(|p| base64::engine::general_purpose::STANDARD.encode(p.data()))
+        .or_else(|| {
+            // Fallback to local cover.jpg / folder.jpg in the album directory.
+            let parent = path.parent()?;
+            for name in ["cover.jpg", "folder.jpg", "cover.jpeg", "folder.jpeg", "cover.png", "folder.png"] {
+                let candidate = parent.join(name);
+                if candidate.is_file() {
+                    if let Ok(bytes) = std::fs::read(&candidate) {
+                        return Some(base64::engine::general_purpose::STANDARD.encode(&bytes));
+                    }
+                }
+            }
+            None
+        });
+
         Ok(LocalTrack::new(
             Uuid::new_v4().to_string(),
             title,
             artist,
             album,
-            None,
+            album_art,
             path.to_path_buf(),
             duration_ms,
         ))

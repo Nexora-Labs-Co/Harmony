@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart' hide Track;
@@ -252,9 +253,16 @@ class AudioService extends ChangeNotifier {
         try { artist = _ffi.artist(path); } catch (_) {}
         try { album = _ffi.album(path); } catch (_) {}
         try { title = _ffi.title(path, t.title); } catch (_) {}
-        try { artwork = _ffi.artworkBase64(path); } catch (_) {}
+        try {
+          final a = _ffi.artworkBase64(path);
+          if (a != null && a.isNotEmpty) artwork = a;
+        } catch (_) {}
+        if (artwork == null || artwork.isEmpty) {
+          artwork = _localCoverBase64(path);
+        }
       }
-      if (artist.isEmpty) artist = 'Artista desconocido';
+      if (artist.trim().isEmpty) artist = 'Artista desconocido';
+      if (album.trim().isEmpty) album = 'Álbum desconocido';
       enriched.add(nexoraCreateLocalTrack(
         id: t.id,
         title: title,
@@ -266,5 +274,21 @@ class AudioService extends ChangeNotifier {
       ));
     }
     return enriched;
+  }
+
+  String? _localCoverBase64(String filePath) {
+    try {
+      final file = File(filePath);
+      final dir = file.parent;
+      const candidates = ['cover.jpg', 'folder.jpg', 'cover.jpeg', 'folder.jpeg', 'cover.png', 'folder.png'];
+      for (final name in candidates) {
+        final f = File('${dir.path}/$name');
+        if (f.existsSync()) {
+          final bytes = f.readAsBytesSync();
+          return base64Encode(bytes);
+        }
+      }
+    } catch (_) {}
+    return null;
   }
 }

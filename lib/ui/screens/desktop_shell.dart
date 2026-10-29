@@ -32,6 +32,59 @@ class _DesktopShellState extends State<DesktopShell> {
   bool _showAccount = false;
   bool _showFavorites = false;
 
+  // Simple navigation history for top bar back/forward.
+  final List<int> _navHistory = <int>[0];
+  int _navPos = 0;
+
+  void _pushHistory(int index) {
+    if (_navPos < _navHistory.length - 1) {
+      _navHistory.removeRange(_navPos + 1, _navHistory.length);
+    }
+    if (_navHistory.isEmpty || _navHistory.last != index) {
+      _navHistory.add(index);
+      _navPos = _navHistory.length - 1;
+    }
+  }
+
+  void _navigateToIndex(int index) {
+    setState(() {
+      _selectedIndex = index;
+      _selectedPlaylistId = null;
+      _showAccount = false;
+      _showNotifications = false;
+      _showFavorites = index == 1;
+    });
+    _pushHistory(index);
+  }
+
+  void _goBack() {
+    if (_navPos > 0) {
+      _navPos--;
+      final idx = _navHistory[_navPos];
+      setState(() {
+        _selectedIndex = idx;
+        _selectedPlaylistId = null;
+        _showAccount = false;
+        _showNotifications = false;
+        _showFavorites = idx == 1;
+      });
+    }
+  }
+
+  void _goForward() {
+    if (_navPos < _navHistory.length - 1) {
+      _navPos++;
+      final idx = _navHistory[_navPos];
+      setState(() {
+        _selectedIndex = idx;
+        _selectedPlaylistId = null;
+        _showAccount = false;
+        _showNotifications = false;
+        _showFavorites = idx == 1;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final player = context.watch<PlayerProvider>();
@@ -50,12 +103,10 @@ class _DesktopShellState extends State<DesktopShell> {
             onToggleRight: () => setState(() => _rightPanelVisible = !_rightPanelVisible),
             onToggleNotifications: () => setState(() => _showNotifications = !_showNotifications),
             onToggleAccount: () => setState(() => _showAccount = !_showAccount),
-            onOpenSearch: () => setState(() {
-              _selectedIndex = 1;
-              _selectedPlaylistId = null;
-              _showNotifications = false;
-              _showAccount = false;
-            }),
+            onOpenSearch: () => _navigateToIndex(1),
+            onBack: _goBack,
+            onForward: _goForward,
+            onOpenSettings: () => _navigateToIndex(2),
           ),
           Expanded(
             child: Row(
@@ -68,27 +119,18 @@ class _DesktopShellState extends State<DesktopShell> {
                     child: HarmonySidebar(
                       selectedIndex: _selectedIndex,
                       onItemSelected: (index) {
-                        setState(() {
-                          _selectedIndex = index;
-                          _selectedPlaylistId = null;
-                          _showAccount = false;
-                          _showNotifications = false;
-                          _showFavorites = false;
-                        });
+                        _navigateToIndex(index);
                       },
-                      onFavorites: () => setState(() {
-                        _showFavorites = true;
-                        _selectedPlaylistId = null;
-                        _showAccount = false;
-                        _showNotifications = false;
-                      }),
+                      onFavorites: () => _navigateToIndex(1),
                       onPlaylistSelected: (id) {
                         setState(() {
+                          _selectedIndex = 3;
                           _selectedPlaylistId = id;
                           _showAccount = false;
                           _showNotifications = false;
                           _showFavorites = false;
                         });
+                        _pushHistory(3);
                       },
                     ),
                   ),

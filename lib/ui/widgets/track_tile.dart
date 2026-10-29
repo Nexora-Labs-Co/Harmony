@@ -1,6 +1,4 @@
-import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../bridge/bridge_generated.dart';
@@ -84,7 +82,7 @@ class TrackTile extends StatelessWidget {
             ),
             onPressed: onFavoriteToggle,
           ),
-          FaIcon(FontAwesomeIcons.ellipsisVertical),
+          const FaIcon(FontAwesomeIcons.ellipsisVertical),
         ],
       ),
       onTap: onTap,

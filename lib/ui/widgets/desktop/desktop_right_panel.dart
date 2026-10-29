@@ -8,7 +8,6 @@ import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/player_provider.dart';
-import '../../../services/audio_service.dart';
 import '../cached_artwork.dart';
 
 class DesktopRightPanel extends StatelessWidget {

@@ -159,13 +159,25 @@ pub extern "C" fn nexora_ffi_artwork_base64(path: *const c_char) -> *mut c_char 
         t.pictures().iter().find(|p| p.pic_type() == PictureType::CoverFront)
             .or_else(|| t.pictures().first())
     });
-    match pic {
-        Some(p) => {
-            let b64 = base64::engine::general_purpose::STANDARD.encode(p.data());
-            cstring_from(b64)
-        }
-        None => std::ptr::null_mut(),
+    if let Some(p) = pic {
+        let b64 = base64::engine::general_purpose::STANDARD.encode(p.data());
+        return cstring_from(b64);
     }
+    // Fallback: look for cover.jpg / folder.jpg (and png variants) next to the file.
+    let parent = std::path::Path::new(path_str).parent();
+    let candidates = ["cover.jpg", "folder.jpg", "cover.jpeg", "folder.jpeg", "cover.png", "folder.png"];
+    if let Some(dir) = parent {
+        for name in candidates.iter() {
+            let candidate = dir.join(name);
+            if candidate.is_file() {
+                if let Ok(bytes) = std::fs::read(&candidate) {
+                    let b64 = base64::engine::general_purpose::STANDARD.encode(&bytes);
+                    return cstring_from(b64);
+                }
+            }
+        }
+    }
+    std::ptr::null_mut()
 }
 
 #[no_mangle]

@@ -3,10 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../providers/library_provider.dart';
 import '../../../providers/profile_provider.dart';
 import 'dart:io';
-import '../../../providers/search_provider.dart';
 
 class DesktopTopBar extends StatefulWidget {
   const DesktopTopBar({
@@ -18,6 +16,9 @@ class DesktopTopBar extends StatefulWidget {
     this.onToggleNotifications,
     this.onToggleAccount,
     this.onOpenSearch,
+    this.onBack,
+    this.onForward,
+    this.onOpenSettings,
   });
 
   final bool leftSidebarVisible;
@@ -27,6 +28,9 @@ class DesktopTopBar extends StatefulWidget {
   final VoidCallback? onToggleNotifications;
   final VoidCallback? onToggleAccount;
   final VoidCallback? onOpenSearch;
+  final VoidCallback? onBack;
+  final VoidCallback? onForward;
+  final VoidCallback? onOpenSettings;
 
   @override
   State<DesktopTopBar> createState() => _DesktopTopBarState();
@@ -35,14 +39,31 @@ class DesktopTopBar extends StatefulWidget {
 class _DesktopTopBarState extends State<DesktopTopBar> {
   @override
   Widget build(BuildContext context) {
-    final searchProvider = context.watch<SearchProvider>();
-    final libraryProvider = context.watch<LibraryProvider>();
-
     return NexoraActionBar(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       left: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          IconButton(
+            iconSize: 18,
+            padding: const EdgeInsets.all(8),
+            icon: const FaIcon(FontAwesomeIcons.arrowLeft, color: Color(0xFFEBF5EE)),
+            tooltip: 'Atras',
+            onPressed: () async {
+              final navigator = Navigator.of(context);
+              final didPop = await navigator.maybePop();
+              if (!didPop) {
+                widget.onBack?.call();
+              }
+            },
+          ),
+          IconButton(
+            iconSize: 18,
+            padding: const EdgeInsets.all(8),
+            icon: const FaIcon(FontAwesomeIcons.arrowRight, color: Color(0xFFEBF5EE)),
+            tooltip: 'Adelante',
+            onPressed: widget.onForward,
+          ),
           IconButton(
             iconSize: 18,
             padding: const EdgeInsets.all(8),
@@ -58,13 +79,15 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
             iconSize: 18,
             padding: const EdgeInsets.all(8),
             icon: const FaIcon(FontAwesomeIcons.gear, color: Color(0xFFEBF5EE)),
-            onPressed: () {},
+            tooltip: 'Configuracion',
+            onPressed: widget.onOpenSettings,
           ),
           IconButton(
             iconSize: 18,
             padding: const EdgeInsets.all(8),
             icon: const FaIcon(FontAwesomeIcons.magnifyingGlass,
                 color: Color(0xFFEBF5EE)),
+            tooltip: 'Buscar',
             onPressed: widget.onOpenSearch,
           ),
         ],

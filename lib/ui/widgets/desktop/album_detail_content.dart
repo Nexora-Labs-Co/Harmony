@@ -102,7 +102,7 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
             cover: GestureDetector(
               onTap: () async {
                 final result = await FilePicker.pickFiles(type: FileType.image);
-                if (result != null && result.isNotEmpty && result.single.path != null) {
+                if (result.isNotEmpty && result.single.path != null) {
                   final path = result.single.path!;
                   setState(() => _coverPath = path);
                   context.read<PlaylistProvider>().setCoverImagePath(widget.playlistId, path);

@@ -16,7 +16,7 @@ class AccountScreen extends StatelessWidget {
   Future<void> _pickAvatar(BuildContext context) async {
     final profile = context.read<ProfileProvider>();
     final result = await FilePicker.pickFiles(type: FileType.image);
-    if (result != null && result.isNotEmpty && result.single.path != null) {
+    if (result.isNotEmpty) {
       await profile.setAvatarPath(result.single.path);
     }
   }

@@ -4,9 +4,7 @@ import 'package:provider/provider.dart';
 import '../../providers/player_provider.dart';
 import '../widgets/player_bar.dart';
 import 'library_screen.dart';
-import 'favorites_screen.dart';
 import 'account_screen.dart';
-import 'notifications_screen.dart';
 import 'playlists_screen.dart';
 import 'search_screen.dart';
 

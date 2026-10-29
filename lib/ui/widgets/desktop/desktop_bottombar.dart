@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,28 +23,6 @@ class DesktopBottomBar extends StatelessWidget {
   String _format(Duration d) {
     String two(int n) => n.toString().padLeft(2, '0');
     return '${two(d.inMinutes.remainder(60))}:${two(d.inSeconds.remainder(60))}';
-  }
-
-  Widget _artwork(BuildContext context, String? albumArt) {
-    return CachedArtwork(
-      albumArt: albumArt,
-      width: 56,
-      height: 56,
-      borderRadius: BorderRadius.circular(8),
-      fallback: _genericArt(context),
-    );
-  }
-
-  Widget _genericArt(BuildContext context) {
-    return Container(
-      width: 56,
-      height: 56,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: FaIcon(FontAwesomeIcons.music, size: 22, color: Theme.of(context).colorScheme.onSurfaceVariant),
-    );
   }
 
   String _formatArtists(String raw) {
