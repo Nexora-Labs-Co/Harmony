@@ -48,6 +48,16 @@ class _DesktopShellState extends State<DesktopShell> {
             onToggleRight: () => setState(() => _rightPanelVisible = !_rightPanelVisible),
             onToggleNotifications: () => setState(() => _showNotifications = !_showNotifications),
             onToggleAccount: () => setState(() => _showAccount = !_showAccount),
+            onSearchChanged: (value) {
+              if (value.trim().isNotEmpty) {
+                setState(() {
+                  _selectedIndex = 1;
+                  _selectedPlaylistId = null;
+                  _showNotifications = false;
+                  _showAccount = false;
+                });
+              }
+            },
           ),
           Expanded(
             child: Row(

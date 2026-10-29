@@ -17,6 +17,7 @@ class DesktopTopBar extends StatefulWidget {
     this.onToggleRight,
     this.onToggleNotifications,
     this.onToggleAccount,
+    this.onSearchChanged,
   });
 
   final bool leftSidebarVisible;
@@ -25,6 +26,7 @@ class DesktopTopBar extends StatefulWidget {
   final VoidCallback? onToggleRight;
   final VoidCallback? onToggleNotifications;
   final VoidCallback? onToggleAccount;
+  final ValueChanged<String>? onSearchChanged;
 
   @override
   State<DesktopTopBar> createState() => _DesktopTopBarState();
@@ -104,6 +106,7 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
           ),
           onChanged: (value) {
             searchProvider.search(value, libraryProvider.allTracks);
+            widget.onSearchChanged?.call(value);
             setState(() {});
           },
         ),
