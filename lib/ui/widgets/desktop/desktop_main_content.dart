@@ -14,7 +14,6 @@ import 'album_header_view.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/search_provider.dart';
 
-
 Widget _artworkFor(BuildContext context, String? albumArt) {
   return CachedArtwork(
     albumArt: albumArt,
@@ -33,7 +32,8 @@ Widget _genericArt48(BuildContext context) {
       color: Theme.of(context).colorScheme.surfaceContainerHighest,
       borderRadius: BorderRadius.circular(4),
     ),
-    child: FaIcon(FontAwesomeIcons.music, color: Theme.of(context).colorScheme.onSurfaceVariant),
+    child: FaIcon(FontAwesomeIcons.music,
+        color: Theme.of(context).colorScheme.onSurfaceVariant),
   );
 }
 
@@ -81,9 +81,7 @@ class _HomeTab extends StatelessWidget {
         ? <dynamic>[]
         : List.generate(8, (i) => tracks[i % tracks.length]);
     final albums = playlistProvider.playlists.take(4).toList();
-    final recent = tracks.isEmpty
-        ? <dynamic>[]
-        : tracks.take(8).toList();
+    final recent = tracks.isEmpty ? <dynamic>[] : tracks.take(8).toList();
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -93,12 +91,16 @@ class _HomeTab extends StatelessWidget {
           children: [
             Text(
               '${_greeting()}, Santiago',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
-              'Tu música, tu ritmo',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+              'Harmony. Tu música, tu ritmo',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 24),
             _sectionTitle(context, 'Recomendado por Cari, para ti'),
@@ -135,7 +137,8 @@ class _HomeTab extends StatelessWidget {
         child: Center(
           child: Text(
             'Sin álbumes',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
         ),
       );
@@ -162,7 +165,10 @@ class _HomeTab extends StatelessWidget {
   Widget _sectionTitle(BuildContext context, String title) {
     return Text(
       title,
-      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+      style: Theme.of(context)
+          .textTheme
+          .titleLarge
+          ?.copyWith(fontWeight: FontWeight.bold),
     );
   }
 
@@ -178,7 +184,8 @@ class _HomeTab extends StatelessWidget {
         child: Center(
           child: Text(
             'Sin canciones',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
         ),
       );
@@ -197,7 +204,10 @@ class _HomeTab extends StatelessWidget {
               child: _TrackCard(
                 track: track,
                 onTap: () {
-                  playerProvider.setQueue(libraryProvider.allTracks, startIndex: libraryProvider.allTracks.indexOf(track).clamp(0, libraryProvider.allTracks.length - 1));
+                  playerProvider.setQueue(libraryProvider.allTracks,
+                      startIndex: libraryProvider.allTracks
+                          .indexOf(track)
+                          .clamp(0, libraryProvider.allTracks.length - 1));
                 },
               ),
             ),
@@ -245,12 +255,14 @@ class _FavoritesTab extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Center(
-                child: FaIcon(FontAwesomeIcons.solidHeart, size: 80, color: Colors.white),
+                child: FaIcon(FontAwesomeIcons.solidHeart,
+                    size: 80, color: Colors.white),
               ),
             ),
             label: 'PLAYLIST',
             title: 'Favoritos',
-            subtitle: 'Saaarmyx · ${tracks.length} canciones, ${_formatMs(totalMs)}',
+            subtitle:
+                'Saaarmyx · ${tracks.length} canciones, ${_formatMs(totalMs)}',
           ),
           const SizedBox(height: 20),
           Row(
@@ -280,15 +292,30 @@ class _FavoritesTab extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
+              border: Border(
+                  bottom: BorderSide(
+                      color: Theme.of(context).colorScheme.outlineVariant)),
             ),
             child: Row(
               children: [
-                SizedBox(width: 32, child: Text('#', style: Theme.of(context).textTheme.labelSmall)),
+                SizedBox(
+                    width: 32,
+                    child: Text('#',
+                        style: Theme.of(context).textTheme.labelSmall)),
                 const SizedBox(width: 44),
-                Expanded(flex: 4, child: Text('Titulo', style: Theme.of(context).textTheme.labelSmall)),
-                Expanded(flex: 2, child: Text('Album', style: Theme.of(context).textTheme.labelSmall)),
-                SizedBox(width: 60, child: Text('Duracion', style: Theme.of(context).textTheme.labelSmall, textAlign: TextAlign.right)),
+                Expanded(
+                    flex: 4,
+                    child: Text('Titulo',
+                        style: Theme.of(context).textTheme.labelSmall)),
+                Expanded(
+                    flex: 2,
+                    child: Text('Album',
+                        style: Theme.of(context).textTheme.labelSmall)),
+                SizedBox(
+                    width: 60,
+                    child: Text('Duracion',
+                        style: Theme.of(context).textTheme.labelSmall,
+                        textAlign: TextAlign.right)),
                 const SizedBox(width: 40),
               ],
             ),
@@ -299,12 +326,21 @@ class _FavoritesTab extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        FaIcon(FontAwesomeIcons.heart, size: 64, color: Theme.of(context).colorScheme.primary),
+                        FaIcon(FontAwesomeIcons.heart,
+                            size: 64,
+                            color: Theme.of(context).colorScheme.primary),
                         const SizedBox(height: 16),
-                        Text('Sin favoritos', style: Theme.of(context).textTheme.titleLarge),
+                        Text('Sin favoritos',
+                            style: Theme.of(context).textTheme.titleLarge),
                         const SizedBox(height: 8),
                         Text('Marca canciones como favoritas',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant)),
                       ],
                     ),
                   )
@@ -314,15 +350,27 @@ class _FavoritesTab extends StatelessWidget {
                       final track = tracks[index];
                       final isFav = libraryProvider.isFavorite(track.id);
                       return InkWell(
-                        onTap: () => playerProvider.setQueue(tracks, startIndex: index),
+                        onTap: () =>
+                            playerProvider.setQueue(tracks, startIndex: index),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 6),
                           decoration: BoxDecoration(
-                            border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.4))),
+                            border: Border(
+                                bottom: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .outlineVariant
+                                        .withOpacity(0.4))),
                           ),
                           child: Row(
                             children: [
-                              SizedBox(width: 32, child: Text('${index + 1}', style: Theme.of(context).textTheme.bodySmall)),
+                              SizedBox(
+                                  width: 32,
+                                  child: Text('${index + 1}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall)),
                               const SizedBox(width: 8),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(4),
@@ -334,21 +382,63 @@ class _FavoritesTab extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(track.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
-                                    Text(track.artist.isEmpty ? 'Artista desconocido' : track.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                                    Text(track.title,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.w600)),
+                                    Text(
+                                        track.artist.isEmpty
+                                            ? 'Artista desconocido'
+                                            : track.artist,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurfaceVariant)),
                                   ],
                                 ),
                               ),
                               Expanded(
                                 flex: 2,
-                                child: Text(track.album, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                                child: Text(track.album,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurfaceVariant)),
                               ),
-                              SizedBox(width: 60, child: Text(_formatMs(track.durationMs), textAlign: TextAlign.right, style: Theme.of(context).textTheme.bodySmall)),
+                              SizedBox(
+                                  width: 60,
+                                  child: Text(_formatMs(track.durationMs),
+                                      textAlign: TextAlign.right,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall)),
                               SizedBox(
                                 width: 40,
                                 child: IconButton(
-                                  icon: FaIcon(isFav ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart, size: 22, color: isFav ? const Color(0xFFA50021) : null),
-                                  onPressed: () => libraryProvider.toggleFavorite(track.id),
+                                  icon: FaIcon(
+                                      isFav
+                                          ? FontAwesomeIcons.solidHeart
+                                          : FontAwesomeIcons.heart,
+                                      size: 22,
+                                      color: isFav
+                                          ? const Color(0xFFA50021)
+                                          : null),
+                                  onPressed: () =>
+                                      libraryProvider.toggleFavorite(track.id),
                                 ),
                               ),
                             ],
@@ -378,13 +468,18 @@ class _SearchTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Buscar', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+          Text('Buscar',
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium
+                  ?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
           TextField(
             decoration: InputDecoration(
               hintText: 'Buscar canciones, artistas, albumes o YouTube...',
               prefixIcon: FaIcon(FontAwesomeIcons.magnifyingGlass),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               filled: true,
             ),
             onChanged: (value) {
@@ -398,12 +493,21 @@ class _SearchTab extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        FaIcon(FontAwesomeIcons.magnifyingGlass, size: 64, color: Theme.of(context).colorScheme.primary),
+                        FaIcon(FontAwesomeIcons.magnifyingGlass,
+                            size: 64,
+                            color: Theme.of(context).colorScheme.primary),
                         const SizedBox(height: 16),
-                        Text('Buscar musica', style: Theme.of(context).textTheme.titleLarge),
+                        Text('Buscar musica',
+                            style: Theme.of(context).textTheme.titleLarge),
                         const SizedBox(height: 8),
                         Text('Busca en tu biblioteca o en YouTube',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant)),
                       ],
                     ),
                   )
@@ -412,7 +516,8 @@ class _SearchTab extends StatelessWidget {
                       if (searchProvider.localResults.isNotEmpty) ...[
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 8, 0, 4),
-                          child: Text('Biblioteca local', style: Theme.of(context).textTheme.titleMedium),
+                          child: Text('Biblioteca local',
+                              style: Theme.of(context).textTheme.titleMedium),
                         ),
                         ...searchProvider.localResults.map((track) => ListTile(
                               leading: ClipRRect(
@@ -420,21 +525,31 @@ class _SearchTab extends StatelessWidget {
                                 child: _artworkFor(context, track.albumArt),
                               ),
                               title: Text(track.title),
-                              subtitle: Text('${track.artist} • ${track.album}'),
+                              subtitle:
+                                  Text('${track.artist} • ${track.album}'),
                               trailing: IconButton(
                                 icon: FaIcon(
-                                  libraryProvider.isFavorite(track.id) ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
-                                  color: libraryProvider.isFavorite(track.id) ? const Color(0xFFA50021) : null,
+                                  libraryProvider.isFavorite(track.id)
+                                      ? FontAwesomeIcons.solidHeart
+                                      : FontAwesomeIcons.heart,
+                                  color: libraryProvider.isFavorite(track.id)
+                                      ? const Color(0xFFA50021)
+                                      : null,
                                 ),
-                                onPressed: () => libraryProvider.toggleFavorite(track.id),
+                                onPressed: () =>
+                                    libraryProvider.toggleFavorite(track.id),
                               ),
-                              onTap: () => playerProvider.setQueue(searchProvider.localResults, startIndex: searchProvider.localResults.indexOf(track)),
+                              onTap: () => playerProvider.setQueue(
+                                  searchProvider.localResults,
+                                  startIndex: searchProvider.localResults
+                                      .indexOf(track)),
                             )),
                       ],
                       if (searchProvider.youtubeResults.isNotEmpty) ...[
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 12, 0, 4),
-                          child: Text('YouTube', style: Theme.of(context).textTheme.titleMedium),
+                          child: Text('YouTube',
+                              style: Theme.of(context).textTheme.titleMedium),
                         ),
                         ...searchProvider.youtubeResults.map((yt) => ListTile(
                               leading: ClipRRect(
@@ -447,23 +562,31 @@ class _SearchTab extends StatelessWidget {
                                   fallback: Container(
                                     width: 48,
                                     height: 48,
-                                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                                    child: const FaIcon(FontAwesomeIcons.playCircle),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainerHighest,
+                                    child: const FaIcon(
+                                        FontAwesomeIcons.playCircle),
                                   ),
                                 ),
                               ),
-                              title: Text(yt.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-                              subtitle: Text('${yt.artist} • ${_fmt(yt.duration)}'),
+                              title: Text(yt.title,
+                                  maxLines: 1, overflow: TextOverflow.ellipsis),
+                              subtitle:
+                                  Text('${yt.artist} • ${_fmt(yt.duration)}'),
                               trailing: FaIcon(FontAwesomeIcons.play),
                               onTap: () async {
                                 await YouTubeService.instance.playTrack(yt);
                               },
                             )),
                       ],
-                      if (searchProvider.localResults.isEmpty && searchProvider.youtubeResults.isEmpty)
+                      if (searchProvider.localResults.isEmpty &&
+                          searchProvider.youtubeResults.isEmpty)
                         Padding(
                           padding: const EdgeInsets.all(32),
-                          child: Center(child: Text('Sin resultados para "${searchProvider.query}"')),
+                          child: Center(
+                              child: Text(
+                                  'Sin resultados para "${searchProvider.query}"')),
                         ),
                     ],
                   ),
@@ -490,7 +613,10 @@ class _SettingsTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Configuración',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium
+                  ?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 24),
           ListTile(
             leading: const FaIcon(FontAwesomeIcons.palette),
@@ -553,20 +679,23 @@ class _TrackCard extends StatelessWidget {
             track.title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(fontWeight: FontWeight.w600),
           ),
           Text(
             track.artist,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
         ],
       ),
     );
   }
 }
-
 
 class _AlbumCard extends StatelessWidget {
   final dynamic album;
@@ -575,6 +704,18 @@ class _AlbumCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final library = context.watch<LibraryProvider>();
+    String? art;
+    if (album.coverImagePath != null && (album.coverImagePath as String).isNotEmpty) {
+      // handled below
+    } else if (album.trackIds != null && (album.trackIds as List).isNotEmpty) {
+      for (final t in library.allTracks) {
+        if (t.id == (album.trackIds as List).first) {
+          art = t.albumArt;
+          break;
+        }
+      }
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -594,9 +735,21 @@ class _AlbumCard extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Center(
-                child: FaIcon(FontAwesomeIcons.compactDisc, size: 22, color: NexoraColors.mutedStrong),
-              ),
+              child: (album.coverImagePath != null && (album.coverImagePath as String).isNotEmpty)
+                  ? Image.file(
+                      File(album.coverImagePath as String),
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const Center(child: FaIcon(FontAwesomeIcons.compactDisc, size: 40, color: NexoraColors.mutedStrong)),
+                    )
+                  : (art != null && art.isNotEmpty)
+                      ? CachedArtwork(
+                          albumArt: art,
+                          width: double.infinity,
+                          height: double.infinity,
+                          borderRadius: BorderRadius.circular(8),
+                          fallback: const Center(child: FaIcon(FontAwesomeIcons.compactDisc, size: 40, color: NexoraColors.mutedStrong)),
+                        )
+                      : const Center(child: FaIcon(FontAwesomeIcons.compactDisc, size: 40, color: NexoraColors.mutedStrong)),
             ),
           ),
         ),
@@ -611,3 +764,4 @@ class _AlbumCard extends StatelessWidget {
     );
   }
 }
+

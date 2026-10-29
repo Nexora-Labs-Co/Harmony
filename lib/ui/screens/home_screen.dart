@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 16),
             _section(context, 'Recomendado por Cari, para ti', recommended, player, library),
             const SizedBox(height: 16),
-            _albumSection(context, albums),
+            _albumSection(context, albums, library),
             const SizedBox(height: 16),
             _section(context, 'Recientes', recent, player, library),
             const SizedBox(height: 80),
@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _albumSection(BuildContext context, List albums) {
+  Widget _albumSection(BuildContext context, List albums, LibraryProvider library) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
