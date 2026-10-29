@@ -65,7 +65,7 @@ class AccountScreen extends StatelessWidget {
         actions: [
           if (onClose != null)
             IconButton(
-              icon: FaIcon(FontAwesomeIcons.xmark, size: 22, color: NexoraColors.foreground),
+              icon: FaIcon(FontAwesomeIcons.xmark, size: 16, color: NexoraColors.foreground),
               onPressed: onClose,
             ),
           IconButton(
@@ -83,42 +83,55 @@ class AccountScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                GestureDetector(
-                  onTap: () => _pickAvatar(context),
-                  child: CircleAvatar(
-                    radius: 48,
-                    backgroundColor: NexoraColors.surfaceHover,
-                    backgroundImage: profile.avatarPath != null ? FileImage(File(profile.avatarPath!)) : null,
-                    child: profile.avatarPath == null
-                        ? FaIcon(FontAwesomeIcons.user, size: 22, color: NexoraColors.foreground)
-                        : null,
-                  ),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF1A1A1A), Color(0xFF090C02)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Profile', style: TextStyle(color: NexoraColors.muted, fontSize: 12, letterSpacing: 1.5)),
-                      const SizedBox(height: 4),
-                      GestureDetector(
-                        onTap: () => _editName(context),
-                        child: Text(
-                          profile.name,
-                          style: const TextStyle(color: NexoraColors.foreground, fontSize: 28, fontWeight: FontWeight.bold),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () => _pickAvatar(context),
+                    child: CircleAvatar(
+                      radius: 90,
+                      backgroundColor: NexoraColors.surfaceHover,
+                      backgroundImage: profile.avatarPath != null ? FileImage(File(profile.avatarPath!)) : null,
+                      child: profile.avatarPath == null
+                          ? FaIcon(FontAwesomeIcons.user, size: 48, color: NexoraColors.foreground)
+                          : null,
+                    ),
+                  ),
+                  const SizedBox(width: 24),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Profile', style: TextStyle(color: NexoraColors.muted, fontSize: 12, letterSpacing: 1.5, fontWeight: FontWeight.w600)),
+                        const SizedBox(height: 8),
+                        GestureDetector(
+                          onTap: () => _editName(context),
+                          child: Text(
+                            profile.name,
+                            style: const TextStyle(color: NexoraColors.foreground, fontSize: 64, fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${playlists.length} Public Playlists',
-                        style: const TextStyle(color: NexoraColors.mutedStrong, fontSize: 13),
-                      ),
-                    ],
+                        const SizedBox(height: 8),
+                        Text(
+                          '${playlists.length} Public Playlists',
+                          style: const TextStyle(color: NexoraColors.mutedStrong, fontSize: 14),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(height: 24),
             const Text(
