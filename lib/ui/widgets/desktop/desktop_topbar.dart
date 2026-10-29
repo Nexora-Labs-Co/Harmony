@@ -127,7 +127,7 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
           ),
           const SizedBox(width: 8),
           SizedBox(
-            height: 40,
+            height: 48,
             child: Center(
               child: GestureDetector(
                 onTap: widget.onToggleAccount,
