@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -41,18 +42,36 @@ class _SearchScreenState extends State<SearchScreen> {
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: 'Buscar canciones, artistas, albumes o YouTube...',
-                prefixIcon: FaIcon(FontAwesomeIcons.magnifyingGlass),
+                prefixIcon: const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: FaIcon(FontAwesomeIcons.magnifyingGlass, size: 16, color: NexoraColors.muted),
+                ),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                        icon: const FaIcon(FontAwesomeIcons.xmark),
+                        icon: const FaIcon(FontAwesomeIcons.xmark, size: 16, color: NexoraColors.muted),
                         onPressed: () {
                           _searchController.clear();
                           searchProvider.clear();
                         },
                       )
                     : null,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                isDense: true,
                 filled: true,
+                fillColor: const Color(0xFF181818),
+                hintStyle: const TextStyle(color: NexoraColors.muted, fontSize: 13),
+                contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: NexoraColors.border),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: NexoraColors.border),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: NexoraColors.foreground),
+                ),
               ),
               onChanged: (value) {
                 searchProvider.search(value, libraryProvider.allTracks);

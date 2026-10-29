@@ -571,7 +571,7 @@ class _SearchTab extends StatelessWidget {
                               title: Text(yt.title,
                                   maxLines: 1, overflow: TextOverflow.ellipsis),
                               subtitle:
-                                  Text('${yt.artist} • ${_fmt(yt.duration)}'),
+                                  Text('${yt.artist} · ${_fmt(yt.duration)}'),
                               trailing: FaIcon(FontAwesomeIcons.play),
                               onTap: () async {
                                 await YouTubeService.instance.playTrack(yt);
