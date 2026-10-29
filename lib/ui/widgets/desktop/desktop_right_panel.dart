@@ -248,7 +248,6 @@ class _CariPanelState extends State<_CariPanel> {
   Future<void> _playVoice() async {
     try {
       final manifest = await rootBundle.loadString('AssetManifest.json');
-      // simple parse
       final regex = RegExp(r'"(assets/voz/[^"]+)"');
       final matches = regex.allMatches(manifest).map((m) => m.group(1)!).toList();
       if (matches.isEmpty) {
@@ -279,27 +278,67 @@ class _CariPanelState extends State<_CariPanel> {
       width: 320,
       color: const Color(0xFF800020),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              'assets/icons/Logo-Cari.png',
-              width: 180,
-              height: 180,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => const Icon(Icons.smart_toy, size: 80, color: Colors.white),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'Cari',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                IconButton(
+                  icon: const FaIcon(FontAwesomeIcons.expand, size: 16, color: Colors.white),
+                  onPressed: () {},
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 16),
-          const Text(
-            'Cari',
-            style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 24),
-          IconButton(
-            icon: Icon(_playing ? Icons.pause_circle_filled : Icons.play_circle_filled, size: 48, color: Colors.white),
-            onPressed: _playVoice,
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(
+                      'assets/icons/Logo-Cari.png',
+                      width: double.infinity,
+                      height: 280,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        width: double.infinity,
+                        height: 280,
+                        color: const Color(0xFF600018),
+                        child: const Icon(Icons.smart_toy, size: 80, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Cari',
+                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Tu asistente de IA',
+                    style: TextStyle(color: Colors.white70, fontSize: 13),
+                  ),
+                  const SizedBox(height: 24),
+                  Center(
+                    child: IconButton(
+                      icon: Icon(_playing ? Icons.pause_circle_filled : Icons.play_circle_filled, size: 48, color: Colors.white),
+                      onPressed: _playVoice,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

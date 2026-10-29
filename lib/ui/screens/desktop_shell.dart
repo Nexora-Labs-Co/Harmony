@@ -8,6 +8,7 @@ import '../../providers/player_provider.dart';
 import '../widgets/desktop/album_detail_content.dart';
 import '../widgets/desktop/desktop_sidebar.dart';
 import '../widgets/desktop/desktop_topbar.dart';
+import '../screens/notifications_screen.dart';
 import '../widgets/desktop/desktop_bottombar.dart';
 import '../widgets/desktop/desktop_main_content.dart';
 import '../widgets/desktop/desktop_right_panel.dart';
@@ -24,6 +25,7 @@ class _DesktopShellState extends State<DesktopShell> {
   String? _selectedPlaylistId;
   bool _sidebarVisible = true;
   bool _rightPanelVisible = true;
+  bool _showNotifications = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,7 @@ class _DesktopShellState extends State<DesktopShell> {
             rightPanelVisible: _rightPanelVisible,
             onToggleLeft: () => setState(() => _sidebarVisible = !_sidebarVisible),
             onToggleRight: () => setState(() => _rightPanelVisible = !_rightPanelVisible),
+            onToggleNotifications: () => setState(() => _showNotifications = !_showNotifications),
           ),
           Expanded(
             child: Row(
@@ -65,9 +68,11 @@ class _DesktopShellState extends State<DesktopShell> {
                   ),
                 Expanded(
                   flex: 3,
-                  child: _selectedPlaylistId != null
-                      ? AlbumDetailContent(playlistId: _selectedPlaylistId!)
-                      : DesktopMainContent(selectedIndex: _selectedIndex),
+                  child: _showNotifications
+                      ? NotificationsScreen(onClose: () => setState(() => _showNotifications = false))
+                      : (_selectedPlaylistId != null
+                          ? AlbumDetailContent(playlistId: _selectedPlaylistId!)
+                          : DesktopMainContent(selectedIndex: _selectedIndex)),
                 ),
                 if (_rightPanelVisible)
                   SizedBox(

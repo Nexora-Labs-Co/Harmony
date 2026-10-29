@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 
 import '../../../providers/library_provider.dart';
-import '../../screens/notifications_screen.dart';
+import '../../screens/account_screen.dart';
 import '../../../providers/search_provider.dart';
 
 class DesktopTopBar extends StatefulWidget {
@@ -14,12 +14,14 @@ class DesktopTopBar extends StatefulWidget {
     this.rightPanelVisible = true,
     this.onToggleLeft,
     this.onToggleRight,
+    this.onToggleNotifications,
   });
 
   final bool leftSidebarVisible;
   final bool rightPanelVisible;
   final VoidCallback? onToggleLeft;
   final VoidCallback? onToggleRight;
+  final VoidCallback? onToggleNotifications;
 
   @override
   State<DesktopTopBar> createState() => _DesktopTopBarState();
@@ -109,11 +111,7 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
           IconButton(
             icon: FaIcon(FontAwesomeIcons.bell, color: Color(0xFFEBF5EE), size: 24),
             tooltip: 'Notificaciones',
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const NotificationsScreen()),
-              );
-            },
+            onPressed: widget.onToggleNotifications,
           ),
           IconButton(
             icon: FaIcon(
@@ -124,8 +122,15 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
             onPressed: widget.onToggleRight,
           ),
           const SizedBox(width: 8),
-          const CircleAvatar(
-            child: Text('H', style: TextStyle(fontWeight: FontWeight.bold)),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const AccountScreen()),
+              );
+            },
+            child: const CircleAvatar(
+              child: Text('H', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
           ),
         ],
       ),
