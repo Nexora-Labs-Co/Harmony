@@ -113,18 +113,22 @@ class _HomeScreenState extends State<HomeScreen> {
         if (tracks.isEmpty)
           Text('Sin canciones', style: Theme.of(context).textTheme.bodyMedium)
         else
-          SizedBox(
-            height: 150,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: tracks.length,
-              itemBuilder: (context, index) {
-                final track = tracks[index];
-                return Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: SizedBox(
-                    width: 120,
-                    child: InkWell(
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final perView = constraints.maxWidth > 600 ? 3 : 2;
+              final itemWidth = (constraints.maxWidth - 12.0 * (perView - 1)) / perView;
+              return SizedBox(
+                height: 150,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: tracks.length,
+                  itemBuilder: (context, index) {
+                    final track = tracks[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: SizedBox(
+                        width: itemWidth.clamp(100.0, 200.0),
+                        child: InkWell(
                       onTap: () {
                         final idx = library.allTracks.indexOf(track);
                         player.setQueue(library.allTracks, startIndex: idx < 0 ? 0 : idx);

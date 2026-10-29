@@ -143,22 +143,29 @@ class _HomeTab extends StatelessWidget {
         ),
       );
     }
-    return SizedBox(
-      height: 180,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: albums.length,
-        itemBuilder: (context, index) {
-          final album = albums[index];
-          return Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: SizedBox(
-              width: 140,
-              child: _AlbumCard(album: album),
-            ),
-          );
-        },
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final perView = width > 900 ? 4 : (width > 600 ? 3 : 2);
+        final itemWidth = (width - 12.0 * (perView - 1)) / perView;
+        return SizedBox(
+          height: 180,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: albums.length,
+            itemBuilder: (context, index) {
+              final album = albums[index];
+              return Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: SizedBox(
+                  width: itemWidth.clamp(120.0, 260.0),
+                  child: _AlbumCard(album: album),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
