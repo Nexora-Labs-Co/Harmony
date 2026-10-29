@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'services/audio_service.dart';
 import 'services/update_service.dart';
 import 'providers/player_provider.dart';
+import 'providers/profile_provider.dart';
 import 'providers/library_provider.dart';
 import 'providers/playlist_provider.dart';
 import 'providers/search_provider.dart';
@@ -58,6 +59,7 @@ class NexoraApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LibraryProvider()),
         ChangeNotifierProvider(create: (_) => PlaylistProvider()),
         ChangeNotifierProvider(create: (_) => SearchProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
       ],
       child: MaterialApp(
         title: 'Harmony',

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 
 import '../../../providers/library_provider.dart';
+import '../../screens/notifications_screen.dart';
 import '../../../providers/search_provider.dart';
 
 class DesktopTopBar extends StatefulWidget {
@@ -43,15 +45,15 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: Icon(
-              widget.leftSidebarVisible ? Icons.chevron_left : Icons.chevron_right,
+            icon: FaIcon(
+              widget.leftSidebarVisible ? FontAwesomeIcons.chevronLeft : FontAwesomeIcons.chevronRight,
               color: const Color(0xFFEBF5EE),
               size: 24,
             ),
             onPressed: widget.onToggleLeft,
           ),
           IconButton(
-            icon: const Icon(Icons.settings_outlined, color: Color(0xFFEBF5EE), size: 24),
+            icon: FaIcon(FontAwesomeIcons.gear, color: Color(0xFFEBF5EE), size: 24),
             onPressed: () {},
           ),
         ],
@@ -65,11 +67,11 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
             hintText: 'Buscar canciones, artistas, albumes...',
             prefixIcon: const Padding(
               padding: EdgeInsets.all(10),
-              child: Icon(Icons.search, size: 18, color: NexoraColors.muted),
+              child: FaIcon(FontAwesomeIcons.magnifyingGlass, size: 18, color: NexoraColors.muted),
             ),
             suffixIcon: _searchController.text.isNotEmpty
                 ? IconButton(
-                    icon: const Icon(Icons.close, size: 16, color: NexoraColors.muted),
+                    icon: FaIcon(FontAwesomeIcons.xmark, size: 16, color: NexoraColors.muted),
                     onPressed: () {
                       _searchController.clear();
                       searchProvider.clear();
@@ -105,13 +107,17 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: Color(0xFFEBF5EE), size: 24),
+            icon: FaIcon(FontAwesomeIcons.bell, color: Color(0xFFEBF5EE), size: 24),
             tooltip: 'Notificaciones',
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+              );
+            },
           ),
           IconButton(
-            icon: Icon(
-              widget.rightPanelVisible ? Icons.chevron_right : Icons.chevron_left,
+            icon: FaIcon(
+              widget.rightPanelVisible ? FontAwesomeIcons.chevronRight : FontAwesomeIcons.chevronLeft,
               color: const Color(0xFFEBF5EE),
               size: 24,
             ),

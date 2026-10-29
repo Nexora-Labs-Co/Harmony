@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../providers/player_provider.dart';
 import '../widgets/player_bar.dart';
 import 'library_screen.dart';
 import 'favorites_screen.dart';
+import 'account_screen.dart';
+import 'notifications_screen.dart';
 import 'playlists_screen.dart';
 import 'search_screen.dart';
 
@@ -21,7 +24,7 @@ class _MainShellState extends State<MainShell> {
     LibraryScreen(),
     SearchScreen(),
     PlaylistsScreen(),
-    FavoritesScreen(),
+    AccountScreen(),
   ];
 
   @override
@@ -48,23 +51,23 @@ class _MainShellState extends State<MainShell> {
         },
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
+            icon: FaIcon(FontAwesomeIcons.house),
+            selectedIcon: FaIcon(FontAwesomeIcons.house),
             label: 'Inicio',
           ),
           NavigationDestination(
-            icon: Icon(Icons.search_outlined),
-            selectedIcon: Icon(Icons.search),
+            icon: FaIcon(FontAwesomeIcons.magnifyingGlass),
+            selectedIcon: FaIcon(FontAwesomeIcons.magnifyingGlass),
             label: 'Buscar',
           ),
           NavigationDestination(
-            icon: Icon(Icons.album_outlined),
-            selectedIcon: Icon(Icons.album),
+            icon: FaIcon(FontAwesomeIcons.compactDisc),
+            selectedIcon: FaIcon(FontAwesomeIcons.compactDisc),
             label: 'Albumes',
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
+            icon: FaIcon(FontAwesomeIcons.user),
+            selectedIcon: FaIcon(FontAwesomeIcons.user),
             label: 'Cuenta',
           ),
         ],
