@@ -204,7 +204,7 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                 onPressed: () {
                   if (tracks.isNotEmpty) playerProvider.setQueue(tracks);
                 },
-                icon: FaIcon(FontAwesomeIcons.play, size: 18),
+                icon: FaIcon(FontAwesomeIcons.play, size: 14),
                 label: const Text('Reproducir todo'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: NexoraColors.foreground,
@@ -276,7 +276,7 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                                             width: 36,
                                             height: 36,
                                             color: NexoraColors.surfaceAlt,
-                                            child: FaIcon(FontAwesomeIcons.music, size: 16, color: NexoraColors.muted),
+                                            child: FaIcon(FontAwesomeIcons.music, size: 14, color: NexoraColors.muted),
                                           ),
                                         ),
                                       ),
@@ -323,7 +323,7 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                                   child: IconButton(
                                     icon: FaIcon(
                                       isFav ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
-                                      size: 16,
+                                      size: 14,
                                       color: isFav ? const Color(0xFFA50021) : NexoraColors.muted,
                                     ),
                                     onPressed: () => libraryProvider.toggleFavorite(track.id),
@@ -344,7 +344,7 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
 
   Widget _iconButton(FaIconData icon, VoidCallback onPressed) {
     return IconButton(
-      icon: FaIcon(icon, size: 16, color: NexoraColors.mutedStrong),
+      icon: FaIcon(icon, size: 14, color: NexoraColors.mutedStrong),
       onPressed: onPressed,
     );
   }

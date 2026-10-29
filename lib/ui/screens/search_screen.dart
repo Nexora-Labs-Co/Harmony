@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/library_provider.dart';
@@ -40,10 +41,10 @@ class _SearchScreenState extends State<SearchScreen> {
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: 'Buscar canciones, artistas, albumes o YouTube...',
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: FaIcon(FontAwesomeIcons.magnifyingGlass),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.clear),
+                        icon: const FaIcon(FontAwesomeIcons.xmark),
                         onPressed: () {
                           _searchController.clear();
                           searchProvider.clear();
@@ -64,7 +65,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.search, size: 80, color: Theme.of(context).colorScheme.primary),
+                        FaIcon(FontAwesomeIcons.magnifyingGlass, size: 80, color: Theme.of(context).colorScheme.primary),
                         const SizedBox(height: 16),
                         Text('Buscar musica', style: Theme.of(context).textTheme.headlineSmall),
                         const SizedBox(height: 8),
@@ -104,13 +105,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                     width: 48,
                                     height: 48,
                                     color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                                    child: const Icon(Icons.play_circle),
+                                    child: const FaIcon(FontAwesomeIcons.playCircle),
                                   ),
                                 ),
                               ),
                               title: Text(yt.title, maxLines: 1, overflow: TextOverflow.ellipsis),
                               subtitle: Text('${yt.artist} • ${_fmt(yt.duration)}'),
-                              trailing: const Icon(Icons.play_arrow),
+                              trailing: FaIcon(FontAwesomeIcons.play),
                               onTap: () async {
                                 await YouTubeService.instance.playTrack(yt);
                               },

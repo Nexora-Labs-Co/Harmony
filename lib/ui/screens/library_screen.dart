@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../providers/library_provider.dart';
@@ -24,7 +25,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.create_new_folder),
+            icon: const FaIcon(FontAwesomeIcons.folderOpen),
             tooltip: 'Escanear carpeta',
             onPressed: () async {
               String? selectedDirectory = await FilePicker.getDirectoryPath();
@@ -39,7 +40,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.info_outline),
+            icon: const FaIcon(FontAwesomeIcons.circleInfo),
             tooltip: 'Acerca de',
             onPressed: () {
               showAboutDialog(
@@ -68,8 +69,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.library_music,
+                      FaIcon(
+                        FontAwesomeIcons.music,
                         size: 80,
                         color: Theme.of(context).colorScheme.primary,
                       ),
@@ -91,7 +92,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             await library.scanLibrary(selectedDirectory);
                           }
                         },
-                        icon: const Icon(Icons.folder_open),
+                        icon: FaIcon(FontAwesomeIcons.folderOpen),
                         label: const Text('Seleccionar carpeta'),
                       ),
                     ],
@@ -112,7 +113,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             onPressed: () {
                               player.setQueue(library.allTracks);
                             },
-                            icon: const Icon(Icons.play_arrow),
+                            icon: FaIcon(FontAwesomeIcons.play),
                             label: const Text('Reproducir todo'),
                           ),
                         ],

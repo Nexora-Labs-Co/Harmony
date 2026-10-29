@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../bridge/bridge_generated.dart';
 import 'cached_artwork.dart';
 
@@ -45,8 +46,8 @@ class TrackTile extends StatelessWidget {
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(4),
       ),
-      child: Icon(
-        track.trackType == TrackType.Local ? Icons.music_note : Icons.cloud,
+      child: FaIcon(
+        track.trackType == TrackType.Local ? FontAwesomeIcons.music : FontAwesomeIcons.cloud,
         color: Theme.of(context).colorScheme.onSurfaceVariant,
       ),
     );
@@ -77,13 +78,13 @@ class TrackTile extends StatelessWidget {
             style: Theme.of(context).textTheme.bodySmall,
           ),
           IconButton(
-            icon: Icon(
-              isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: isFavorite ? Colors.red : null,
+            icon: FaIcon(
+              isFavorite ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+              color: isFavorite ? const Color(0xFFA50021) : null,
             ),
             onPressed: onFavoriteToggle,
           ),
-          const Icon(Icons.more_vert),
+          FaIcon(FontAwesomeIcons.ellipsisVertical),
         ],
       ),
       onTap: onTap,

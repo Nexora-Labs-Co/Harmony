@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../providers/player_provider.dart';
 import '../../providers/playlist_provider.dart';
@@ -42,7 +43,7 @@ class PlayerBar extends StatelessWidget {
                     color: Theme.of(context).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Icon(Icons.music_note, size: 24, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  child: FaIcon(FontAwesomeIcons.music, size: 14, color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               ),
               const SizedBox(width: 12),
@@ -58,7 +59,7 @@ class PlayerBar extends StatelessWidget {
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.devices),
+                icon: FaIcon(FontAwesomeIcons.display),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Dispositivos')),
@@ -66,11 +67,11 @@ class PlayerBar extends StatelessWidget {
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.library_add),
+                icon: const FaIcon(FontAwesomeIcons.plus),
                 onPressed: () => _showAddToAlbumMenu(context, track),
               ),
               IconButton(
-                icon: Icon(player.isPlaying ? Icons.pause : Icons.play_arrow),
+                icon: FaIcon(player.isPlaying ? FontAwesomeIcons.pause : FontAwesomeIcons.play),
                 iconSize: 32,
                 onPressed: () => player.togglePlayPause(),
               ),
@@ -127,7 +128,7 @@ void _showAddToAlbumMenu(BuildContext context, dynamic track) {
             child: Text('Anadir a album', style: Theme.of(context).textTheme.titleMedium),
           ),
           ...provider.playlists.map((p) => ListTile(
-                leading: const Icon(Icons.queue_music),
+                leading: FaIcon(FontAwesomeIcons.bars),
                 title: Text(p.name),
                 subtitle: Text('${p.trackIds.length} pistas'),
                 onTap: () {

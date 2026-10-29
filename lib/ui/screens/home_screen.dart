@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/library_provider.dart';
@@ -86,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(color: NexoraColors.border),
                             ),
-                            child: const Center(child: Icon(Icons.album, size: 40, color: NexoraColors.mutedStrong)),
+                            child: const Center(child: FaIcon(FontAwesomeIcons.compactDisc, size: 14, color: NexoraColors.mutedStrong)),
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -133,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
-                              child: CachedArtwork(albumArt: track.albumArt, width: double.infinity, height: double.infinity, borderRadius: BorderRadius.circular(8), fallback: Container(color: Theme.of(context).colorScheme.surfaceContainerHighest, child: const Icon(Icons.music_note))),
+                              child: CachedArtwork(albumArt: track.albumArt, width: double.infinity, height: double.infinity, borderRadius: BorderRadius.circular(8), fallback: Container(color: Theme.of(context).colorScheme.surfaceContainerHighest, child: FaIcon(FontAwesomeIcons.music))),
                             ),
                           ),
                           const SizedBox(height: 4),

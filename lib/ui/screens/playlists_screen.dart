@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../providers/playlist_provider.dart';
 
@@ -15,7 +16,7 @@ class PlaylistsScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: FaIcon(FontAwesomeIcons.plus),
             tooltip: 'Crear playlist',
             onPressed: () {
               _showCreatePlaylistDialog(context, playlistProvider);
@@ -28,8 +29,8 @@ class PlaylistsScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.queue_music,
+                  FaIcon(
+                    FontAwesomeIcons.bars,
                     size: 80,
                     color: Theme.of(context).colorScheme.primary,
                   ),
@@ -48,7 +49,7 @@ class PlaylistsScreen extends StatelessWidget {
                     onPressed: () {
                       _showCreatePlaylistDialog(context, playlistProvider);
                     },
-                    icon: const Icon(Icons.add),
+                    icon: FaIcon(FontAwesomeIcons.plus),
                     label: const Text('Crear playlist'),
                   ),
                 ],
@@ -63,8 +64,8 @@ class PlaylistsScreen extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   child: ListTile(
                     leading: CircleAvatar(
-                      child: Icon(
-                        Icons.queue_music,
+                      child: FaIcon(
+                        FontAwesomeIcons.bars,
                         color: Theme.of(context).colorScheme.onPrimaryContainer,
                       ),
                     ),
@@ -80,7 +81,7 @@ class PlaylistsScreen extends StatelessWidget {
                           value: 'play',
                           child: Row(
                             children: [
-                              Icon(Icons.play_arrow),
+                              FaIcon(FontAwesomeIcons.play),
                               SizedBox(width: 8),
                               Text('Reproducir'),
                             ],
@@ -90,7 +91,7 @@ class PlaylistsScreen extends StatelessWidget {
                           value: 'rename',
                           child: Row(
                             children: [
-                              Icon(Icons.edit),
+                              FaIcon(FontAwesomeIcons.pen),
                               SizedBox(width: 8),
                               Text('Renombrar'),
                             ],
@@ -100,7 +101,7 @@ class PlaylistsScreen extends StatelessWidget {
                           value: 'delete',
                           child: Row(
                             children: [
-                              Icon(Icons.delete),
+                              FaIcon(FontAwesomeIcons.trash),
                               SizedBox(width: 8),
                               Text('Eliminar'),
                             ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 import 'package:provider/provider.dart';
@@ -94,8 +95,8 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.add,
-                      size: 16, color: NexoraColors.foreground),
+                  icon: FaIcon(FontAwesomeIcons.plus,
+                      size: 14, color: NexoraColors.foreground),
                   tooltip: 'Crear album',
                   onPressed: playlistProvider.playlists.length >= 500
                       ? null
@@ -156,9 +157,9 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                                 border: Border.all(color: NexoraColors.border),
                               ),
                               child: const Center(
-                                child: Icon(
-                                  Icons.album,
-                                  size: 40,
+                                child: FaIcon(
+                                  FontAwesomeIcons.compactDisc,
+                                  size: 14,
                                   color: NexoraColors.mutedStrong,
                                 ),
                               ),
@@ -176,7 +177,7 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
 
   Widget _gridTile(
     BuildContext context, {
-    IconData? icon,
+    FaIconData? icon,
     String? assetPath,
     required bool selected,
     required VoidCallback onTap,
@@ -203,7 +204,6 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Container(
-            color: NexoraColors.surface,
             decoration: BoxDecoration(
               color: NexoraColors.surface,
               border: Border.all(color: NexoraColors.border),
@@ -221,13 +221,13 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                             fit: BoxFit.cover,
                             alignment: Alignment.center,
                             errorBuilder: (_, __, ___) => const Center(
-                              child: Icon(Icons.broken_image,
+                              child: FaIcon(FontAwesomeIcons.image,
                                   color: NexoraColors.muted),
                             ),
                           ),
                   )
                 : (icon != null
-                    ? Icon(icon, size: 32, color: NexoraColors.foreground)
+                    ? FaIcon(icon, size: 14, color: NexoraColors.foreground)
                     : const SizedBox.shrink()),
           ),
         ),

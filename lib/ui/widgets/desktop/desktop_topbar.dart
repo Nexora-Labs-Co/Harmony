@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 
 import '../../../providers/library_provider.dart';
-import '../../screens/account_screen.dart';
 import '../../../providers/search_provider.dart';
 
 class DesktopTopBar extends StatefulWidget {
@@ -15,6 +14,7 @@ class DesktopTopBar extends StatefulWidget {
     this.onToggleLeft,
     this.onToggleRight,
     this.onToggleNotifications,
+    this.onToggleAccount,
   });
 
   final bool leftSidebarVisible;
@@ -22,6 +22,7 @@ class DesktopTopBar extends StatefulWidget {
   final VoidCallback? onToggleLeft;
   final VoidCallback? onToggleRight;
   final VoidCallback? onToggleNotifications;
+  final VoidCallback? onToggleAccount;
 
   @override
   State<DesktopTopBar> createState() => _DesktopTopBarState();
@@ -50,12 +51,12 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
             icon: FaIcon(
               widget.leftSidebarVisible ? FontAwesomeIcons.chevronLeft : FontAwesomeIcons.chevronRight,
               color: const Color(0xFFEBF5EE),
-              size: 24,
+              size: 14,
             ),
             onPressed: widget.onToggleLeft,
           ),
           IconButton(
-            icon: FaIcon(FontAwesomeIcons.gear, color: Color(0xFFEBF5EE), size: 24),
+            icon: FaIcon(FontAwesomeIcons.gear, color: Color(0xFFEBF5EE), size: 14),
             onPressed: () {},
           ),
         ],
@@ -69,11 +70,11 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
             hintText: 'Buscar canciones, artistas, albumes...',
             prefixIcon: const Padding(
               padding: EdgeInsets.all(10),
-              child: FaIcon(FontAwesomeIcons.magnifyingGlass, size: 18, color: NexoraColors.muted),
+              child: FaIcon(FontAwesomeIcons.magnifyingGlass, size: 14, color: NexoraColors.muted),
             ),
             suffixIcon: _searchController.text.isNotEmpty
                 ? IconButton(
-                    icon: FaIcon(FontAwesomeIcons.xmark, size: 16, color: NexoraColors.muted),
+                    icon: FaIcon(FontAwesomeIcons.xmark, size: 14, color: NexoraColors.muted),
                     onPressed: () {
                       _searchController.clear();
                       searchProvider.clear();
@@ -109,7 +110,7 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: FaIcon(FontAwesomeIcons.bell, color: Color(0xFFEBF5EE), size: 24),
+            icon: FaIcon(FontAwesomeIcons.bell, color: Color(0xFFEBF5EE), size: 14),
             tooltip: 'Notificaciones',
             onPressed: widget.onToggleNotifications,
           ),
@@ -117,17 +118,13 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
             icon: FaIcon(
               widget.rightPanelVisible ? FontAwesomeIcons.chevronRight : FontAwesomeIcons.chevronLeft,
               color: const Color(0xFFEBF5EE),
-              size: 24,
+              size: 14,
             ),
             onPressed: widget.onToggleRight,
           ),
           const SizedBox(width: 8),
           GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const AccountScreen()),
-              );
-            },
+            onTap: widget.onToggleAccount,
             child: const CircleAvatar(
               child: Text('H', style: TextStyle(fontWeight: FontWeight.bold)),
             ),

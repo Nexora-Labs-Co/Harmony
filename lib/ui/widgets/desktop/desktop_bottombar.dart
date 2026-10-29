@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 import 'package:provider/provider.dart';
 
@@ -43,7 +44,7 @@ class DesktopBottomBar extends StatelessWidget {
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Icon(Icons.music_note, size: 28, color: Theme.of(context).colorScheme.onSurfaceVariant),
+      child: FaIcon(FontAwesomeIcons.music, size: 14, color: Theme.of(context).colorScheme.onSurfaceVariant),
     );
   }
 
@@ -110,15 +111,15 @@ class DesktopBottomBar extends StatelessWidget {
                   builder: (context, lib, _) {
                     final isFav = track.id.isNotEmpty && lib.isFavorite(track.id);
                     return IconButton(
-                      icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, size: 20,
-                          color: isFav ? Colors.red : null),
+                      icon: FaIcon(isFav ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart, size: 14,
+                          color: isFav ? const Color(0xFFA50021) : null),
                       tooltip: 'Favorito',
                       onPressed: () => lib.toggleFavorite(track.id),
                     );
                   },
                 ),
                 IconButton(
-                  icon: const Icon(Icons.library_add, size: 20),
+                  icon: const FaIcon(FontAwesomeIcons.plus, size: 14),
                   tooltip: 'Anadir a album',
                   onPressed: () => _showAddToAlbumMenu(context, track),
                 ),
@@ -135,7 +136,7 @@ class DesktopBottomBar extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.shuffle, size: 22),
+                      icon: FaIcon(FontAwesomeIcons.shuffle, size: 14),
                       color: player.shuffle
                           ? Theme.of(context).colorScheme.primary
                           : Theme.of(context).colorScheme.onSurfaceVariant,
@@ -143,25 +144,25 @@ class DesktopBottomBar extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     IconButton(
-                      icon: const Icon(Icons.skip_previous, size: 28),
+                      icon: FaIcon(FontAwesomeIcons.backwardStep, size: 14),
                       onPressed: () => player.previous(),
                     ),
                     const SizedBox(width: 4),
                     IconButton(
-                      icon: Icon(player.isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled, size: 40),
+                      icon: FaIcon(player.isPlaying ? FontAwesomeIcons.circlePause : FontAwesomeIcons.circlePlay, size: 14),
                       color: Theme.of(context).colorScheme.primary,
                       onPressed: () => player.togglePlayPause(),
                     ),
                     const SizedBox(width: 4),
                     IconButton(
-                      icon: const Icon(Icons.skip_next, size: 28),
+                      icon: FaIcon(FontAwesomeIcons.forwardStep, size: 14),
                       onPressed: () => player.next(),
                     ),
                     const SizedBox(width: 4),
                     IconButton(
-                      icon: Icon(
-                        player.repeatMode == PlayerRepeatMode.one ? Icons.repeat_one : Icons.repeat,
-                        size: 22,
+                      icon: FaIcon(
+                        player.repeatMode == PlayerRepeatMode.one ? FontAwesomeIcons.repeat : FontAwesomeIcons.repeat,
+                        size: 14,
                       ),
                       color: player.repeatMode != PlayerRepeatMode.none
                           ? Theme.of(context).colorScheme.primary
@@ -202,17 +203,17 @@ class DesktopBottomBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.lyrics_outlined, size: 20),
+                  icon: FaIcon(FontAwesomeIcons.microphone, size: 14),
                   tooltip: 'Letra',
                   onPressed: () => _showLyrics(context, track),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.queue_music, size: 20),
+                  icon: FaIcon(FontAwesomeIcons.bars, size: 14),
                   tooltip: 'Lista de reproduccion',
                   onPressed: onToggleRightPanel,
                 ),
                 IconButton(
-                  icon: const Icon(Icons.devices, size: 20),
+                  icon: FaIcon(FontAwesomeIcons.display, size: 14),
                   tooltip: 'Dispositivos',
                   onPressed: null,
                 ),
@@ -233,7 +234,7 @@ class DesktopBottomBar extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.fullscreen, size: 20),
+                  icon: FaIcon(FontAwesomeIcons.expand, size: 14),
                   tooltip: 'Pantalla completa',
                   onPressed: onToggleFullscreen,
                 ),
@@ -278,7 +279,7 @@ void _showAddToAlbumMenu(BuildContext context, dynamic track) {
             child: Text('Anadir a album', style: Theme.of(context).textTheme.titleMedium),
           ),
           ...provider.playlists.map((p) => ListTile(
-                leading: const Icon(Icons.queue_music),
+                leading: FaIcon(FontAwesomeIcons.bars),
                 title: Text(p.name),
                 subtitle: Text('${p.trackIds.length} pistas'),
                 onTap: () {
@@ -313,7 +314,7 @@ class _BottomArtwork extends StatelessWidget {
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Icon(Icons.music_note, size: 28, color: Theme.of(context).colorScheme.onSurfaceVariant),
+        child: FaIcon(FontAwesomeIcons.music, size: 14, color: Theme.of(context).colorScheme.onSurfaceVariant),
       ),
     );
   }
@@ -327,7 +328,7 @@ void _showLyrics(BuildContext context, dynamic track) {
         appBar: AppBar(
           title: Text(track.title ?? 'Letra'),
           leading: IconButton(
-            icon: const Icon(Icons.close),
+            icon: FaIcon(FontAwesomeIcons.xmark),
             onPressed: () => Navigator.pop(ctx),
           ),
         ),

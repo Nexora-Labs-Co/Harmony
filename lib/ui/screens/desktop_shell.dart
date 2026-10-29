@@ -9,6 +9,7 @@ import '../widgets/desktop/album_detail_content.dart';
 import '../widgets/desktop/desktop_sidebar.dart';
 import '../widgets/desktop/desktop_topbar.dart';
 import '../screens/notifications_screen.dart';
+import '../screens/account_screen.dart';
 import '../widgets/desktop/desktop_bottombar.dart';
 import '../widgets/desktop/desktop_main_content.dart';
 import '../widgets/desktop/desktop_right_panel.dart';
@@ -26,6 +27,7 @@ class _DesktopShellState extends State<DesktopShell> {
   bool _sidebarVisible = true;
   bool _rightPanelVisible = true;
   bool _showNotifications = false;
+  bool _showAccount = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +46,7 @@ class _DesktopShellState extends State<DesktopShell> {
             onToggleLeft: () => setState(() => _sidebarVisible = !_sidebarVisible),
             onToggleRight: () => setState(() => _rightPanelVisible = !_rightPanelVisible),
             onToggleNotifications: () => setState(() => _showNotifications = !_showNotifications),
+            onToggleAccount: () => setState(() => _showAccount = !_showAccount),
           ),
           Expanded(
             child: Row(
@@ -102,7 +105,7 @@ class _DesktopShellState extends State<DesktopShell> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.github, size: 16),
+                  icon: const FaIcon(FontAwesomeIcons.github, size: 14),
                   color: NexoraColors.mutedStrong,
                   onPressed: () async {
                     final uri = Uri.parse('https://github.com/Nexora-Labs-Co');
@@ -112,7 +115,7 @@ class _DesktopShellState extends State<DesktopShell> {
                   },
                 ),
                 IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.xTwitter, size: 16),
+                  icon: const FaIcon(FontAwesomeIcons.xTwitter, size: 14),
                   color: NexoraColors.mutedStrong,
                   onPressed: () async {
                     final uri = Uri.parse('https://x.com');

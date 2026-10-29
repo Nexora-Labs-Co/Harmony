@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../../bridge/bridge_generated.dart';
 import '../../../providers/library_provider.dart';
@@ -30,7 +31,7 @@ Widget _genericArt48(BuildContext context) {
       color: Theme.of(context).colorScheme.surfaceContainerHighest,
       borderRadius: BorderRadius.circular(4),
     ),
-    child: Icon(Icons.music_note, color: Theme.of(context).colorScheme.onSurfaceVariant),
+    child: FaIcon(FontAwesomeIcons.music, color: Theme.of(context).colorScheme.onSurfaceVariant),
   );
 }
 
@@ -239,7 +240,7 @@ class _FavoritesTab extends StatelessWidget {
                   color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.favorite, size: 48, color: Colors.red),
+                child: FaIcon(FontAwesomeIcons.solidHeart, size: 14, color: const Color(0xFFA50021)),
               ),
               const SizedBox(width: 20),
               Expanded(
@@ -264,7 +265,7 @@ class _FavoritesTab extends StatelessWidget {
                 onPressed: () {
                   if (tracks.isNotEmpty) playerProvider.setQueue(tracks);
                 },
-                icon: const Icon(Icons.play_arrow, size: 18),
+                icon: FaIcon(FontAwesomeIcons.play, size: 14),
                 label: const Text('Reproducir todo'),
               ),
               const SizedBox(width: 8),
@@ -275,7 +276,7 @@ class _FavoritesTab extends StatelessWidget {
                     playerProvider.toggleShuffle();
                   }
                 },
-                icon: const Icon(Icons.shuffle, size: 18),
+                icon: FaIcon(FontAwesomeIcons.shuffle, size: 14),
                 label: const Text('Aleatorio'),
               ),
             ],
@@ -304,7 +305,7 @@ class _FavoritesTab extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.favorite_border, size: 64, color: Theme.of(context).colorScheme.primary),
+                        FaIcon(FontAwesomeIcons.heart, size: 64, color: Theme.of(context).colorScheme.primary),
                         const SizedBox(height: 16),
                         Text('Sin favoritos', style: Theme.of(context).textTheme.titleLarge),
                         const SizedBox(height: 8),
@@ -352,7 +353,7 @@ class _FavoritesTab extends StatelessWidget {
                               SizedBox(
                                 width: 40,
                                 child: IconButton(
-                                  icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, size: 16, color: isFav ? Colors.red : null),
+                                  icon: FaIcon(isFav ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart, size: 14, color: isFav ? const Color(0xFFA50021) : null),
                                   onPressed: () => libraryProvider.toggleFavorite(track.id),
                                 ),
                               ),
@@ -388,7 +389,7 @@ class _SearchTab extends StatelessWidget {
           TextField(
             decoration: InputDecoration(
               hintText: 'Buscar canciones, artistas, albumes o YouTube...',
-              prefixIcon: const Icon(Icons.search),
+              prefixIcon: FaIcon(FontAwesomeIcons.magnifyingGlass),
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               filled: true,
             ),
@@ -403,7 +404,7 @@ class _SearchTab extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.search, size: 64, color: Theme.of(context).colorScheme.primary),
+                        FaIcon(FontAwesomeIcons.magnifyingGlass, size: 64, color: Theme.of(context).colorScheme.primary),
                         const SizedBox(height: 16),
                         Text('Buscar musica', style: Theme.of(context).textTheme.titleLarge),
                         const SizedBox(height: 8),
@@ -427,9 +428,9 @@ class _SearchTab extends StatelessWidget {
                               title: Text(track.title),
                               subtitle: Text('${track.artist} • ${track.album}'),
                               trailing: IconButton(
-                                icon: Icon(
-                                  libraryProvider.isFavorite(track.id) ? Icons.favorite : Icons.favorite_border,
-                                  color: libraryProvider.isFavorite(track.id) ? Colors.red : null,
+                                icon: FaIcon(
+                                  libraryProvider.isFavorite(track.id) ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+                                  color: libraryProvider.isFavorite(track.id) ? const Color(0xFFA50021) : null,
                                 ),
                                 onPressed: () => libraryProvider.toggleFavorite(track.id),
                               ),
@@ -453,13 +454,13 @@ class _SearchTab extends StatelessWidget {
                                     width: 48,
                                     height: 48,
                                     color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                                    child: const Icon(Icons.play_circle),
+                                    child: const FaIcon(FontAwesomeIcons.playCircle),
                                   ),
                                 ),
                               ),
                               title: Text(yt.title, maxLines: 1, overflow: TextOverflow.ellipsis),
                               subtitle: Text('${yt.artist} • ${_fmt(yt.duration)}'),
-                              trailing: const Icon(Icons.play_arrow),
+                              trailing: FaIcon(FontAwesomeIcons.play),
                               onTap: () async {
                                 await YouTubeService.instance.playTrack(yt);
                               },
@@ -498,24 +499,24 @@ class _SettingsTab extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 24),
           ListTile(
-            leading: const Icon(Icons.palette_outlined),
+            leading: const FaIcon(FontAwesomeIcons.palette),
             title: const Text('Tema'),
             subtitle: const Text('Claro / Oscuro / Sistema'),
-            trailing: const Icon(Icons.chevron_right),
+            trailing: FaIcon(FontAwesomeIcons.chevronRight),
             onTap: () {},
           ),
           ListTile(
-            leading: const Icon(Icons.folder_outlined),
+            leading: const FaIcon(FontAwesomeIcons.folder),
             title: const Text('Carpetas de música'),
             subtitle: const Text('Gestionar directorios escaneados'),
-            trailing: const Icon(Icons.chevron_right),
+            trailing: FaIcon(FontAwesomeIcons.chevronRight),
             onTap: () {},
           ),
           ListTile(
-            leading: const Icon(Icons.info_outline),
+            leading: const FaIcon(FontAwesomeIcons.circleInfo),
             title: const Text('Acerca de Harmony'),
             subtitle: const Text('Versión 26.10.27 (Beta)'),
-            trailing: const Icon(Icons.chevron_right),
+            trailing: FaIcon(FontAwesomeIcons.chevronRight),
             onTap: () {},
           ),
         ],
@@ -548,7 +549,7 @@ class _TrackCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 fallback: Container(
                   color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                  child: const Icon(Icons.music_note),
+                  child: FaIcon(FontAwesomeIcons.music),
                 ),
               ),
             ),
@@ -600,7 +601,7 @@ class _AlbumCard extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Center(
-                child: Icon(Icons.album, size: 48, color: NexoraColors.mutedStrong),
+                child: FaIcon(FontAwesomeIcons.compactDisc, size: 14, color: NexoraColors.mutedStrong),
               ),
             ),
           ),

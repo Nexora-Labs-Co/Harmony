@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/player_provider.dart';
@@ -40,11 +41,11 @@ class AudioPlayerDemo extends StatelessWidget {
                 final dur = Duration(milliseconds: ms);
 
                 return ListTile(
-                  leading: const Icon(Icons.music_note),
+                  leading: FaIcon(FontAwesomeIcons.music),
                   title: Text('Pista $i'),
                   subtitle: Text('Duración: ${_fmt(dur)}'),
                   trailing: IconButton(
-                    icon: const Icon(Icons.play_arrow),
+                    icon: FaIcon(FontAwesomeIcons.play),
                     onPressed: () {
                       final track = AudioService.instance.createLocalTrack(
                         id: 'demo-$i',
@@ -104,14 +105,14 @@ class AudioPlayerDemo extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      icon: Icon(player.isPlaying
-                          ? Icons.pause_circle_filled
-                          : Icons.play_circle_filled),
+                      icon: FaIcon(player.isPlaying
+                          ? FontAwesomeIcons.circlePause
+                          : FontAwesomeIcons.circlePlay),
                       iconSize: 48,
                       onPressed: () => player.togglePlayPause(),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.stop),
+                      icon: const FaIcon(FontAwesomeIcons.stop),
                       iconSize: 32,
                       onPressed: () => player.stop(),
                     ),
@@ -121,7 +122,7 @@ class AudioPlayerDemo extends StatelessWidget {
                 // ── 2. Volumen real (0..1 → 0..100) ────────────────────────
                 Row(
                   children: [
-                    const Icon(Icons.volume_down),
+                    FaIcon(FontAwesomeIcons.volumeLow),
                     Expanded(
                       child: Slider(
                         value: player.volume, // 0.0 .. 1.0
@@ -130,7 +131,7 @@ class AudioPlayerDemo extends StatelessWidget {
                         onChanged: (v) => player.setVolume(v),
                       ),
                     ),
-                    const Icon(Icons.volume_up),
+                    FaIcon(FontAwesomeIcons.volumeHigh),
                     Text('${(player.volume * 100).round()}%',
                         style: Theme.of(context).textTheme.bodySmall),
                   ],
@@ -153,7 +154,7 @@ class AudioPlayerDemo extends StatelessWidget {
 |---|-----------|----------------|
 | 1 | Slider de progreso con seek | `Slider(value: position, max: duration, onChanged: (v) => player.seek(...))` |
 | 2 | Volumen real (0-100) | `player.setVolume(v)` → `AudioService` llama `_player.setVolume(v * 100)` (media_kit) |
-| 3 | Play/Pause sincronizado | `Icon(player.isPlaying ? Icons.pause : Icons.play_arrow)` + `togglePlayPause()` |
+| 3 | Play/Pause sincronizado | `FaIcon(player.isPlaying ? FontAwesomeIcons.pause : FontAwesomeIcons.play)` + `togglePlayPause()` |
 | 4 | Duración previa con lofty | `RustFfi.instance.durationMs(path)` → FFI `nexora_ffi_duration_ms` → lofty `read_from_path` |
 
 ### Integración en tu app
