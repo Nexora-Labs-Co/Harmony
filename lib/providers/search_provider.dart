@@ -6,12 +6,15 @@ import '../services/youtube_service.dart';
 class SearchProvider extends ChangeNotifier {
   String _query = '';
   List<Track> _localResults = [];
+  List<Track> _youtubeTracks = [];
   List<YouTubeTrack> _youtubeResults = [];
   bool _isSearching = false;
   bool _searchYouTube = true;
 
   String get query => _query;
   List<Track> get localResults => _localResults;
+  List<Track> get youtubeTracks => _youtubeTracks;
+  List<Track> get allResults => [..._localResults, ..._youtubeTracks];
   List<YouTubeTrack> get youtubeResults => _youtubeResults;
   bool get isSearching => _isSearching;
   bool get searchYouTube => _searchYouTube;
@@ -27,6 +30,7 @@ class SearchProvider extends ChangeNotifier {
 
     if (query.isEmpty) {
       _localResults = [];
+      _youtubeTracks = [];
       _youtubeResults = [];
       notifyListeners();
       return;
@@ -45,8 +49,10 @@ class SearchProvider extends ChangeNotifier {
     if (_searchYouTube) {
       debugPrint('SearchProvider: searching YouTube for $query');
       _youtubeResults = await YouTubeService.instance.search(query);
+      _youtubeTracks = await YouTubeService.instance.searchTracks(query);
       debugPrint('SearchProvider: found ${_youtubeResults.length} YouTube results');
     } else {
+      _youtubeTracks = [];
       _youtubeResults = [];
     }
 
@@ -56,6 +62,7 @@ class SearchProvider extends ChangeNotifier {
   void clear() {
     _query = '';
     _localResults = [];
+    _youtubeTracks = [];
     _youtubeResults = [];
     _isSearching = false;
     notifyListeners();

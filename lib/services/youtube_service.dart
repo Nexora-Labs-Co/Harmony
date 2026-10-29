@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import 'audio_service.dart';
+import '../bridge/bridge_generated.dart';
 
 class YouTubeTrack {
   final String id;
@@ -46,6 +47,31 @@ class YouTubeService {
       return [];
     }
   }
+
+  Future<List<Track>> searchTracks(String query) async {
+    if (query.trim().isEmpty) return [];
+    try {
+      final results = await _yt.search.getVideos(query);
+      return results.map((v) {
+        return Track(
+          id: v.id.value,
+          title: v.title,
+          artist: v.author,
+          album: 'YouTube Music',
+          albumArt: v.thumbnails.highResUrl,
+          sourceUri: 'https://www.youtube.com/watch?v=${v.id.value}',
+          durationMs: (v.duration ?? Duration.zero).inMilliseconds,
+          trackType: TrackType.Remote,
+          path: null,
+        );
+      }).toList();
+    } catch (e) {
+      debugPrint('YouTubeService.searchTracks error: $e');
+      return [];
+    }
+  }
+
+  Future<String?> getStreamUrl(String youtubeId) => getAudioStreamUrl(youtubeId);
 
   Future<String?> getAudioStreamUrl(String videoId) async {
     try {

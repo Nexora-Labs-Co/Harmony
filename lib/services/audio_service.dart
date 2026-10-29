@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../bridge/bridge_generated.dart';
 import 'rust_ffi.dart';
+import 'youtube_service.dart';
 
 class AudioService extends ChangeNotifier {
   static final AudioService instance = AudioService._internal();
@@ -127,6 +128,24 @@ class AudioService extends ChangeNotifier {
   Future<bool> loadTrack(Track track) async {
     try {
       _currentTrack = track;
+      if (track.trackType == TrackType.Remote || track.source == 'youtube') {
+        final url = await YouTubeService.instance.getStreamUrl(track.id);
+        if (url == null) return false;
+        await _player.open(
+          Media(
+            url,
+            httpHeaders: const {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+              'Accept': '*/*',
+              'Referer': 'https://www.youtube.com/',
+            },
+          ),
+          play: true,
+        );
+        _playing = true;
+        notifyListeners();
+        return true;
+      }
       final path = (track.path != null && track.path!.isNotEmpty)
           ? track.path!
           : track.sourceUri.replaceFirst('file://', '');
