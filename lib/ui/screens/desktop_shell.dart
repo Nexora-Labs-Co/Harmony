@@ -10,6 +10,7 @@ import '../../providers/library_provider.dart';
 import '../widgets/desktop/album_detail_content.dart';
 import '../widgets/harmony_sidebar.dart';
 import '../widgets/desktop/desktop_topbar.dart';
+import '../widgets/search_view.dart';
 import '../screens/notifications_screen.dart';
 import '../screens/favorites_screen.dart';
 import '../screens/account_screen.dart';
@@ -50,20 +51,7 @@ class _DesktopShellState extends State<DesktopShell> {
   bool _showNotifications = false;
   bool _showAccount = false;
   bool _showFavorites = false;
-
-  // Simple navigation history for top bar back/forward.
-  final List<int> _navHistory = <int>[0];
-  int _navPos = 0;
-
-  void _pushHistory(int index) {
-    if (_navPos < _navHistory.length - 1) {
-      _navHistory.removeRange(_navPos + 1, _navHistory.length);
-    }
-    if (_navHistory.isEmpty || _navHistory.last != index) {
-      _navHistory.add(index);
-      _navPos = _navHistory.length - 1;
-    }
-  }
+  bool _showSearch = false;
 
   void _navigateToIndex(int index) {
     setState(() {
@@ -72,36 +60,8 @@ class _DesktopShellState extends State<DesktopShell> {
       _showAccount = false;
       _showNotifications = false;
       _showFavorites = index == 1;
+      _showSearch = false;
     });
-    _pushHistory(index);
-  }
-
-  void _goBack() {
-    if (_navPos > 0) {
-      _navPos--;
-      final idx = _navHistory[_navPos];
-      setState(() {
-        _selectedIndex = idx;
-        _selectedPlaylistId = null;
-        _showAccount = false;
-        _showNotifications = false;
-        _showFavorites = idx == 1;
-      });
-    }
-  }
-
-  void _goForward() {
-    if (_navPos < _navHistory.length - 1) {
-      _navPos++;
-      final idx = _navHistory[_navPos];
-      setState(() {
-        _selectedIndex = idx;
-        _selectedPlaylistId = null;
-        _showAccount = false;
-        _showNotifications = false;
-        _showFavorites = idx == 1;
-      });
-    }
   }
 
   @override
@@ -122,9 +82,13 @@ class _DesktopShellState extends State<DesktopShell> {
             onToggleRight: () => setState(() => _rightPanelVisible = !_rightPanelVisible),
             onToggleNotifications: () => setState(() => _showNotifications = !_showNotifications),
             onToggleAccount: () => setState(() => _showAccount = !_showAccount),
-            onOpenSearch: () => _navigateToIndex(1),
-            onBack: _goBack,
-            onForward: _goForward,
+            onOpenSearch: () => setState(() {
+              _showSearch = true;
+              _selectedPlaylistId = null;
+              _showAccount = false;
+              _showNotifications = false;
+              _showFavorites = false;
+            }),
             onOpenSettings: () => _navigateToIndex(2),
           ),
           Expanded(
@@ -148,8 +112,8 @@ class _DesktopShellState extends State<DesktopShell> {
                           _showAccount = false;
                           _showNotifications = false;
                           _showFavorites = false;
+                          _showSearch = false;
                         });
-                        _pushHistory(3);
                       },
                     ),
                   ),
@@ -159,11 +123,13 @@ class _DesktopShellState extends State<DesktopShell> {
                       ? NotificationsScreen(onClose: () => setState(() => _showNotifications = false))
                       : (_showAccount
                           ? AccountScreen(onClose: () => setState(() => _showAccount = false))
-                          : (_showFavorites
-                              ? FavoritesScreen()
-                              : (_selectedPlaylistId != null
-                                  ? AlbumDetailContent(playlistId: _selectedPlaylistId!)
-                                  : DesktopMainContent(selectedIndex: _selectedIndex)))), 
+                          : (_showSearch
+                              ? const SearchView()
+                              : (_showFavorites
+                                  ? FavoritesScreen()
+                                  : (_selectedPlaylistId != null
+                                      ? AlbumDetailContent(playlistId: _selectedPlaylistId!)
+                                      : DesktopMainContent(selectedIndex: _selectedIndex))))), 
                 ),
                 if (_rightPanelVisible)
                   SizedBox(

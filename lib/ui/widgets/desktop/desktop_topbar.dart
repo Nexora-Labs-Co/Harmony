@@ -16,8 +16,6 @@ class DesktopTopBar extends StatefulWidget {
     this.onToggleNotifications,
     this.onToggleAccount,
     this.onOpenSearch,
-    this.onBack,
-    this.onForward,
     this.onOpenSettings,
   });
 
@@ -28,8 +26,6 @@ class DesktopTopBar extends StatefulWidget {
   final VoidCallback? onToggleNotifications;
   final VoidCallback? onToggleAccount;
   final VoidCallback? onOpenSearch;
-  final VoidCallback? onBack;
-  final VoidCallback? onForward;
   final VoidCallback? onOpenSettings;
 
   @override
@@ -44,26 +40,6 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
       left: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton(
-            iconSize: 18,
-            padding: const EdgeInsets.all(8),
-            icon: const FaIcon(FontAwesomeIcons.arrowLeft, color: Color(0xFFEBF5EE)),
-            tooltip: 'Atras',
-            onPressed: () async {
-              final navigator = Navigator.of(context);
-              final didPop = await navigator.maybePop();
-              if (!didPop) {
-                widget.onBack?.call();
-              }
-            },
-          ),
-          IconButton(
-            iconSize: 18,
-            padding: const EdgeInsets.all(8),
-            icon: const FaIcon(FontAwesomeIcons.arrowRight, color: Color(0xFFEBF5EE)),
-            tooltip: 'Adelante',
-            onPressed: widget.onForward,
-          ),
           IconButton(
             iconSize: 18,
             padding: const EdgeInsets.all(8),
