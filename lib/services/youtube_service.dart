@@ -101,20 +101,30 @@ class YouTubeService {
     }
   }
 
+  bool _isPlaying = false;
+
   Future<bool> playTrack(YouTubeTrack track) async {
-    debugPrint('YouTubeService.playTrack: resolving stream for ${track.id}');
-    final url = await getAudioStreamUrl(track.id);
-    if (url == null) {
-      debugPrint('YouTubeService.playTrack: no stream url for ${track.id}');
+    if (_isPlaying) {
+      debugPrint('YouTubeService.playTrack: already playing, ignoring.');
       return false;
     }
-    debugPrint('YouTubeService.playTrack: stream url = $url');
+    _isPlaying = true;
+    debugPrint('YouTubeService.playTrack: resolving stream for ${track.id}');
     try {
+      final url = await getAudioStreamUrl(track.id);
+      if (url == null) {
+        debugPrint('YouTubeService.playTrack: no stream url for ${track.id}');
+        return false;
+      }
+      debugPrint('YouTubeService.playTrack: stream url = $url');
       await AudioService.instance.playUrl(url, title: track.title, artist: track.artist, thumbnailUrl: track.thumbnailUrl, durationMs: track.duration.inMilliseconds);
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
       debugPrint('YouTubeService.playTrack error: $e');
+      debugPrint('$stackTrace');
       return false;
+    } finally {
+      _isPlaying = false;
     }
   }
 
