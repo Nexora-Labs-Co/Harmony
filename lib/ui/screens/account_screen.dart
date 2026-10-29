@@ -56,102 +56,84 @@ class AccountScreen extends StatelessWidget {
     final profile = context.watch<ProfileProvider>();
     final playlists = context.watch<PlaylistProvider>().playlists;
 
-    return Scaffold(
-      backgroundColor: NexoraColors.background,
-      appBar: AppBar(
-        backgroundColor: NexoraColors.surface,
-        title: const Text('Cuenta', style: TextStyle(color: NexoraColors.foreground)),
-        iconTheme: const IconThemeData(color: NexoraColors.foreground),
-        actions: [
-          if (onClose != null)
-            IconButton(
-              icon: FaIcon(FontAwesomeIcons.xmark, size: 16, color: NexoraColors.foreground),
-              onPressed: onClose,
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(24),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF1A1A1A), Color(0xFF090C02)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
             ),
-          IconButton(
-            icon: FaIcon(FontAwesomeIcons.gear, color: NexoraColors.foreground),
-            onPressed: () {},
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () => _pickAvatar(context),
+                  child: CircleAvatar(
+                    radius: 90,
+                    backgroundColor: NexoraColors.surfaceHover,
+                    backgroundImage: profile.avatarPath != null ? FileImage(File(profile.avatarPath!)) : null,
+                    child: profile.avatarPath == null
+                        ? FaIcon(FontAwesomeIcons.user, size: 48, color: NexoraColors.foreground)
+                        : null,
+                  ),
+                ),
+                const SizedBox(width: 24),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Profile', style: TextStyle(color: NexoraColors.muted, fontSize: 12, letterSpacing: 1.5, fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 8),
+                      GestureDetector(
+                        onTap: () => _editName(context),
+                        child: Text(
+                          profile.name,
+                          style: const TextStyle(color: NexoraColors.foreground, fontSize: 64, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${playlists.length} Public Playlists',
+                        style: const TextStyle(color: NexoraColors.mutedStrong, fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-          IconButton(
-            icon: FaIcon(FontAwesomeIcons.ellipsis, color: NexoraColors.foreground),
-            onPressed: () {},
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Top artists this month',
+                  style: TextStyle(color: NexoraColors.foreground, fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  height: 130,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: const [
+                      _ArtistChip(name: 'Blessd'),
+                      _ArtistChip(name: 'Kris R.'),
+                      _ArtistChip(name: 'Tury'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF1A1A1A), Color(0xFF090C02)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () => _pickAvatar(context),
-                    child: CircleAvatar(
-                      radius: 90,
-                      backgroundColor: NexoraColors.surfaceHover,
-                      backgroundImage: profile.avatarPath != null ? FileImage(File(profile.avatarPath!)) : null,
-                      child: profile.avatarPath == null
-                          ? FaIcon(FontAwesomeIcons.user, size: 48, color: NexoraColors.foreground)
-                          : null,
-                    ),
-                  ),
-                  const SizedBox(width: 24),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Profile', style: TextStyle(color: NexoraColors.muted, fontSize: 12, letterSpacing: 1.5, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 8),
-                        GestureDetector(
-                          onTap: () => _editName(context),
-                          child: Text(
-                            profile.name,
-                            style: const TextStyle(color: NexoraColors.foreground, fontSize: 64, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '${playlists.length} Public Playlists',
-                          style: const TextStyle(color: NexoraColors.mutedStrong, fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'Top artists this month',
-              style: TextStyle(color: NexoraColors.foreground, fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 130,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: const [
-                  _ArtistChip(name: 'Blessd'),
-                  _ArtistChip(name: 'Kris R.'),
-                  _ArtistChip(name: 'Tury'),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

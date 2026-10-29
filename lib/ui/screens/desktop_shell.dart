@@ -61,11 +61,15 @@ class _DesktopShellState extends State<DesktopShell> {
                         setState(() {
                           _selectedIndex = index;
                           _selectedPlaylistId = null;
+                          _showAccount = false;
+                          _showNotifications = false;
                         });
                       },
                       onPlaylistSelected: (id) {
                         setState(() {
                           _selectedPlaylistId = id;
+                          _showAccount = false;
+                          _showNotifications = false;
                         });
                       },
                     ),
