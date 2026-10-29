@@ -58,132 +58,121 @@ class DesktopMainContent extends StatelessWidget {
 class _HomeTab extends StatelessWidget {
   const _HomeTab();
 
+  String _greeting() {
+    final h = DateTime.now().hour;
+    if (h < 12) return 'Buenos días';
+    if (h < 19) return 'Buenas tardes';
+    return 'Buenas noches';
+  }
+
   @override
   Widget build(BuildContext context) {
     final libraryProvider = context.watch<LibraryProvider>();
     final playerProvider = context.watch<PlayerProvider>();
+    final tracks = libraryProvider.allTracks;
+
+    final recommended = tracks.isEmpty
+        ? <dynamic>[]
+        : List.generate(8, (i) => tracks[i % tracks.length]);
+    final albums = tracks.isEmpty
+        ? <dynamic>[]
+        : List.generate(4, (i) => tracks[i % tracks.length]);
+    final recent = tracks.isEmpty
+        ? <dynamic>[]
+        : tracks.take(8).toList();
 
     return Container(
       padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Bienvenido a Harmony',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Tu musica, tu ritmo',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
-          ),
-          const SizedBox(height: 24),
-          if (libraryProvider.allTracks.isNotEmpty) ...[
-            const SizedBox(height: 8),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${_greeting()}, Santiago',
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Tu música, tu ritmo',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+            ),
+            const SizedBox(height: 24),
+            _sectionTitle(context, 'Recomendado por Cari, para ti'),
+            const SizedBox(height: 12),
+            _horizontalList(
+              context,
+              recommended,
+              playerProvider,
+              libraryProvider,
+            ),
+            const SizedBox(height: 24),
+            _sectionTitle(context, 'Álbumes'),
+            const SizedBox(height: 12),
+            _horizontalList(
+              context,
+              albums,
+              playerProvider,
+              libraryProvider,
+            ),
+            const SizedBox(height: 24),
+            _sectionTitle(context, 'Recientes'),
+            const SizedBox(height: 12),
+            _horizontalList(
+              context,
+              recent,
+              playerProvider,
+              libraryProvider,
+            ),
           ],
-          Expanded(
-            child: libraryProvider.allTracks.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.library_music, size: 64, color: Theme.of(context).colorScheme.primary),
-                        const SizedBox(height: 16),
-                        Text('Sin canciones', style: Theme.of(context).textTheme.titleLarge),
-                        const SizedBox(height: 8),
-                        Text('Escanea una carpeta para comenzar',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
-                      ],
-                    ),
-                  )
-                : SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Tus canciones', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 12),
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 6,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 8,
-                            childAspectRatio: 0.8,
-                          ),
-                          itemCount: libraryProvider.allTracks.length.clamp(0, 8),
-                          itemBuilder: (context, index) {
-                            final track = libraryProvider.allTracks[index];
-                            return _TrackCard(track: track, onTap: () {
-                              playerProvider.setQueue(libraryProvider.allTracks, startIndex: index);
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 24),
-                        Text('Favoritos', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 12),
-                        if (libraryProvider.favorites.isEmpty)
-                          Text('Sin favoritos aun', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant))
-                        else
-                          GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 6,
-                              mainAxisSpacing: 8,
-                              crossAxisSpacing: 8,
-                              childAspectRatio: 0.8,
-                            ),
-                            itemCount: libraryProvider.favorites.length.clamp(0, 8),
-                            itemBuilder: (context, index) {
-                              final track = libraryProvider.favorites[index];
-                              return _TrackCard(track: track, onTap: () {
-                                playerProvider.setQueue(libraryProvider.favorites, startIndex: index);
-                              });
-                            },
-                          ),
-                      ],
-                    ),
-                  ),
-          ),
-        ],
+        ),
       ),
     );
   }
-}
 
-class _TrackCard extends StatelessWidget {
-  final Track track;
-  final VoidCallback onTap;
-  const _TrackCard({required this.track, required this.onTap});
+  Widget _sectionTitle(BuildContext context, String title) {
+    return Text(
+      title,
+      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: CachedArtwork(
-                albumArt: track.albumArt,
-                width: double.infinity,
-                height: double.infinity,
-                borderRadius: BorderRadius.circular(8),
-                fallback: Container(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                  child: const Icon(Icons.music_note, size: 32),
-                ),
+  Widget _horizontalList(
+    BuildContext context,
+    List tracks,
+    PlayerProvider playerProvider,
+    LibraryProvider libraryProvider,
+  ) {
+    if (tracks.isEmpty) {
+      return SizedBox(
+        height: 160,
+        child: Center(
+          child: Text(
+            'Sin canciones',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          ),
+        ),
+      );
+    }
+    return SizedBox(
+      height: 180,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: tracks.length,
+        itemBuilder: (context, index) {
+          final track = tracks[index];
+          return Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: SizedBox(
+              width: 140,
+              child: _TrackCard(
+                track: track,
+                onTap: () {
+                  playerProvider.setQueue(libraryProvider.allTracks, startIndex: libraryProvider.allTracks.indexOf(track).clamp(0, libraryProvider.allTracks.length - 1));
+                },
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(track.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
-          Text(track.artist.isEmpty ? 'Artista desconocido' : track.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
-        ],
+          );
+        },
       ),
     );
   }
@@ -500,6 +489,54 @@ class _SettingsTab extends StatelessWidget {
             subtitle: const Text('Versión 26.10.27 (Beta)'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {},
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TrackCard extends StatelessWidget {
+  final dynamic track;
+  final VoidCallback onTap;
+
+  const _TrackCard({required this.track, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: CachedArtwork(
+                albumArt: track.albumArt,
+                width: double.infinity,
+                height: double.infinity,
+                borderRadius: BorderRadius.circular(8),
+                fallback: Container(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  child: const Icon(Icons.music_note),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            track.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+          ),
+          Text(
+            track.artist,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
         ],
       ),
