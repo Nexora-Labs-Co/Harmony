@@ -72,7 +72,7 @@ class _DesktopShellState extends State<DesktopShell> {
                 if (_rightPanelVisible)
                   SizedBox(
                     width: 320,
-                    child: const DesktopRightPanel(),
+                    child: DesktopRightPanel(cariActive: _selectedIndex == 2),
                   ),
               ],
             ),

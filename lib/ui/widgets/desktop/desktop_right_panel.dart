@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit/media_kit.dart' show Media;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/player_provider.dart';
+import '../../../services/audio_service.dart';
 import '../cached_artwork.dart';
 
 class DesktopRightPanel extends StatelessWidget {
-  const DesktopRightPanel({super.key});
+  final bool cariActive;
+  const DesktopRightPanel({super.key, this.cariActive = false});
 
   String _formatArtists(String raw) {
     final parts = raw.split(RegExp(r'\s*/\s*'));
@@ -18,6 +24,9 @@ class DesktopRightPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (cariActive) {
+      return _CariPanel();
+    }
     final player = context.watch<PlayerProvider>();
     final current = player.currentTrack;
     final queue = player.queue;
@@ -56,7 +65,7 @@ class DesktopRightPanel extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.open_in_full, size: 16, color: NexoraColors.foreground),
+                  icon: FaIcon(FontAwesomeIcons.expand, size: 16, color: NexoraColors.foreground),
                   onPressed: () {},
                 ),
               ],
@@ -68,8 +77,8 @@ class DesktopRightPanel extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.music_note,
+                        FaIcon(
+                          FontAwesomeIcons.music,
                           size: 48,
                           color: NexoraColors.muted,
                         ),
@@ -95,7 +104,7 @@ class DesktopRightPanel extends StatelessWidget {
                             width: double.infinity,
                             height: 280,
                             color: NexoraColors.surfaceHover,
-                            child: const Icon(Icons.music_note, size: 80, color: NexoraColors.muted),
+                            child: FaIcon(FontAwesomeIcons.music, size: 80, color: NexoraColors.muted),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -179,7 +188,7 @@ class DesktopRightPanel extends StatelessWidget {
                                     width: 48,
                                     height: 48,
                                     color: NexoraColors.surface,
-                                    child: const Icon(Icons.music_note, color: NexoraColors.muted),
+                                    child: FaIcon(FontAwesomeIcons.music, color: NexoraColors.muted),
                                   ),
                                 ),
                                 const SizedBox(width: 12),
@@ -220,6 +229,77 @@ class DesktopRightPanel extends StatelessWidget {
                       ],
                     ),
                   ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class _CariPanel extends StatefulWidget {
+  @override
+  State<_CariPanel> createState() => _CariPanelState();
+}
+
+class _CariPanelState extends State<_CariPanel> {
+  bool _playing = false;
+
+  Future<void> _playVoice() async {
+    try {
+      final manifest = await rootBundle.loadString('AssetManifest.json');
+      // simple parse
+      final regex = RegExp(r'"(assets/voz/[^"]+)"');
+      final matches = regex.allMatches(manifest).map((m) => m.group(1)!).toList();
+      if (matches.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No hay audios de Cari disponibles.')),
+          );
+        }
+        return;
+      }
+      final bytes = await rootBundle.load(matches.first);
+      final data = bytes.buffer.asUint8List();
+      final media = await Media.memory(data);
+      await AudioService.instance.player.open(media, play: true);
+      setState(() => _playing = true);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error reproduciendo voz de Cari: $e')),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 320,
+      color: const Color(0xFF800020),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+              'assets/icons/Logo-Cari.png',
+              width: 180,
+              height: 180,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => const Icon(Icons.smart_toy, size: 80, color: Colors.white),
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Cari',
+            style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 24),
+          IconButton(
+            icon: Icon(_playing ? Icons.pause_circle_filled : Icons.play_circle_filled, size: 48, color: Colors.white),
+            onPressed: _playVoice,
           ),
         ],
       ),
