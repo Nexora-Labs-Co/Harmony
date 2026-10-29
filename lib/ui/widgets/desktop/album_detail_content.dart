@@ -23,6 +23,24 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
   String? _hoveredId;
   String? _coverPath;
 
+  @override
+  void initState() {
+    super.initState();
+    final provider = PlaylistProvider();
+    // best-effort: load from provider later in build not possible; set after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final p = context.read<PlaylistProvider>().playlists.firstWhere(
+            (pl) => pl.id == widget.playlistId,
+            orElse: () => context.read<PlaylistProvider>().playlists.isNotEmpty
+                ? context.read<PlaylistProvider>().playlists.first
+                : null as dynamic,
+          );
+      if (p != null && p.coverImagePath != null) {
+        setState(() => _coverPath = p.coverImagePath);
+      }
+    });
+  }
+
   String _format(Duration d) {
     String two(int n) => n.toString().padLeft(2, '0');
     return '${two(d.inMinutes.remainder(60))}:${two(d.inSeconds.remainder(60))}';
@@ -95,7 +113,9 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                 onTap: () async {
                   final result = await FilePicker.pickFiles(type: FileType.image);
                   if (result != null && result.isNotEmpty && result.single.path != null) {
-                    setState(() => _coverPath = result.single.path);
+                    final path = result.single.path!;
+                    setState(() => _coverPath = path);
+                    context.read<PlaylistProvider>().setCoverImagePath(widget.playlistId, path);
                   }
                 },
                 child: ClipRRect(
@@ -247,11 +267,17 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                                     children: [
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(4),
-                                        child: Container(
+                                        child: CachedArtwork(
+                                          albumArt: track.albumArt,
                                           width: 36,
                                           height: 36,
-                                          color: NexoraColors.surfaceAlt,
-                                          child: FaIcon(FontAwesomeIcons.music, size: 16, color: NexoraColors.muted),
+                                          borderRadius: BorderRadius.circular(4),
+                                          fallback: Container(
+                                            width: 36,
+                                            height: 36,
+                                            color: NexoraColors.surfaceAlt,
+                                            child: FaIcon(FontAwesomeIcons.music, size: 16, color: NexoraColors.muted),
+                                          ),
                                         ),
                                       ),
                                       const SizedBox(width: 8),

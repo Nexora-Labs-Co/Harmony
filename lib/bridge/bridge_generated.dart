@@ -33,6 +33,7 @@ class Playlist {
   final List<String> trackIds;
   final int createdAt;
   final int updatedAt;
+  final String? coverImagePath;
 
   Playlist({
     required this.id,
@@ -41,6 +42,7 @@ class Playlist {
     required this.trackIds,
     required this.createdAt,
     required this.updatedAt,
+    this.coverImagePath,
   });
 }
 
@@ -128,6 +130,7 @@ Playlist nexoraCreatePlaylist({required String name, required String description
     trackIds: [],
     createdAt: DateTime.now().millisecondsSinceEpoch ~/ 1000,
     updatedAt: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+    coverImagePath: null,
   );
 }
 List<Playlist> nexoraGetAllPlaylists() => [];
