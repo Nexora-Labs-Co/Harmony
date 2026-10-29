@@ -39,8 +39,6 @@ class DesktopBottomBar extends StatelessWidget {
     if (player.currentTrack == null) return const SizedBox.shrink();
 
     final track = player.currentTrack!;
-    final remaining = player.duration - player.position;
-    final remainingClamped = remaining.isNegative ? Duration.zero : remaining;
 
     return Container(
       height: 104,
@@ -115,7 +113,7 @@ class DesktopBottomBar extends StatelessWidget {
                     IconButton(
                       icon: FaIcon(FontAwesomeIcons.shuffle, size: 18),
                       color: player.shuffle
-                          ? Theme.of(context).colorScheme.primary
+                          ? const Color(0xFFA50021)
                           : Theme.of(context).colorScheme.onSurfaceVariant,
                       onPressed: () => player.toggleShuffle(),
                     ),
@@ -125,10 +123,21 @@ class DesktopBottomBar extends StatelessWidget {
                       onPressed: () => player.previous(),
                     ),
                     const SizedBox(width: 4),
-                    IconButton(
-                      icon: FaIcon(player.isPlaying ? FontAwesomeIcons.circlePause : FontAwesomeIcons.circlePlay, size: 28),
-                      color: Theme.of(context).colorScheme.primary,
-                      onPressed: () => player.togglePlayPause(),
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: const BoxDecoration(
+                        color: NexoraColors.foreground,
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: FaIcon(
+                          player.isPlaying ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
+                          size: 18,
+                          color: NexoraColors.background,
+                        ),
+                        onPressed: () => player.togglePlayPause(),
+                      ),
                     ),
                     const SizedBox(width: 4),
                     IconButton(
@@ -137,8 +146,8 @@ class DesktopBottomBar extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     IconButton(
-                      icon: FaIcon(
-                        player.repeatMode == PlayerRepeatMode.one ? FontAwesomeIcons.repeat : FontAwesomeIcons.repeat,
+                      icon: Icon(
+                        player.repeatMode == PlayerRepeatMode.one ? Icons.repeat_one : Icons.repeat,
                         size: 18,
                       ),
                       color: player.repeatMode != PlayerRepeatMode.none
@@ -168,7 +177,7 @@ class DesktopBottomBar extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(_format(remainingClamped), style: Theme.of(context).textTheme.bodySmall),
+                    Text(_format(player.duration), style: Theme.of(context).textTheme.bodySmall),
                   ],
                 ),
               ],
@@ -283,13 +292,13 @@ class _BottomArtwork extends StatelessWidget {
       albumArt: albumArt,
       width: 56,
       height: 56,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(6),
       fallback: Container(
         width: 56,
         height: 56,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(6),
         ),
         child: FaIcon(FontAwesomeIcons.music, size: 22, color: Theme.of(context).colorScheme.onSurfaceVariant),
       ),

@@ -17,12 +17,14 @@ class PlayerProvider extends ChangeNotifier {
 
   List<Track> _queue = [];
   int _currentIndex = -1;
+  final List<Track> _recentlyPlayed = [];
   bool _shuffle = false;
   PlayerRepeatMode _repeatMode = PlayerRepeatMode.none;
 
   List<Track> get queue => _queue;
   int get currentIndex => _currentIndex;
   bool get shuffle => _shuffle;
+  List<Track> get recentlyPlayed => List.unmodifiable(_recentlyPlayed);
   PlayerRepeatMode get repeatMode => _repeatMode;
 
   PlayerProvider() {
@@ -75,7 +77,11 @@ class PlayerProvider extends ChangeNotifier {
   }
 
   Future<void> playTrack(Track track) async {
+    _recentlyPlayed.removeWhere((t) => t.id == track.id);
+    _recentlyPlayed.insert(0, track);
+    if (_recentlyPlayed.length > 50) _recentlyPlayed.removeLast();
     await _audio.playTrack(track);
+    notifyListeners();
   }
   void play() => _audio.play();
   void pause() => _audio.pause();
