@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 
 import '../../../providers/library_provider.dart';
+import '../../../providers/profile_provider.dart';
 import '../../../providers/search_provider.dart';
 
 class DesktopTopBar extends StatefulWidget {
@@ -108,6 +110,7 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
       ),
       right: Row(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           IconButton(
             icon: FaIcon(FontAwesomeIcons.bell, color: Color(0xFFEBF5EE), size: 22),
@@ -125,8 +128,18 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
           const SizedBox(width: 8),
           GestureDetector(
             onTap: widget.onToggleAccount,
-            child: const CircleAvatar(
-              child: Text('H', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Builder(
+              builder: (context) {
+                final profile = context.watch<ProfileProvider>();
+                return CircleAvatar(
+                  radius: 14,
+                  backgroundColor: NexoraColors.surfaceHover,
+                  backgroundImage: profile.avatarPath != null ? FileImage(File(profile.avatarPath!)) : null,
+                  child: profile.avatarPath == null
+                      ? Text(profile.name.isNotEmpty ? profile.name[0].toUpperCase() : 'H', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: NexoraColors.foreground))
+                      : null,
+                );
+              },
             ),
           ),
         ],
