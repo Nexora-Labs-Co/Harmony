@@ -96,13 +96,11 @@ class LibraryProvider extends ChangeNotifier {
   }
 
   void toggleFavorite(String trackId) {
-    final isFav = nexoraToggleFavorite(trackId: trackId);
-    if (isFav) {
-      if (!_favoriteIds.contains(trackId)) {
-        _favoriteIds.add(trackId);
-      }
-    } else {
+    if (trackId.isEmpty) return;
+    if (_favoriteIds.contains(trackId)) {
       _favoriteIds.remove(trackId);
+    } else {
+      _favoriteIds.add(trackId);
     }
     _favorites = _allTracks.where((t) => _favoriteIds.contains(t.id)).toList();
     _saveFavorites();
