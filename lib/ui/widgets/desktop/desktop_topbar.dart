@@ -51,12 +51,12 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
             icon: FaIcon(
               widget.leftSidebarVisible ? FontAwesomeIcons.chevronLeft : FontAwesomeIcons.chevronRight,
               color: const Color(0xFFEBF5EE),
-              size: 14,
+              size: 22,
             ),
             onPressed: widget.onToggleLeft,
           ),
           IconButton(
-            icon: FaIcon(FontAwesomeIcons.gear, color: Color(0xFFEBF5EE), size: 14),
+            icon: FaIcon(FontAwesomeIcons.gear, color: Color(0xFFEBF5EE), size: 22),
             onPressed: () {},
           ),
         ],
@@ -70,11 +70,11 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
             hintText: 'Buscar canciones, artistas, albumes...',
             prefixIcon: const Padding(
               padding: EdgeInsets.all(10),
-              child: FaIcon(FontAwesomeIcons.magnifyingGlass, size: 14, color: NexoraColors.muted),
+              child: FaIcon(FontAwesomeIcons.magnifyingGlass, size: 22, color: NexoraColors.muted),
             ),
             suffixIcon: _searchController.text.isNotEmpty
                 ? IconButton(
-                    icon: FaIcon(FontAwesomeIcons.xmark, size: 14, color: NexoraColors.muted),
+                    icon: FaIcon(FontAwesomeIcons.xmark, size: 22, color: NexoraColors.muted),
                     onPressed: () {
                       _searchController.clear();
                       searchProvider.clear();
@@ -110,7 +110,7 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: FaIcon(FontAwesomeIcons.bell, color: Color(0xFFEBF5EE), size: 14),
+            icon: FaIcon(FontAwesomeIcons.bell, color: Color(0xFFEBF5EE), size: 22),
             tooltip: 'Notificaciones',
             onPressed: widget.onToggleNotifications,
           ),
@@ -118,7 +118,7 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
             icon: FaIcon(
               widget.rightPanelVisible ? FontAwesomeIcons.chevronRight : FontAwesomeIcons.chevronLeft,
               color: const Color(0xFFEBF5EE),
-              size: 14,
+              size: 22,
             ),
             onPressed: widget.onToggleRight,
           ),

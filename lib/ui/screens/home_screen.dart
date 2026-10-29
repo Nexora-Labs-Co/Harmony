@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(color: NexoraColors.border),
                             ),
-                            child: const Center(child: FaIcon(FontAwesomeIcons.compactDisc, size: 14, color: NexoraColors.mutedStrong)),
+                            child: const Center(child: FaIcon(FontAwesomeIcons.compactDisc, size: 22, color: NexoraColors.mutedStrong)),
                           ),
                         ),
                         const SizedBox(height: 4),

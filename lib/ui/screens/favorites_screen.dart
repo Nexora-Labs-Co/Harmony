@@ -80,12 +80,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 onPressed: () {
                   if (tracks.isNotEmpty) player.setQueue(tracks);
                 },
-                icon: const FaIcon(FontAwesomeIcons.play, size: 14),
+                icon: const FaIcon(FontAwesomeIcons.play, size: 22),
                 label: const Text('Reproducir todo'),
                 style: ElevatedButton.styleFrom(backgroundColor: NexoraColors.foreground, foregroundColor: NexoraColors.background),
               ),
               const SizedBox(width: 12),
-              IconButton(icon: FaIcon(FontAwesomeIcons.shuffle, size: 14, color: NexoraColors.mutedStrong), onPressed: () {
+              IconButton(icon: FaIcon(FontAwesomeIcons.shuffle, size: 22, color: NexoraColors.mutedStrong), onPressed: () {
                 if (tracks.isNotEmpty) { player.setQueue(tracks); player.toggleShuffle(); }
               }),
             ],
@@ -142,7 +142,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                             width: 36,
                                             height: 36,
                                             color: NexoraColors.surfaceAlt,
-                                            child: FaIcon(FontAwesomeIcons.music, size: 14, color: NexoraColors.muted),
+                                            child: FaIcon(FontAwesomeIcons.music, size: 22, color: NexoraColors.muted),
                                           ),
                                         ),
                                       ),
@@ -165,7 +165,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                 SizedBox(
                                   width: 40,
                                   child: IconButton(
-                                    icon: FaIcon(isFav ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart, size: 14, color: isFav ? const Color(0xFFA50021) : NexoraColors.muted),
+                                    icon: FaIcon(isFav ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart, size: 22, color: isFav ? const Color(0xFFA50021) : NexoraColors.muted),
                                     onPressed: () => library.toggleFavorite(track.id),
                                   ),
                                 ),

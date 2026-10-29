@@ -65,7 +65,7 @@ class DesktopRightPanel extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: FaIcon(FontAwesomeIcons.expand, size: 14, color: NexoraColors.foreground),
+                  icon: FaIcon(FontAwesomeIcons.expand, size: 22, color: NexoraColors.foreground),
                   onPressed: () {},
                 ),
               ],
@@ -79,7 +79,7 @@ class DesktopRightPanel extends StatelessWidget {
                       children: [
                         FaIcon(
                           FontAwesomeIcons.music,
-                          size: 14,
+                          size: 22,
                           color: NexoraColors.muted,
                         ),
                         SizedBox(height: 12),
@@ -292,7 +292,7 @@ class _CariPanelState extends State<_CariPanel> {
                   ),
                 ),
                 IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.expand, size: 14, color: Colors.white),
+                  icon: const FaIcon(FontAwesomeIcons.expand, size: 22, color: Colors.white),
                   onPressed: () {},
                 ),
               ],
@@ -332,7 +332,7 @@ class _CariPanelState extends State<_CariPanel> {
                   const SizedBox(height: 24),
                   Center(
                     child: IconButton(
-                      icon: Icon(_playing ? Icons.pause_circle_filled : Icons.play_circle_filled, size: 14, color: Colors.white),
+                      icon: Icon(_playing ? Icons.pause_circle_filled : Icons.play_circle_filled, size: 22, color: Colors.white),
                       onPressed: _playVoice,
                     ),
                   ),

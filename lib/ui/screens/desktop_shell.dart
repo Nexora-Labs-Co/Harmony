@@ -105,7 +105,7 @@ class _DesktopShellState extends State<DesktopShell> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.github, size: 14),
+                  icon: const FaIcon(FontAwesomeIcons.github, size: 22),
                   color: NexoraColors.mutedStrong,
                   onPressed: () async {
                     final uri = Uri.parse('https://github.com/Nexora-Labs-Co');
@@ -115,7 +115,7 @@ class _DesktopShellState extends State<DesktopShell> {
                   },
                 ),
                 IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.xTwitter, size: 14),
+                  icon: const FaIcon(FontAwesomeIcons.xTwitter, size: 22),
                   color: NexoraColors.mutedStrong,
                   onPressed: () async {
                     final uri = Uri.parse('https://x.com');

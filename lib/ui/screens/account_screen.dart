@@ -65,7 +65,7 @@ class AccountScreen extends StatelessWidget {
         actions: [
           if (onClose != null)
             IconButton(
-              icon: FaIcon(FontAwesomeIcons.xmark, size: 14, color: NexoraColors.foreground),
+              icon: FaIcon(FontAwesomeIcons.xmark, size: 22, color: NexoraColors.foreground),
               onPressed: onClose,
             ),
           IconButton(
@@ -92,7 +92,7 @@ class AccountScreen extends StatelessWidget {
                     backgroundColor: NexoraColors.surfaceHover,
                     backgroundImage: profile.avatarPath != null ? FileImage(File(profile.avatarPath!)) : null,
                     child: profile.avatarPath == null
-                        ? FaIcon(FontAwesomeIcons.user, size: 14, color: NexoraColors.foreground)
+                        ? FaIcon(FontAwesomeIcons.user, size: 22, color: NexoraColors.foreground)
                         : null,
                   ),
                 ),

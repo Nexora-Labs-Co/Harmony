@@ -240,7 +240,7 @@ class _FavoritesTab extends StatelessWidget {
                   color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: FaIcon(FontAwesomeIcons.solidHeart, size: 14, color: const Color(0xFFA50021)),
+                child: FaIcon(FontAwesomeIcons.solidHeart, size: 22, color: const Color(0xFFA50021)),
               ),
               const SizedBox(width: 20),
               Expanded(
@@ -265,7 +265,7 @@ class _FavoritesTab extends StatelessWidget {
                 onPressed: () {
                   if (tracks.isNotEmpty) playerProvider.setQueue(tracks);
                 },
-                icon: FaIcon(FontAwesomeIcons.play, size: 14),
+                icon: FaIcon(FontAwesomeIcons.play, size: 22),
                 label: const Text('Reproducir todo'),
               ),
               const SizedBox(width: 8),
@@ -276,7 +276,7 @@ class _FavoritesTab extends StatelessWidget {
                     playerProvider.toggleShuffle();
                   }
                 },
-                icon: FaIcon(FontAwesomeIcons.shuffle, size: 14),
+                icon: FaIcon(FontAwesomeIcons.shuffle, size: 22),
                 label: const Text('Aleatorio'),
               ),
             ],
@@ -353,7 +353,7 @@ class _FavoritesTab extends StatelessWidget {
                               SizedBox(
                                 width: 40,
                                 child: IconButton(
-                                  icon: FaIcon(isFav ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart, size: 14, color: isFav ? const Color(0xFFA50021) : null),
+                                  icon: FaIcon(isFav ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart, size: 22, color: isFav ? const Color(0xFFA50021) : null),
                                   onPressed: () => libraryProvider.toggleFavorite(track.id),
                                 ),
                               ),
@@ -601,7 +601,7 @@ class _AlbumCard extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Center(
-                child: FaIcon(FontAwesomeIcons.compactDisc, size: 14, color: NexoraColors.mutedStrong),
+                child: FaIcon(FontAwesomeIcons.compactDisc, size: 22, color: NexoraColors.mutedStrong),
               ),
             ),
           ),

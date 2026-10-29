@@ -43,7 +43,7 @@ class PlayerBar extends StatelessWidget {
                     color: Theme.of(context).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: FaIcon(FontAwesomeIcons.music, size: 14, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  child: FaIcon(FontAwesomeIcons.music, size: 22, color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               ),
               const SizedBox(width: 12),

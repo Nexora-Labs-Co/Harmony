@@ -29,7 +29,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               const Spacer(),
               if (widget.onClose != null)
                 IconButton(
-                  icon: FaIcon(FontAwesomeIcons.xmark, size: 14, color: NexoraColors.muted),
+                  icon: FaIcon(FontAwesomeIcons.xmark, size: 22, color: NexoraColors.muted),
                   onPressed: widget.onClose,
                 ),
             ],
@@ -53,7 +53,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               children: [
                 FaIcon(
                   _filter == 0 ? FontAwesomeIcons.music : FontAwesomeIcons.podcast,
-                  size: 14,
+                  size: 22,
                   color: NexoraColors.muted,
                 ),
                 const SizedBox(height: 16),

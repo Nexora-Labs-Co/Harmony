@@ -44,7 +44,7 @@ class DesktopBottomBar extends StatelessWidget {
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: FaIcon(FontAwesomeIcons.music, size: 14, color: Theme.of(context).colorScheme.onSurfaceVariant),
+      child: FaIcon(FontAwesomeIcons.music, size: 22, color: Theme.of(context).colorScheme.onSurfaceVariant),
     );
   }
 
@@ -111,7 +111,7 @@ class DesktopBottomBar extends StatelessWidget {
                   builder: (context, lib, _) {
                     final isFav = track.id.isNotEmpty && lib.isFavorite(track.id);
                     return IconButton(
-                      icon: FaIcon(isFav ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart, size: 14,
+                      icon: FaIcon(isFav ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart, size: 22,
                           color: isFav ? const Color(0xFFA50021) : null),
                       tooltip: 'Favorito',
                       onPressed: () => lib.toggleFavorite(track.id),
@@ -119,7 +119,7 @@ class DesktopBottomBar extends StatelessWidget {
                   },
                 ),
                 IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.plus, size: 14),
+                  icon: const FaIcon(FontAwesomeIcons.plus, size: 22),
                   tooltip: 'Anadir a album',
                   onPressed: () => _showAddToAlbumMenu(context, track),
                 ),
@@ -136,7 +136,7 @@ class DesktopBottomBar extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      icon: FaIcon(FontAwesomeIcons.shuffle, size: 14),
+                      icon: FaIcon(FontAwesomeIcons.shuffle, size: 22),
                       color: player.shuffle
                           ? Theme.of(context).colorScheme.primary
                           : Theme.of(context).colorScheme.onSurfaceVariant,
@@ -144,25 +144,25 @@ class DesktopBottomBar extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     IconButton(
-                      icon: FaIcon(FontAwesomeIcons.backwardStep, size: 14),
+                      icon: FaIcon(FontAwesomeIcons.backwardStep, size: 22),
                       onPressed: () => player.previous(),
                     ),
                     const SizedBox(width: 4),
                     IconButton(
-                      icon: FaIcon(player.isPlaying ? FontAwesomeIcons.circlePause : FontAwesomeIcons.circlePlay, size: 14),
+                      icon: FaIcon(player.isPlaying ? FontAwesomeIcons.circlePause : FontAwesomeIcons.circlePlay, size: 22),
                       color: Theme.of(context).colorScheme.primary,
                       onPressed: () => player.togglePlayPause(),
                     ),
                     const SizedBox(width: 4),
                     IconButton(
-                      icon: FaIcon(FontAwesomeIcons.forwardStep, size: 14),
+                      icon: FaIcon(FontAwesomeIcons.forwardStep, size: 22),
                       onPressed: () => player.next(),
                     ),
                     const SizedBox(width: 4),
                     IconButton(
                       icon: FaIcon(
                         player.repeatMode == PlayerRepeatMode.one ? FontAwesomeIcons.repeat : FontAwesomeIcons.repeat,
-                        size: 14,
+                        size: 22,
                       ),
                       color: player.repeatMode != PlayerRepeatMode.none
                           ? Theme.of(context).colorScheme.primary
@@ -203,17 +203,17 @@ class DesktopBottomBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: FaIcon(FontAwesomeIcons.microphone, size: 14),
+                  icon: FaIcon(FontAwesomeIcons.microphone, size: 22),
                   tooltip: 'Letra',
                   onPressed: () => _showLyrics(context, track),
                 ),
                 IconButton(
-                  icon: FaIcon(FontAwesomeIcons.bars, size: 14),
+                  icon: FaIcon(FontAwesomeIcons.bars, size: 22),
                   tooltip: 'Lista de reproduccion',
                   onPressed: onToggleRightPanel,
                 ),
                 IconButton(
-                  icon: FaIcon(FontAwesomeIcons.display, size: 14),
+                  icon: FaIcon(FontAwesomeIcons.display, size: 22),
                   tooltip: 'Dispositivos',
                   onPressed: null,
                 ),
@@ -234,7 +234,7 @@ class DesktopBottomBar extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: FaIcon(FontAwesomeIcons.expand, size: 14),
+                  icon: FaIcon(FontAwesomeIcons.expand, size: 22),
                   tooltip: 'Pantalla completa',
                   onPressed: onToggleFullscreen,
                 ),
@@ -314,7 +314,7 @@ class _BottomArtwork extends StatelessWidget {
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: FaIcon(FontAwesomeIcons.music, size: 14, color: Theme.of(context).colorScheme.onSurfaceVariant),
+        child: FaIcon(FontAwesomeIcons.music, size: 22, color: Theme.of(context).colorScheme.onSurfaceVariant),
       ),
     );
   }

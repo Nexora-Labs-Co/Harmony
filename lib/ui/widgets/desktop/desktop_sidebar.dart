@@ -96,7 +96,7 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                 const Spacer(),
                 IconButton(
                   icon: FaIcon(FontAwesomeIcons.plus,
-                      size: 14, color: NexoraColors.foreground),
+                      size: 22, color: NexoraColors.foreground),
                   tooltip: 'Crear album',
                   onPressed: playlistProvider.playlists.length >= 500
                       ? null
@@ -159,7 +159,7 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                               child: const Center(
                                 child: FaIcon(
                                   FontAwesomeIcons.compactDisc,
-                                  size: 14,
+                                  size: 22,
                                   color: NexoraColors.mutedStrong,
                                 ),
                               ),
@@ -227,7 +227,7 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                           ),
                   )
                 : (icon != null
-                    ? FaIcon(icon, size: 14, color: NexoraColors.foreground)
+                    ? FaIcon(icon, size: 22, color: NexoraColors.foreground)
                     : const SizedBox.shrink()),
           ),
         ),
