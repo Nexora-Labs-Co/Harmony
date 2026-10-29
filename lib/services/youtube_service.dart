@@ -77,13 +77,22 @@ class YouTubeService {
     try {
       final manifest = await _yt.videos.streamsClient.getManifest(videoId);
       // Prefer MP4/M4A (AAC) streams for better compatibility with the player.
+      // Prefer MP4 (M4A/AAC) streams, ideally itag 140, for desktop compatibility.
       final mp4Streams = manifest.audioOnly.where((s) {
         final mime = s.codec.mimeType.toLowerCase();
         return mime.contains('mp4') || mime.contains('m4a') || mime.contains('aac');
       }).toList();
-      final audio = mp4Streams.isNotEmpty
-          ? mp4Streams.reduce((a, b) => a.bitrate.bitsPerSecond > b.bitrate.bitsPerSecond ? a : b)
-          : manifest.audioOnly.withHighestBitrate();
+      late AudioStreamInfo audio;
+      if (mp4Streams.isNotEmpty) {
+        // Try to pick itag 140 if available.
+        final itag140 = mp4Streams.firstWhere(
+          (s) => s.tag == 140,
+          orElse: () => mp4Streams.reduce((a, b) => a.bitrate.bitsPerSecond > b.bitrate.bitsPerSecond ? a : b),
+        );
+        audio = itag140;
+      } else {
+        audio = manifest.audioOnly.withHighestBitrate();
+      }
       debugPrint('YouTubeService: selected ${audio.codec.mimeType} ${audio.bitrate} for $videoId');
       return audio.url.toString();
     } catch (e) {

@@ -96,9 +96,11 @@ class _DesktopShellState extends State<DesktopShell> {
                       ? NotificationsScreen(onClose: () => setState(() => _showNotifications = false))
                       : (_showAccount
                           ? AccountScreen(onClose: () => setState(() => _showAccount = false))
-                          : (_selectedPlaylistId != null
-                              ? AlbumDetailContent(playlistId: _selectedPlaylistId!)
-                              : DesktopMainContent(selectedIndex: _selectedIndex))),
+                          : (_showFavorites
+                              ? FavoritesScreen()
+                              : (_selectedPlaylistId != null
+                                  ? AlbumDetailContent(playlistId: _selectedPlaylistId!)
+                                  : DesktopMainContent(selectedIndex: _selectedIndex)))), 
                 ),
                 if (_rightPanelVisible)
                   SizedBox(
