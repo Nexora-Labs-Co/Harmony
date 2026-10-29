@@ -80,8 +80,10 @@ class _HomeTab extends StatelessWidget {
     final recommended = tracks.isEmpty
         ? <dynamic>[]
         : List.generate(8, (i) => tracks[i % tracks.length]);
-    final albums = playlistProvider.playlists.take(4).toList();
-    final recent = tracks.isEmpty ? <dynamic>[] : tracks.take(8).toList();
+    final albums = playlistProvider.playlists.take(8).toList();
+    final recent = tracks.isEmpty
+        ? <dynamic>[]
+        : tracks.take(8).toList();
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -91,21 +93,17 @@ class _HomeTab extends StatelessWidget {
           children: [
             Text(
               '${_greeting()}, Santiago',
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
-              'Harmony. Tu música, tu ritmo',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+              'Tu música, tu ritmo',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 24),
             _sectionTitle(context, 'Recomendado por Cari, para ti'),
             const SizedBox(height: 12),
-            _horizontalList(
+            _trackGrid(
               context,
               recommended,
               playerProvider,
@@ -114,11 +112,11 @@ class _HomeTab extends StatelessWidget {
             const SizedBox(height: 24),
             _sectionTitle(context, 'Álbumes'),
             const SizedBox(height: 12),
-            _albumHorizontalList(context, albums),
+            _albumGrid(context, albums),
             const SizedBox(height: 24),
             _sectionTitle(context, 'Recientes'),
             const SizedBox(height: 12),
-            _horizontalList(
+            _trackGrid(
               context,
               recent,
               playerProvider,
@@ -130,56 +128,14 @@ class _HomeTab extends StatelessWidget {
     );
   }
 
-  Widget _albumHorizontalList(BuildContext context, List albums) {
-    if (albums.isEmpty) {
-      return SizedBox(
-        height: 180,
-        child: Center(
-          child: Text(
-            'Sin álbumes',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant),
-          ),
-        ),
-      );
-    }
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth;
-        final perView = width > 900 ? 4 : (width > 600 ? 3 : 2);
-        final itemWidth = (width - 12.0 * (perView - 1)) / perView;
-        return SizedBox(
-          height: 180,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: albums.length,
-            itemBuilder: (context, index) {
-              final album = albums[index];
-              return Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: SizedBox(
-                  width: itemWidth.clamp(120.0, 260.0),
-                  child: _AlbumCard(album: album),
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
   Widget _sectionTitle(BuildContext context, String title) {
     return Text(
       title,
-      style: Theme.of(context)
-          .textTheme
-          .titleLarge
-          ?.copyWith(fontWeight: FontWeight.bold),
+      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
     );
   }
 
-  Widget _horizontalList(
+  Widget _trackGrid(
     BuildContext context,
     List tracks,
     PlayerProvider playerProvider,
@@ -187,40 +143,75 @@ class _HomeTab extends StatelessWidget {
   ) {
     if (tracks.isEmpty) {
       return SizedBox(
-        height: 160,
+        height: 120,
         child: Center(
           child: Text(
             'Sin canciones',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
         ),
       );
     }
-    return SizedBox(
-      height: 180,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: tracks.length,
-        itemBuilder: (context, index) {
-          final track = tracks[index];
-          return Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: SizedBox(
-              width: 140,
-              child: _TrackCard(
-                track: track,
-                onTap: () {
-                  playerProvider.setQueue(libraryProvider.allTracks,
-                      startIndex: libraryProvider.allTracks
-                          .indexOf(track)
-                          .clamp(0, libraryProvider.allTracks.length - 1));
-                },
-              ),
-            ),
-          );
-        },
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final targetWidth = 180.0;
+        final crossAxisCount = (constraints.maxWidth / targetWidth).floor().clamp(2, 8);
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            childAspectRatio: 0.85,
+          ),
+          itemCount: tracks.length,
+          itemBuilder: (context, index) {
+            final track = tracks[index];
+            return _TrackCard(
+              track: track,
+              onTap: () {
+                playerProvider.setQueue(libraryProvider.allTracks, startIndex: libraryProvider.allTracks.indexOf(track).clamp(0, libraryProvider.allTracks.length - 1));
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _albumGrid(BuildContext context, List albums) {
+    if (albums.isEmpty) {
+      return SizedBox(
+        height: 120,
+        child: Center(
+          child: Text(
+            'Sin álbumes',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          ),
+        ),
+      );
+    }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final targetWidth = 180.0;
+        final crossAxisCount = (constraints.maxWidth / targetWidth).floor().clamp(2, 8);
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            childAspectRatio: 0.85,
+          ),
+          itemCount: albums.length,
+          itemBuilder: (context, index) {
+            final album = albums[index];
+            return _AlbumCard(album: album);
+          },
+        );
+      },
     );
   }
 }

@@ -35,6 +35,10 @@ class Playlist {
   final int updatedAt;
   final String? coverImagePath;
 
+  String? get coverPath => coverImagePath;
+  String? get coverUrl => coverImagePath;
+  List<String> get songs => trackIds;
+
   Playlist({
     required this.id,
     required this.name,
