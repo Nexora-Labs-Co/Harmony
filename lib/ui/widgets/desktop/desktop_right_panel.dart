@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:media_kit/media_kit.dart';
@@ -243,33 +244,78 @@ class _CariPanel extends StatefulWidget {
 }
 
 class _CariPanelState extends State<_CariPanel> {
+  late final Player _player;
+  List<String> _tracks = [];
+  int _currentIndex = 0;
   bool _playing = false;
+  StreamSubscription<bool>? _completedSub;
 
-  Future<void> _playVoice() async {
+  @override
+  void initState() {
+    super.initState();
+    _player = Player();
+    _completedSub = _player.stream.completed.listen((completed) {
+      if (!completed) return;
+      _advance();
+    });
+    _player.stream.playing.listen((p) {
+      if (mounted) setState(() => _playing = p);
+    });
+    _loadTracks();
+  }
+
+  Future<void> _loadTracks() async {
     try {
       final manifest = await rootBundle.loadString('AssetManifest.json');
       final regex = RegExp(r'"(assets/voz/[^"]+)"');
       final matches = regex.allMatches(manifest).map((m) => m.group(1)!).toList();
-      if (matches.isEmpty) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('No hay audios de Cari disponibles.')),
-          );
-        }
-        return;
+      matches.sort();
+      _tracks = matches;
+      if (_tracks.isNotEmpty) {
+        await _playIndex(0);
       }
-      final bytes = await rootBundle.load(matches.first);
+    } catch (e) {
+      debugPrint('Cari voice load error: $e');
+    }
+  }
+
+  Future<void> _playIndex(int index) async {
+    if (index < 0 || index >= _tracks.length) return;
+    _currentIndex = index;
+    try {
+      final bytes = await rootBundle.load(_tracks[index]);
       final data = bytes.buffer.asUint8List();
       final media = await Media.memory(data);
-      await AudioService.instance.player.open(media, play: true);
-      setState(() => _playing = true);
+      await _player.open(media, play: true);
+      if (mounted) setState(() => _playing = true);
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error reproduciendo voz de Cari: $e')),
-        );
+      debugPrint('Cari play error: $e');
+    }
+  }
+
+  void _advance() {
+    if (_tracks.isEmpty) return;
+    final next = (_currentIndex + 1) % _tracks.length;
+    _playIndex(next);
+  }
+
+  void _togglePlayPause() {
+    if (_playing) {
+      _player.pause();
+    } else {
+      if (_tracks.isNotEmpty && _player.state.playlist.medias.isEmpty) {
+        _playIndex(_currentIndex);
+      } else {
+        _player.play();
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _completedSub?.cancel();
+    _player.dispose();
+    super.dispose();
   }
 
   @override
@@ -292,7 +338,7 @@ class _CariPanelState extends State<_CariPanel> {
                   ),
                 ),
                 IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.expand, size: 22, color: Colors.white),
+                  icon: const FaIcon(FontAwesomeIcons.expand, size: 16, color: Colors.white),
                   onPressed: () {},
                 ),
               ],
@@ -332,8 +378,8 @@ class _CariPanelState extends State<_CariPanel> {
                   const SizedBox(height: 24),
                   Center(
                     child: IconButton(
-                      icon: Icon(_playing ? Icons.pause_circle_filled : Icons.play_circle_filled, size: 22, color: Colors.white),
-                      onPressed: _playVoice,
+                      icon: Icon(_playing ? Icons.pause_circle_filled : Icons.play_circle_filled, size: 48, color: Colors.white),
+                      onPressed: _togglePlayPause,
                     ),
                   ),
                 ],
