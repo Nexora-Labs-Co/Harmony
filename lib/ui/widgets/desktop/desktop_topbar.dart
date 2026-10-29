@@ -126,25 +126,20 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
             onPressed: widget.onToggleRight,
           ),
           const SizedBox(width: 8),
-          SizedBox(
-            height: 48,
-            child: Center(
-              child: GestureDetector(
-                onTap: widget.onToggleAccount,
-                child: Builder(
-                  builder: (context) {
-                    final profile = context.watch<ProfileProvider>();
-                    return CircleAvatar(
-                      radius: 14,
-                      backgroundColor: NexoraColors.surfaceHover,
-                      backgroundImage: profile.avatarPath != null ? FileImage(File(profile.avatarPath!)) : null,
-                      child: profile.avatarPath == null
-                          ? Text(profile.name.isNotEmpty ? profile.name[0].toUpperCase() : 'H', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: NexoraColors.foreground))
-                          : null,
-                    );
-                  },
-                ),
-              ),
+          GestureDetector(
+            onTap: widget.onToggleAccount,
+            child: Builder(
+              builder: (context) {
+                final profile = context.watch<ProfileProvider>();
+                return CircleAvatar(
+                  radius: 14,
+                  backgroundColor: NexoraColors.surfaceHover,
+                  backgroundImage: profile.avatarPath != null ? FileImage(File(profile.avatarPath!)) : null,
+                  child: profile.avatarPath == null
+                      ? Text(profile.name.isNotEmpty ? profile.name[0].toUpperCase() : 'H', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: NexoraColors.foreground))
+                      : null,
+                );
+              },
             ),
           ),
         ],
