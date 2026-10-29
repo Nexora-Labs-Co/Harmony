@@ -136,7 +136,7 @@ class DesktopBottomBar extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      icon: FaIcon(FontAwesomeIcons.shuffle, size: 22),
+                      icon: FaIcon(FontAwesomeIcons.shuffle, size: 18),
                       color: player.shuffle
                           ? Theme.of(context).colorScheme.primary
                           : Theme.of(context).colorScheme.onSurfaceVariant,
@@ -144,25 +144,25 @@ class DesktopBottomBar extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     IconButton(
-                      icon: FaIcon(FontAwesomeIcons.backwardStep, size: 22),
+                      icon: FaIcon(FontAwesomeIcons.backwardStep, size: 18),
                       onPressed: () => player.previous(),
                     ),
                     const SizedBox(width: 4),
                     IconButton(
-                      icon: FaIcon(player.isPlaying ? FontAwesomeIcons.circlePause : FontAwesomeIcons.circlePlay, size: 22),
+                      icon: FaIcon(player.isPlaying ? FontAwesomeIcons.circlePause : FontAwesomeIcons.circlePlay, size: 28),
                       color: Theme.of(context).colorScheme.primary,
                       onPressed: () => player.togglePlayPause(),
                     ),
                     const SizedBox(width: 4),
                     IconButton(
-                      icon: FaIcon(FontAwesomeIcons.forwardStep, size: 22),
+                      icon: FaIcon(FontAwesomeIcons.forwardStep, size: 18),
                       onPressed: () => player.next(),
                     ),
                     const SizedBox(width: 4),
                     IconButton(
                       icon: FaIcon(
                         player.repeatMode == PlayerRepeatMode.one ? FontAwesomeIcons.repeat : FontAwesomeIcons.repeat,
-                        size: 22,
+                        size: 18,
                       ),
                       color: player.repeatMode != PlayerRepeatMode.none
                           ? Theme.of(context).colorScheme.primary
