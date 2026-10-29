@@ -13,6 +13,8 @@ class Track {
   final TrackType trackType;
   final String? path;
 
+  String get source => trackType == TrackType.Remote ? 'youtube' : 'local';
+
   Track({
     required this.id,
     required this.title,
