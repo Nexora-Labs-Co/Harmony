@@ -10,7 +10,8 @@ import '../../providers/playlist_provider.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 
 class AccountScreen extends StatelessWidget {
-  const AccountScreen({super.key});
+  final VoidCallback? onClose;
+  const AccountScreen({super.key, this.onClose});
 
   Future<void> _pickAvatar(BuildContext context) async {
     final profile = context.read<ProfileProvider>();
@@ -62,6 +63,11 @@ class AccountScreen extends StatelessWidget {
         title: const Text('Cuenta', style: TextStyle(color: NexoraColors.foreground)),
         iconTheme: const IconThemeData(color: NexoraColors.foreground),
         actions: [
+          if (onClose != null)
+            IconButton(
+              icon: FaIcon(FontAwesomeIcons.xmark, size: 16, color: NexoraColors.foreground),
+              onPressed: onClose,
+            ),
           IconButton(
             icon: FaIcon(FontAwesomeIcons.gear, color: NexoraColors.foreground),
             onPressed: () {},
@@ -121,7 +127,7 @@ class AccountScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             SizedBox(
-              height: 110,
+              height: 130,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: const [
@@ -154,8 +160,8 @@ class _ArtistChip extends StatelessWidget {
             child: FaIcon(FontAwesomeIcons.user, color: NexoraColors.muted),
           ),
           const SizedBox(height: 8),
-          Text(name, style: const TextStyle(color: NexoraColors.foreground, fontSize: 12, fontWeight: FontWeight.w500)),
-          const Text('Artist', style: TextStyle(color: NexoraColors.muted, fontSize: 10)),
+          Text(name, style: const TextStyle(color: NexoraColors.foreground, fontSize: 11, fontWeight: FontWeight.w500)),
+          const Text('Artist', style: TextStyle(color: NexoraColors.muted, fontSize: 9)),
         ],
       ),
     );
