@@ -23,6 +23,7 @@ class DesktopSidebar extends StatefulWidget {
 
 class _DesktopSidebarState extends State<DesktopSidebar> {
   String? _pinnedAlbumId;
+  String? _selectedAlbumId;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +65,7 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                 ),
                 _gridTile(
                   context,
-                  assetPath: 'assets/icons/Logo-Harmony-512.png',
+                  assetPath: 'assets/icons/Logo-Cari.png',
                   selected: widget.selectedIndex == 2,
                   onTap: () => widget.onItemSelected(2),
                 ),
@@ -93,11 +94,13 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.add, size: 16, color: NexoraColors.foreground),
+                  icon: const Icon(Icons.add,
+                      size: 16, color: NexoraColors.foreground),
                   tooltip: 'Crear album',
                   onPressed: playlistProvider.playlists.length >= 500
                       ? null
-                      : () => _showCreatePlaylistDialog(context, playlistProvider),
+                      : () =>
+                          _showCreatePlaylistDialog(context, playlistProvider),
                 ),
               ],
             ),
@@ -112,7 +115,8 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                   )
                 : GridView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       mainAxisSpacing: 8,
                       crossAxisSpacing: 8,
@@ -121,21 +125,42 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                     itemCount: playlistProvider.playlists.length.clamp(0, 500),
                     itemBuilder: (context, index) {
                       final playlist = playlistProvider.playlists[index];
+                      final selected = _selectedAlbumId == playlist.id;
                       return InkWell(
-                        onTap: () => widget.onPlaylistSelected(playlist.id),
+                        onTap: () {
+                          setState(() => _selectedAlbumId = playlist.id);
+                          widget.onPlaylistSelected(playlist.id);
+                        },
                         borderRadius: BorderRadius.circular(8),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: NexoraColors.surfaceHover,
-                              border: Border.all(color: NexoraColors.border),
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.album,
-                                size: 40,
-                                color: NexoraColors.mutedStrong,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 180),
+                          curve: Curves.easeOut,
+                          transform: Matrix4.translationValues(0, selected ? -3 : 0, 0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: selected
+                                ? const [
+                                    BoxShadow(
+                                      color: Color(0x33000000),
+                                      blurRadius: 8,
+                                      offset: Offset(0, 4),
+                                    ),
+                                  ]
+                                : null,
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: NexoraColors.surfaceHover,
+                                border: Border.all(color: NexoraColors.border),
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.album,
+                                  size: 40,
+                                  color: NexoraColors.mutedStrong,
+                                ),
                               ),
                             ),
                           ),
@@ -159,34 +184,52 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: selected ? NexoraColors.foreground : NexoraColors.border,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        curve: Curves.easeOut,
+        transform: Matrix4.translationValues(0, selected ? -3 : 0, 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: selected
+              ? const [
+                  BoxShadow(
+                    color: Color(0x33000000),
+                    blurRadius: 8,
+                    offset: Offset(0, 4),
+                  ),
+                ]
+              : null,
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            color: NexoraColors.surface,
+            decoration: BoxDecoration(
+              color: NexoraColors.surface,
+              border: Border.all(color: NexoraColors.border),
             ),
-          ),
-          child: assetPath != null
-              ? SizedBox.expand(
-                  child: assetPath.toLowerCase().endsWith('.svg')
-                      ? SvgPicture.asset(
-                          assetPath,
-                          fit: BoxFit.cover,
-                          alignment: Alignment.center,
-                        )
-                      : Image.asset(
-                          assetPath,
-                          fit: BoxFit.cover,
-                          alignment: Alignment.center,
-                          errorBuilder: (_, __, ___) => const Center(
-                            child: Icon(Icons.broken_image, color: NexoraColors.muted),
+            child: assetPath != null
+                ? SizedBox.expand(
+                    child: assetPath.toLowerCase().endsWith('.svg')
+                        ? SvgPicture.asset(
+                            assetPath,
+                            fit: BoxFit.cover,
+                            alignment: Alignment.center,
+                          )
+                        : Image.asset(
+                            assetPath,
+                            fit: BoxFit.cover,
+                            alignment: Alignment.center,
+                            errorBuilder: (_, __, ___) => const Center(
+                              child: Icon(Icons.broken_image,
+                                  color: NexoraColors.muted),
+                            ),
                           ),
-                        ),
-                )
-              : (icon != null
-                  ? Icon(icon, size: 32, color: NexoraColors.foreground)
-                  : const SizedBox.shrink()),
+                  )
+                : (icon != null
+                    ? Icon(icon, size: 32, color: NexoraColors.foreground)
+                    : const SizedBox.shrink()),
+          ),
         ),
       ),
     );
@@ -212,7 +255,8 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
     widget.onPlaylistSelected(provider.playlists.first.id);
   }
 
-  void _showCreatePlaylistDialog(BuildContext context, PlaylistProvider provider) {
+  void _showCreatePlaylistDialog(
+      BuildContext context, PlaylistProvider provider) {
     final nameController = TextEditingController();
     final descController = TextEditingController();
 
@@ -225,22 +269,27 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
           children: [
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(labelText: 'Nombre', hintText: 'Mi album'),
+              decoration: const InputDecoration(
+                  labelText: 'Nombre', hintText: 'Mi album'),
               autofocus: true,
             ),
             const SizedBox(height: 16),
             TextField(
               controller: descController,
-              decoration: const InputDecoration(labelText: 'Descripcion (opcional)'),
+              decoration:
+                  const InputDecoration(labelText: 'Descripcion (opcional)'),
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancelar')),
           FilledButton(
             onPressed: () {
               if (nameController.text.isNotEmpty) {
-                provider.createPlaylist(nameController.text, descController.text);
+                provider.createPlaylist(
+                    nameController.text, descController.text);
                 Navigator.pop(context);
               }
             },
