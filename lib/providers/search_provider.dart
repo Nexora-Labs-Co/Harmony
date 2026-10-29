@@ -43,7 +43,9 @@ class SearchProvider extends ChangeNotifier {
 
     // Búsqueda en YouTube
     if (_searchYouTube) {
+      debugPrint('SearchProvider: searching YouTube for $query');
       _youtubeResults = await YouTubeService.instance.search(query);
+      debugPrint('SearchProvider: found ${_youtubeResults.length} YouTube results');
     } else {
       _youtubeResults = [];
     }

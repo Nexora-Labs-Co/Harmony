@@ -31,6 +31,7 @@ class YouTubeService {
     if (query.trim().isEmpty) return [];
     try {
       final results = await _yt.search.getVideos(query);
+      debugPrint('YouTubeService: ${results.length} results for $query');
       return results.map((v) {
         return YouTubeTrack(
           id: v.id.value,
