@@ -25,6 +25,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return parts.length > 3 ? '$joined...' : joined;
   }
 
+  String _formatDuration(Duration d) {
+    final h = d.inHours;
+    final m = d.inMinutes.remainder(60);
+    if (h > 0) return '$h h $m min';
+    return '$m min';
+  }
+
   String _formatMs(int ms) {
     final d = Duration(milliseconds: ms);
     String two(int n) => n.toString().padLeft(2, '0');
@@ -49,14 +56,19 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Container(
-                width: 180,
-                height: 180,
+                width: 200,
+                height: 200,
                 decoration: BoxDecoration(
-                  color: NexoraColors.surfaceAlt,
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFA50021), Color(0xFF500010)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: NexoraColors.border),
                 ),
-                child: const FaIcon(FontAwesomeIcons.solidHeart, size: 64, color: Color(0xFFA50021)),
+                child: const Center(
+                  child: FaIcon(FontAwesomeIcons.solidHeart, size: 80, color: Colors.white),
+                ),
               ),
               const SizedBox(width: 24),
               Expanded(
@@ -65,9 +77,15 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   children: [
                     const Text('PLAYLIST', style: TextStyle(color: NexoraColors.muted, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 2)),
                     const SizedBox(height: 8),
-                    const Text('Favoritos', style: TextStyle(color: NexoraColors.foreground, fontSize: 40, fontWeight: FontWeight.bold)),
+                    const Text('Favoritos', style: TextStyle(color: NexoraColors.foreground, fontSize: 56, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
-                    Text('${tracks.length} canciones, ${_formatMs(totalMs)}', style: const TextStyle(color: NexoraColors.mutedStrong, fontSize: 13)),
+                    Row(
+                      children: [
+                        const CircleAvatar(radius: 10, backgroundColor: NexoraColors.surfaceHover, child: Text('S', style: TextStyle(fontSize: 10, color: NexoraColors.foreground))),
+                        const SizedBox(width: 8),
+                        Text('Saaarmyx · ${tracks.length} canciones, ${_formatDuration(totalDur)}', style: const TextStyle(color: NexoraColors.mutedStrong, fontSize: 13)),
+                      ],
+                    ),
                   ],
                 ),
               ),

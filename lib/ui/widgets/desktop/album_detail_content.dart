@@ -123,12 +123,12 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                   child: (_coverPath != null)
                       ? Image.file(
                           File(_coverPath!),
-                          width: 180,
-                          height: 180,
+                          width: 200,
+                          height: 200,
                           fit: BoxFit.cover,
                           errorBuilder: (_, __, ___) => Container(
-                            width: 180,
-                            height: 180,
+                            width: 200,
+                            height: 200,
                             color: NexoraColors.surfaceAlt,
                             child: FaIcon(FontAwesomeIcons.compactDisc, size: 64, color: NexoraColors.muted),
                           ),
@@ -136,19 +136,19 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                       : (tracks.isNotEmpty)
                     ? CachedArtwork(
                         albumArt: tracks.first.albumArt,
-                        width: 180,
-                        height: 180,
+                        width: 200,
+                        height: 200,
                         borderRadius: BorderRadius.circular(8),
                         fallback: Container(
-                          width: 180,
-                          height: 180,
+                          width: 200,
+                          height: 200,
                           color: NexoraColors.surfaceAlt,
                           child: FaIcon(FontAwesomeIcons.compactDisc, size: 64, color: NexoraColors.muted),
                         ),
                       )
                     : Container(
-                        width: 180,
-                        height: 180,
+                        width: 200,
+                        height: 200,
                         color: NexoraColors.surfaceAlt,
                         child: FaIcon(FontAwesomeIcons.compactDisc, size: 64, color: NexoraColors.muted),
                       ),
@@ -173,7 +173,7 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                       playlist.name,
                       style: const TextStyle(
                         color: NexoraColors.foreground,
-                        fontSize: 40,
+                        fontSize: 56,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
