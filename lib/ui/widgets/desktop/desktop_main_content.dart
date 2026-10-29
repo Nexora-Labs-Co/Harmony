@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../bridge/bridge_generated.dart';
 import '../../../providers/library_provider.dart';
+import '../../../providers/playlist_provider.dart';
+import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 import '../../../services/youtube_service.dart';
 import '../cached_artwork.dart';
 import '../../../providers/player_provider.dart';
@@ -68,15 +70,14 @@ class _HomeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final libraryProvider = context.watch<LibraryProvider>();
+    final playlistProvider = context.watch<PlaylistProvider>();
     final playerProvider = context.watch<PlayerProvider>();
     final tracks = libraryProvider.allTracks;
 
     final recommended = tracks.isEmpty
         ? <dynamic>[]
         : List.generate(8, (i) => tracks[i % tracks.length]);
-    final albums = tracks.isEmpty
-        ? <dynamic>[]
-        : List.generate(4, (i) => tracks[i % tracks.length]);
+    final albums = playlistProvider.playlists.take(4).toList();
     final recent = tracks.isEmpty
         ? <dynamic>[]
         : tracks.take(8).toList();
@@ -108,12 +109,7 @@ class _HomeTab extends StatelessWidget {
             const SizedBox(height: 24),
             _sectionTitle(context, 'Álbumes'),
             const SizedBox(height: 12),
-            _horizontalList(
-              context,
-              albums,
-              playerProvider,
-              libraryProvider,
-            ),
+            _albumHorizontalList(context, albums),
             const SizedBox(height: 24),
             _sectionTitle(context, 'Recientes'),
             const SizedBox(height: 12),
@@ -125,6 +121,37 @@ class _HomeTab extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _albumHorizontalList(BuildContext context, List albums) {
+    if (albums.isEmpty) {
+      return SizedBox(
+        height: 180,
+        child: Center(
+          child: Text(
+            'Sin álbumes',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          ),
+        ),
+      );
+    }
+    return SizedBox(
+      height: 180,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: albums.length,
+        itemBuilder: (context, index) {
+          final album = albums[index];
+          return Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: SizedBox(
+              width: 140,
+              child: _AlbumCard(album: album),
+            ),
+          );
+        },
       ),
     );
   }
@@ -190,6 +217,7 @@ class _FavoritesTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final libraryProvider = context.watch<LibraryProvider>();
+    final playlistProvider = context.watch<PlaylistProvider>();
     final playerProvider = context.watch<PlayerProvider>();
 
     final tracks = libraryProvider.favorites;
@@ -540,6 +568,51 @@ class _TrackCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+
+class _AlbumCard extends StatelessWidget {
+  final dynamic album;
+
+  const _AlbumCard({required this.album});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              color: NexoraColors.surface,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: NexoraColors.border),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x22000000),
+                  blurRadius: 6,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Center(
+                child: Icon(Icons.album, size: 48, color: NexoraColors.mutedStrong),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          album.name ?? 'Álbum',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+        ),
+      ],
     );
   }
 }
