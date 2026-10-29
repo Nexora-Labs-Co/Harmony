@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,6 +25,24 @@ class DesktopShell extends StatefulWidget {
 }
 
 class _DesktopShellState extends State<DesktopShell> {
+  String _appVersion = '26.10.28+2';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppVersion();
+  }
+
+  Future<void> _loadAppVersion() async {
+    try {
+      final yaml = await rootBundle.loadString('pubspec.yaml');
+      final match = RegExp(r'^version:\s*(.+)$', multiLine: true).firstMatch(yaml);
+      if (match != null && mounted) {
+        setState(() => _appVersion = match.group(1)!.trim());
+      }
+    } catch (_) {}
+  }
+
   int _selectedIndex = 0;
   String? _selectedPlaylistId;
   bool _sidebarVisible = true;
@@ -176,8 +195,8 @@ class _DesktopShellState extends State<DesktopShell> {
               },
             ),
           NexoraFooterBar(
-            left: const Text(
-              'v26.10.27+1',
+            left: Text(
+              'v$_appVersion',
               style: TextStyle(color: NexoraColors.muted, fontSize: 11.5),
             ),
             right: Row(
