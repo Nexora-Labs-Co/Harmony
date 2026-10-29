@@ -76,7 +76,15 @@ class YouTubeService {
   Future<String?> getAudioStreamUrl(String videoId) async {
     try {
       final manifest = await _yt.videos.streamsClient.getManifest(videoId);
-      final audio = manifest.audioOnly.withHighestBitrate();
+      // Prefer MP4/M4A (AAC) streams for better compatibility with the player.
+      final mp4Streams = manifest.audioOnly.where((s) {
+        final mime = s.codec.mimeType.toLowerCase();
+        return mime.contains('mp4') || mime.contains('m4a') || mime.contains('aac');
+      }).toList();
+      final audio = mp4Streams.isNotEmpty
+          ? mp4Streams.reduce((a, b) => a.bitrate.bitsPerSecond > b.bitrate.bitsPerSecond ? a : b)
+          : manifest.audioOnly.withHighestBitrate();
+      debugPrint('YouTubeService: selected ${audio.codec.mimeType} ${audio.bitrate} for $videoId');
       return audio.url.toString();
     } catch (e) {
       debugPrint('YouTubeService.getAudioStreamUrl error: $e');
