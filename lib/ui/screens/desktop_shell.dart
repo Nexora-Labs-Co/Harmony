@@ -73,9 +73,11 @@ class _DesktopShellState extends State<DesktopShell> {
                   flex: 3,
                   child: _showNotifications
                       ? NotificationsScreen(onClose: () => setState(() => _showNotifications = false))
-                      : (_selectedPlaylistId != null
-                          ? AlbumDetailContent(playlistId: _selectedPlaylistId!)
-                          : DesktopMainContent(selectedIndex: _selectedIndex)),
+                      : (_showAccount
+                          ? AccountScreen(onClose: () => setState(() => _showAccount = false))
+                          : (_selectedPlaylistId != null
+                              ? AlbumDetailContent(playlistId: _selectedPlaylistId!)
+                              : DesktopMainContent(selectedIndex: _selectedIndex))),
                 ),
                 if (_rightPanelVisible)
                   SizedBox(
@@ -105,7 +107,7 @@ class _DesktopShellState extends State<DesktopShell> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.github, size: 22),
+                  icon: const FaIcon(FontAwesomeIcons.github, size: 16),
                   color: NexoraColors.mutedStrong,
                   onPressed: () async {
                     final uri = Uri.parse('https://github.com/Nexora-Labs-Co');
@@ -115,7 +117,7 @@ class _DesktopShellState extends State<DesktopShell> {
                   },
                 ),
                 IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.xTwitter, size: 22),
+                  icon: const FaIcon(FontAwesomeIcons.xTwitter, size: 16),
                   color: NexoraColors.mutedStrong,
                   onPressed: () async {
                     final uri = Uri.parse('https://x.com');
