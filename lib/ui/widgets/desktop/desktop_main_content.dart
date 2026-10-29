@@ -10,6 +10,7 @@ import '../../../providers/playlist_provider.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 import '../../../services/youtube_service.dart';
 import '../cached_artwork.dart';
+import 'album_header_view.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/search_provider.dart';
 
@@ -231,33 +232,25 @@ class _FavoritesTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(8),
+          AlbumHeaderView(
+            cover: Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFA50021), Color(0xFF090c02)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                child: FaIcon(FontAwesomeIcons.solidHeart, size: 22, color: const Color(0xFFA50021)),
+                borderRadius: BorderRadius.circular(8),
               ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('PLAYLIST', style: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: 2)),
-                    const SizedBox(height: 6),
-                    Text('Favoritos', style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 6),
-                    Text('${tracks.length} pistas • ${_formatMs(totalMs)}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
-                  ],
-                ),
+              child: const Center(
+                child: FaIcon(FontAwesomeIcons.solidHeart, size: 80, color: Colors.white),
               ),
-            ],
+            ),
+            label: 'PLAYLIST',
+            title: 'Favoritos',
+            subtitle: 'Saaarmyx · ${tracks.length} canciones, ${_formatMs(totalMs)}',
           ),
           const SizedBox(height: 20),
           Row(
