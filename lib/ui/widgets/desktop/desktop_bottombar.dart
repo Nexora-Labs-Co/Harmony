@@ -10,7 +10,14 @@ import '../../../providers/library_provider.dart';
 import '../cached_artwork.dart';
 
 class DesktopBottomBar extends StatelessWidget {
-  const DesktopBottomBar({super.key});
+  const DesktopBottomBar({
+    super.key,
+    this.onToggleRightPanel,
+    this.onToggleFullscreen,
+  });
+
+  final VoidCallback? onToggleRightPanel;
+  final VoidCallback? onToggleFullscreen;
 
   String _format(Duration d) {
     String two(int n) => n.toString().padLeft(2, '0');
@@ -182,11 +189,20 @@ class DesktopBottomBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.queue_music, size: 20),
-                  onPressed: () {},
+                  icon: const Icon(Icons.lyrics_outlined, size: 20),
+                  tooltip: 'Letra',
+                  onPressed: () => _showLyrics(context, track),
                 ),
-                const SizedBox(width: 8),
-                Icon(Icons.volume_down, size: 20, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                IconButton(
+                  icon: const Icon(Icons.queue_music, size: 20),
+                  tooltip: 'Lista de reproduccion',
+                  onPressed: onToggleRightPanel,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.devices, size: 20),
+                  tooltip: 'Dispositivos',
+                  onPressed: null,
+                ),
                 SizedBox(
                   width: 110,
                   child: SliderTheme(
@@ -203,7 +219,11 @@ class DesktopBottomBar extends StatelessWidget {
                     ),
                   ),
                 ),
-                Icon(Icons.volume_up, size: 20, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                IconButton(
+                  icon: const Icon(Icons.fullscreen, size: 20),
+                  tooltip: 'Pantalla completa',
+                  onPressed: onToggleFullscreen,
+                ),
               ],
             ),
           ),
@@ -284,4 +304,24 @@ class _BottomArtwork extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showLyrics(BuildContext context, dynamic track) {
+  showDialog(
+    context: context,
+    builder: (ctx) => Dialog.fullscreen(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(track.title ?? 'Letra'),
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => Navigator.pop(ctx),
+          ),
+        ),
+        body: const Center(
+          child: Text('Letra no disponible'),
+        ),
+      ),
+    ),
+  );
 }

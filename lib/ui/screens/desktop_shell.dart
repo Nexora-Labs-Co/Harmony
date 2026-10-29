@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:window_manager/window_manager.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -110,7 +111,16 @@ class _DesktopShellState extends State<DesktopShell> {
             ),
           ),
           if (player.currentTrack != null)
-            const DesktopBottomBar(),
+            DesktopBottomBar(
+              onToggleRightPanel: () => setState(() => _rightPanelVisible = !_rightPanelVisible),
+              onToggleFullscreen: () async {
+                if (await windowManager.isMaximized()) {
+                  await windowManager.unmaximize();
+                } else {
+                  await windowManager.maximize();
+                }
+              },
+            ),
           NexoraFooterBar(
             left: const Text(
               'v26.10.27+1',
