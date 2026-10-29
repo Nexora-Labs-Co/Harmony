@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +21,7 @@ class AlbumDetailContent extends StatefulWidget {
 
 class _AlbumDetailContentState extends State<AlbumDetailContent> {
   String? _hoveredId;
+  String? _coverPath;
 
   String _format(Duration d) {
     String two(int n) => n.toString().padLeft(2, '0');
@@ -88,13 +91,47 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  width: 180,
-                  height: 180,
-                  color: NexoraColors.surfaceAlt,
-                  child: const Icon(Icons.album, size: 64, color: NexoraColors.muted),
+              GestureDetector(
+                onTap: () async {
+                  final result = await FilePicker.pickFiles(type: FileType.image);
+                  if (result != null && result.isNotEmpty && result.single.path != null) {
+                    setState(() => _coverPath = result.single.path);
+                  }
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: (_coverPath != null)
+                      ? Image.file(
+                          File(_coverPath!),
+                          width: 180,
+                          height: 180,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            width: 180,
+                            height: 180,
+                            color: NexoraColors.surfaceAlt,
+                            child: FaIcon(FontAwesomeIcons.compactDisc, size: 64, color: NexoraColors.muted),
+                          ),
+                        )
+                      : (tracks.isNotEmpty)
+                    ? CachedArtwork(
+                        albumArt: tracks.first.albumArt,
+                        width: 180,
+                        height: 180,
+                        borderRadius: BorderRadius.circular(8),
+                        fallback: Container(
+                          width: 180,
+                          height: 180,
+                          color: NexoraColors.surfaceAlt,
+                          child: FaIcon(FontAwesomeIcons.compactDisc, size: 64, color: NexoraColors.muted),
+                        ),
+                      )
+                    : Container(
+                        width: 180,
+                        height: 180,
+                        color: NexoraColors.surfaceAlt,
+                        child: FaIcon(FontAwesomeIcons.compactDisc, size: 64, color: NexoraColors.muted),
+                      ),
                 ),
               ),
               const SizedBox(width: 24),
@@ -116,7 +153,7 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                       playlist.name,
                       style: const TextStyle(
                         color: NexoraColors.foreground,
-                        fontSize: 32,
+                        fontSize: 40,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -147,7 +184,7 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                 onPressed: () {
                   if (tracks.isNotEmpty) playerProvider.setQueue(tracks);
                 },
-                icon: const Icon(Icons.play_arrow, size: 18),
+                icon: FaIcon(FontAwesomeIcons.play, size: 18),
                 label: const Text('Reproducir todo'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: NexoraColors.foreground,
@@ -174,8 +211,9 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
               children: const [
                 SizedBox(width: 32, child: Text('#', style: TextStyle(color: NexoraColors.muted, fontSize: 12))),
                 SizedBox(width: 8),
-                Expanded(flex: 4, child: Text('Título', style: TextStyle(color: NexoraColors.muted, fontSize: 12))),
-                Expanded(flex: 3, child: Text('Álbum', style: TextStyle(color: NexoraColors.muted, fontSize: 12))),
+                Expanded(flex: 3, child: Text('Título', style: TextStyle(color: NexoraColors.muted, fontSize: 12))),
+                Expanded(flex: 2, child: Text('Artistas', style: TextStyle(color: NexoraColors.muted, fontSize: 12))),
+                Expanded(flex: 2, child: Text('Álbum', style: TextStyle(color: NexoraColors.muted, fontSize: 12))),
                 SizedBox(width: 60, child: Text('Duración', textAlign: TextAlign.right, style: TextStyle(color: NexoraColors.muted, fontSize: 12))),
                 SizedBox(width: 40),
               ],
@@ -204,7 +242,7 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                                 SizedBox(width: 32, child: Text('${index + 1}', style: const TextStyle(color: NexoraColors.muted, fontSize: 12))),
                                 const SizedBox(width: 8),
                                 Expanded(
-                                  flex: 4,
+                                  flex: 3,
                                   child: Row(
                                     children: [
                                       ClipRRect(
@@ -213,34 +251,32 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                                           width: 36,
                                           height: 36,
                                           color: NexoraColors.surfaceAlt,
-                                          child: const Icon(Icons.music_note, size: 16, color: NexoraColors.muted),
+                                          child: FaIcon(FontAwesomeIcons.music, size: 16, color: NexoraColors.muted),
                                         ),
                                       ),
                                       const SizedBox(width: 8),
                                       Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              track.title,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(color: NexoraColors.foreground, fontSize: 13, fontWeight: FontWeight.w600),
-                                            ),
-                                            Text(
-                                              _formatArtists(track.artist),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(color: NexoraColors.muted, fontSize: 11),
-                                            ),
-                                          ],
+                                        child: Text(
+                                          track.title,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(color: NexoraColors.foreground, fontSize: 13, fontWeight: FontWeight.w600),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
                                 Expanded(
-                                  flex: 3,
+                                  flex: 2,
+                                  child: Text(
+                                    _formatArtists(track.artist),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(color: NexoraColors.muted, fontSize: 12),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
                                   child: Text(
                                     track.album,
                                     maxLines: 1,
@@ -259,10 +295,10 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                                 SizedBox(
                                   width: 40,
                                   child: IconButton(
-                                    icon: Icon(
-                                      isFav ? Icons.favorite : Icons.favorite_border,
+                                    icon: FaIcon(
+                                      isFav ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
                                       size: 16,
-                                      color: isFav ? NexoraColors.foreground : NexoraColors.muted,
+                                      color: isFav ? const Color(0xFFA50021) : NexoraColors.muted,
                                     ),
                                     onPressed: () => libraryProvider.toggleFavorite(track.id),
                                   ),
