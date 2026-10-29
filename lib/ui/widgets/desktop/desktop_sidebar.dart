@@ -11,12 +11,14 @@ class DesktopSidebar extends StatefulWidget {
   final int selectedIndex;
   final ValueChanged<int> onItemSelected;
   final ValueChanged<String> onPlaylistSelected;
+  final VoidCallback? onFavorites;
 
   const DesktopSidebar({
     super.key,
     required this.selectedIndex,
     required this.onItemSelected,
     required this.onPlaylistSelected,
+    this.onFavorites,
   });
 
   @override
@@ -63,7 +65,7 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                   context,
                   assetPath: 'assets/icons/Logo-Favoritos.png',
                   selected: widget.selectedIndex == 1,
-                  onTap: () => widget.onItemSelected(1),
+                  onTap: () => widget.onFavorites?.call(),
                 ),
                 _gridTile(
                   context,

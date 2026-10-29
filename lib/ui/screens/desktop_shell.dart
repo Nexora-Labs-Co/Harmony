@@ -10,6 +10,7 @@ import '../widgets/desktop/album_detail_content.dart';
 import '../widgets/desktop/desktop_sidebar.dart';
 import '../widgets/desktop/desktop_topbar.dart';
 import '../screens/notifications_screen.dart';
+import '../screens/favorites_screen.dart';
 import '../screens/account_screen.dart';
 import '../widgets/desktop/desktop_bottombar.dart';
 import '../widgets/desktop/desktop_main_content.dart';
@@ -29,6 +30,7 @@ class _DesktopShellState extends State<DesktopShell> {
   bool _rightPanelVisible = true;
   bool _showNotifications = false;
   bool _showAccount = false;
+  bool _showFavorites = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,16 +50,12 @@ class _DesktopShellState extends State<DesktopShell> {
             onToggleRight: () => setState(() => _rightPanelVisible = !_rightPanelVisible),
             onToggleNotifications: () => setState(() => _showNotifications = !_showNotifications),
             onToggleAccount: () => setState(() => _showAccount = !_showAccount),
-            onSearchChanged: (value) {
-              if (value.trim().isNotEmpty) {
-                setState(() {
-                  _selectedIndex = 1;
-                  _selectedPlaylistId = null;
-                  _showNotifications = false;
-                  _showAccount = false;
-                });
-              }
-            },
+            onOpenSearch: () => setState(() {
+              _selectedIndex = 1;
+              _selectedPlaylistId = null;
+              _showNotifications = false;
+              _showAccount = false;
+            }),
           ),
           Expanded(
             child: Row(
@@ -73,13 +71,21 @@ class _DesktopShellState extends State<DesktopShell> {
                           _selectedPlaylistId = null;
                           _showAccount = false;
                           _showNotifications = false;
+                          _showFavorites = false;
                         });
                       },
+                      onFavorites: () => setState(() {
+                        _showFavorites = true;
+                        _selectedPlaylistId = null;
+                        _showAccount = false;
+                        _showNotifications = false;
+                      }),
                       onPlaylistSelected: (id) {
                         setState(() {
                           _selectedPlaylistId = id;
                           _showAccount = false;
                           _showNotifications = false;
+                          _showFavorites = false;
                         });
                       },
                     ),

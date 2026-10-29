@@ -85,8 +85,13 @@ class YouTubeService {
   }
 
   Future<bool> playTrack(YouTubeTrack track) async {
+    debugPrint('YouTubeService.playTrack: resolving stream for ${track.id}');
     final url = await getAudioStreamUrl(track.id);
-    if (url == null) return false;
+    if (url == null) {
+      debugPrint('YouTubeService.playTrack: no stream url for ${track.id}');
+      return false;
+    }
+    debugPrint('YouTubeService.playTrack: stream url = $url');
     try {
       await AudioService.instance.playUrl(url, title: track.title, artist: track.artist, thumbnailUrl: track.thumbnailUrl, durationMs: track.duration.inMilliseconds);
       return true;

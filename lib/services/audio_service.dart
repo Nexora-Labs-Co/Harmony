@@ -94,6 +94,7 @@ class AudioService extends ChangeNotifier {
 
   /// Reproduce una URL directa (ej. stream de YouTube) usando media_kit.
   Future<bool> playUrl(String url, {String? title, String? artist, String? thumbnailUrl, int durationMs = 0}) async {
+    debugPrint('AudioService.playUrl: $url');
     try {
       _currentTrack = nexoraCreateLocalTrack(
         id: 'yt-${url.hashCode}',
@@ -120,7 +121,7 @@ class AudioService extends ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
-      debugPrint('Error loading url: $e');
+      debugPrint('AudioService.playUrl error: $e');
       return false;
     }
   }
