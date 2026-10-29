@@ -13,7 +13,8 @@ import '../cached_artwork.dart';
 
 class DesktopRightPanel extends StatelessWidget {
   final bool cariActive;
-  const DesktopRightPanel({super.key, this.cariActive = false});
+  final VoidCallback? onCariFinished;
+  const DesktopRightPanel({super.key, this.cariActive = false, this.onCariFinished});
 
   String _formatArtists(String raw) {
     final parts = raw.split(RegExp(r'\s*/\s*'));
@@ -26,7 +27,7 @@ class DesktopRightPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (cariActive) {
-      return _CariPanel();
+      return _CariPanel(onFinished: onCariFinished);
     }
     final player = context.watch<PlayerProvider>();
     final current = player.currentTrack;
@@ -239,6 +240,8 @@ class DesktopRightPanel extends StatelessWidget {
 
 
 class _CariPanel extends StatefulWidget {
+  final VoidCallback? onFinished;
+  const _CariPanel({this.onFinished});
   @override
   State<_CariPanel> createState() => _CariPanelState();
 }
@@ -273,6 +276,8 @@ class _CariPanelState extends State<_CariPanel> {
       _tracks = matches;
       if (_tracks.isNotEmpty) {
         await _playIndex(0);
+      } else {
+        widget.onFinished?.call();
       }
     } catch (e) {
       debugPrint('Cari voice load error: $e');
@@ -294,8 +299,16 @@ class _CariPanelState extends State<_CariPanel> {
   }
 
   void _advance() {
-    if (_tracks.isEmpty) return;
-    final next = (_currentIndex + 1) % _tracks.length;
+    if (_tracks.isEmpty) {
+      widget.onFinished?.call();
+      return;
+    }
+    final next = _currentIndex + 1;
+    if (next >= _tracks.length) {
+      _player.stop();
+      widget.onFinished?.call();
+      return;
+    }
     _playIndex(next);
   }
 

@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import '../../providers/player_provider.dart';
+import '../../providers/library_provider.dart';
 import '../widgets/desktop/album_detail_content.dart';
 import '../widgets/desktop/desktop_sidebar.dart';
 import '../widgets/desktop/desktop_topbar.dart';
@@ -82,7 +83,17 @@ class _DesktopShellState extends State<DesktopShell> {
                 if (_rightPanelVisible)
                   SizedBox(
                     width: 320,
-                    child: DesktopRightPanel(cariActive: _selectedIndex == 2),
+                    child: DesktopRightPanel(
+                      cariActive: _selectedIndex == 2,
+                      onCariFinished: () {
+                        setState(() => _selectedIndex = 0);
+                        final library = context.read<LibraryProvider>();
+                        final player = context.read<PlayerProvider>();
+                        if (library.allTracks.isNotEmpty) {
+                          player.setQueue(library.allTracks, startIndex: 0);
+                        }
+                      },
+                    ),
                   ),
               ],
             ),
