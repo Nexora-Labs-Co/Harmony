@@ -51,7 +51,7 @@ class DesktopMainContent extends StatelessWidget {
       case 0:
         return const _HomeTab();
       case 1:
-        return const _FavoritesTab();
+        return const _SearchTab();
       case 2:
         return const _SettingsTab();
       default:
