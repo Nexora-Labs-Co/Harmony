@@ -22,6 +22,20 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es/1.1.
 
 ---
 
+## [26.10.28]
+
+### Añadido
+- Integración de `NexoraWindowHeader`, `NexoraActionBar` y `NexoraFooterBar` desde NexoraUi-Kit.
+- Reproducción de música desde YouTube integrada de forma transparente.
+- Vista de Cari AI con reproducción secuencial de voz.
+- Pantallas de Notificaciones y Cuenta/Perfil.
+
+### Cambiado
+- Rediseño completo de la barra inferior de reproducción (estilo Spotify).
+- Rediseño de la pantalla de inicio con secciones horizontales responsivas.
+- Barra lateral rediseñada con cuadrícula y álbumes.
+
+---
 ## [Sin publicar]
 
 ### Añadido
