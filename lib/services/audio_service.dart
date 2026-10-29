@@ -61,6 +61,12 @@ class AudioService extends ChangeNotifier {
       _volume = (vol / 100.0).clamp(0.0, 1.0);
       notifyListeners();
     });
+    _player.stream.error.listen((e) {
+      debugPrint('AudioService player error: $e');
+    });
+    _player.stream.log.listen((e) {
+      debugPrint('AudioService player log: $e');
+    });
     _initialized = true;
     notifyListeners();
   }
@@ -117,6 +123,8 @@ class AudioService extends ChangeNotifier {
         ),
         play: true,
       );
+      await _player.play();
+      debugPrint('AudioService.playUrl: playing=${_player.state.playing} duration=${_player.state.duration}');
       _playing = true;
       notifyListeners();
       return true;
