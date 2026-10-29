@@ -67,6 +67,8 @@ class AudioService extends ChangeNotifier {
     _player.stream.log.listen((e) {
       debugPrint('AudioService player log: $e');
     });
+    try { ( _player.platform as dynamic).setProperty('ytdl', 'no'); } catch (_) {}
+    try { ( _player.platform as dynamic).setProperty('ytdl-raw-options', ''); } catch (_) {}
     _initialized = true;
     notifyListeners();
   }
@@ -127,6 +129,7 @@ class AudioService extends ChangeNotifier {
             'Accept': '*/*',
             'Accept-Language': 'en-US,en;q=0.9',
             'Referer': 'https://www.youtube.com/',
+            'Range': 'bytes=0-',
           },
         ),
         play: true,
