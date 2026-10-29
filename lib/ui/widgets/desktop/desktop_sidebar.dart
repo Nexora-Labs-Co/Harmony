@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -156,13 +157,17 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                                 color: NexoraColors.surfaceHover,
                                 border: Border.all(color: NexoraColors.border),
                               ),
-                              child: const Center(
-                                child: FaIcon(
-                                  FontAwesomeIcons.compactDisc,
-                                  size: 22,
-                                  color: NexoraColors.mutedStrong,
-                                ),
-                              ),
+                              child: (playlist.coverImagePath != null && playlist.coverImagePath!.isNotEmpty)
+                                  ? Image.file(
+                                      File(playlist.coverImagePath!),
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => const Center(
+                                        child: FaIcon(FontAwesomeIcons.compactDisc, size: 22, color: NexoraColors.mutedStrong),
+                                      ),
+                                    )
+                                  : const Center(
+                                      child: FaIcon(FontAwesomeIcons.compactDisc, size: 22, color: NexoraColors.mutedStrong),
+                                    ),
                             ),
                           ),
                         ),
