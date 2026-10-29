@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../providers/library_provider.dart';
 import '../../providers/player_provider.dart';
 import '../widgets/cached_artwork.dart';
+import '../widgets/desktop/album_header_view.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -52,44 +53,25 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFA50021), Color(0xFF500010)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(8),
+          AlbumHeaderView(
+            cover: Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFA50021), Color(0xFF500010)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                child: const Center(
-                  child: FaIcon(FontAwesomeIcons.solidHeart, size: 80, color: Colors.white),
-                ),
+                borderRadius: BorderRadius.circular(8),
               ),
-              const SizedBox(width: 24),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('PLAYLIST', style: TextStyle(color: NexoraColors.muted, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 2)),
-                    const SizedBox(height: 8),
-                    const Text('Favoritos', style: TextStyle(color: NexoraColors.foreground, fontSize: 56, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const CircleAvatar(radius: 10, backgroundColor: NexoraColors.surfaceHover, child: Text('S', style: TextStyle(fontSize: 10, color: NexoraColors.foreground))),
-                        const SizedBox(width: 8),
-                        Text('Saaarmyx · ${tracks.length} canciones, ${_formatDuration(totalDur)}', style: const TextStyle(color: NexoraColors.mutedStrong, fontSize: 13)),
-                      ],
-                    ),
-                  ],
-                ),
+              child: const Center(
+                child: FaIcon(FontAwesomeIcons.solidHeart, size: 80, color: Colors.white),
               ),
-            ],
+            ),
+            label: 'PLAYLIST',
+            title: 'Favoritos',
+            subtitle: 'Saaarmyx · ${tracks.length} canciones, ${_formatDuration(totalDur)}',
           ),
           const SizedBox(height: 24),
           Row(

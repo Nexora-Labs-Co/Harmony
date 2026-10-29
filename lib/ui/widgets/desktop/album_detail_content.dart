@@ -1,6 +1,7 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
+
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +10,7 @@ import '../../../providers/player_provider.dart';
 import '../../../providers/playlist_provider.dart';
 import '../../../bridge/bridge_generated.dart';
 import '../cached_artwork.dart';
+import 'album_header_view.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 
 class AlbumDetailContent extends StatefulWidget {
@@ -26,30 +28,14 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
   @override
   void initState() {
     super.initState();
-    final provider = PlaylistProvider();
-    // best-effort: load from provider later in build not possible; set after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final p = context.read<PlaylistProvider>().playlists.firstWhere(
-            (pl) => pl.id == widget.playlistId,
-            orElse: () => context.read<PlaylistProvider>().playlists.isNotEmpty
-                ? context.read<PlaylistProvider>().playlists.first
-                : null as dynamic,
-          );
-      if (p != null && p.coverImagePath != null) {
-        setState(() => _coverPath = p.coverImagePath);
-      }
+      try {
+        final playlist = context.read<PlaylistProvider>().playlists.firstWhere((p) => p.id == widget.playlistId);
+        if (playlist.coverImagePath != null) {
+          setState(() => _coverPath = playlist.coverImagePath);
+        }
+      } catch (_) {}
     });
-  }
-
-  String _format(Duration d) {
-    String two(int n) => n.toString().padLeft(2, '0');
-    return '${two(d.inMinutes.remainder(60))}:${two(d.inSeconds.remainder(60))}';
-  }
-
-  String _formatMs(int ms) {
-    final d = Duration(milliseconds: ms);
-    String two(int n) => n.toString().padLeft(2, '0');
-    return '${two(d.inMinutes.remainder(60))}:${two(d.inSeconds.remainder(60))}';
   }
 
   String _formatArtists(String raw) {
@@ -58,6 +44,12 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
     final limited = parts.take(3).map((e) => e.trim()).toList();
     final joined = limited.join(' · ');
     return parts.length > 3 ? '$joined...' : joined;
+  }
+
+  String _formatMs(int ms) {
+    final d = Duration(milliseconds: ms);
+    String two(int n) => n.toString().padLeft(2, '0');
+    return '${two(d.inMinutes.remainder(60))}:${two(d.inSeconds.remainder(60))}';
   }
 
   String _formatDuration(Duration d) {
@@ -106,96 +98,55 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              GestureDetector(
-                onTap: () async {
-                  final result = await FilePicker.pickFiles(type: FileType.image);
-                  if (result != null && result.isNotEmpty && result.single.path != null) {
-                    final path = result.single.path!;
-                    setState(() => _coverPath = path);
-                    context.read<PlaylistProvider>().setCoverImagePath(widget.playlistId, path);
-                  }
-                },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: (_coverPath != null)
-                      ? Image.file(
-                          File(_coverPath!),
-                          width: 200,
-                          height: 200,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Container(
-                            width: 200,
-                            height: 200,
-                            color: NexoraColors.surfaceAlt,
-                            child: FaIcon(FontAwesomeIcons.compactDisc, size: 64, color: NexoraColors.muted),
-                          ),
-                        )
-                      : (tracks.isNotEmpty)
-                    ? CachedArtwork(
-                        albumArt: tracks.first.albumArt,
+          AlbumHeaderView(
+            cover: GestureDetector(
+              onTap: () async {
+                final result = await FilePicker.pickFiles(type: FileType.image);
+                if (result != null && result.isNotEmpty && result.single.path != null) {
+                  final path = result.single.path!;
+                  setState(() => _coverPath = path);
+                  context.read<PlaylistProvider>().setCoverImagePath(widget.playlistId, path);
+                }
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: (_coverPath != null)
+                    ? Image.file(
+                        File(_coverPath!),
                         width: 200,
                         height: 200,
-                        borderRadius: BorderRadius.circular(8),
-                        fallback: Container(
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
                           width: 200,
                           height: 200,
                           color: NexoraColors.surfaceAlt,
                           child: FaIcon(FontAwesomeIcons.compactDisc, size: 64, color: NexoraColors.muted),
                         ),
                       )
-                    : Container(
-                        width: 200,
-                        height: 200,
-                        color: NexoraColors.surfaceAlt,
-                        child: FaIcon(FontAwesomeIcons.compactDisc, size: 64, color: NexoraColors.muted),
-                      ),
-                ),
+                    : (tracks.isNotEmpty)
+                        ? CachedArtwork(
+                            albumArt: tracks.first.albumArt,
+                            width: 200,
+                            height: 200,
+                            borderRadius: BorderRadius.circular(8),
+                            fallback: Container(
+                              width: 200,
+                              height: 200,
+                              color: NexoraColors.surfaceAlt,
+                              child: FaIcon(FontAwesomeIcons.compactDisc, size: 64, color: NexoraColors.muted),
+                            ),
+                          )
+                        : Container(
+                            width: 200,
+                            height: 200,
+                            color: NexoraColors.surfaceAlt,
+                            child: FaIcon(FontAwesomeIcons.compactDisc, size: 64, color: NexoraColors.muted),
+                          ),
               ),
-              const SizedBox(width: 24),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'ÁLBUM',
-                      style: TextStyle(
-                        color: NexoraColors.muted,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 2,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      playlist.name,
-                      style: const TextStyle(
-                        color: NexoraColors.foreground,
-                        fontSize: 56,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const CircleAvatar(
-                          radius: 10,
-                          backgroundColor: NexoraColors.surfaceHover,
-                          child: Text('S', style: TextStyle(fontSize: 10, color: NexoraColors.foreground)),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Saaarmyx · ${tracks.length} canciones, ${_formatDuration(totalDur)}',
-                          style: const TextStyle(color: NexoraColors.mutedStrong, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            ),
+            label: 'ÁLBUM',
+            title: playlist.name,
+            subtitle: 'Saaarmyx · ${tracks.length} canciones, ${_formatDuration(totalDur)}',
           ),
           const SizedBox(height: 24),
           Row(
@@ -204,7 +155,7 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                 onPressed: () {
                   if (tracks.isNotEmpty) playerProvider.setQueue(tracks);
                 },
-                icon: FaIcon(FontAwesomeIcons.play, size: 22),
+                icon: FaIcon(FontAwesomeIcons.play, size: 18),
                 label: const Text('Reproducir todo'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: NexoraColors.foreground,
@@ -224,7 +175,6 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
             ],
           ),
           const SizedBox(height: 16),
-          // Header row
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
@@ -276,7 +226,7 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                                             width: 36,
                                             height: 36,
                                             color: NexoraColors.surfaceAlt,
-                                            child: FaIcon(FontAwesomeIcons.music, size: 22, color: NexoraColors.muted),
+                                            child: FaIcon(FontAwesomeIcons.music, size: 16, color: NexoraColors.muted),
                                           ),
                                         ),
                                       ),
@@ -323,7 +273,7 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                                   child: IconButton(
                                     icon: FaIcon(
                                       isFav ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
-                                      size: 22,
+                                      size: 16,
                                       color: isFav ? const Color(0xFFA50021) : NexoraColors.muted,
                                     ),
                                     onPressed: () => libraryProvider.toggleFavorite(track.id),
@@ -344,7 +294,7 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
 
   Widget _iconButton(FaIconData icon, VoidCallback onPressed) {
     return IconButton(
-      icon: FaIcon(icon, size: 22, color: NexoraColors.mutedStrong),
+      icon: FaIcon(icon, size: 16, color: NexoraColors.mutedStrong),
       onPressed: onPressed,
     );
   }
