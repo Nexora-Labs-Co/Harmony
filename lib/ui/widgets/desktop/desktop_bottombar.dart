@@ -47,6 +47,14 @@ class DesktopBottomBar extends StatelessWidget {
     );
   }
 
+  String _formatArtists(String raw) {
+    final parts = raw.split(RegExp(r'\s*/\s*'));
+    if (parts.length <= 1) return raw.trim();
+    final limited = parts.take(3).map((e) => e.trim()).toList();
+    final joined = limited.join(' · ');
+    return parts.length > 3 ? '$joined...' : joined;
+  }
+
   @override
   Widget build(BuildContext context) {
     final player = context.watch<PlayerProvider>();
@@ -73,10 +81,11 @@ class DesktopBottomBar extends StatelessWidget {
                   child: _BottomArtwork(albumArt: track.albumArt),
                 ),
                 const SizedBox(width: 12),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                     Text(
                       track.title,
                       maxLines: 1,
@@ -84,7 +93,9 @@ class DesktopBottomBar extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                     ),
                     Text(
-                      track.artist.isEmpty ? 'Artista desconocido' : track.artist,
+                      track.artist.trim().isEmpty
+                          ? 'Artista desconocido'
+                          : _formatArtists(track.artist),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -92,6 +103,7 @@ class DesktopBottomBar extends StatelessWidget {
                           ),
                     ),
                   ],
+                ),
                 ),
                 const SizedBox(width: 8),
                 Consumer<LibraryProvider>(

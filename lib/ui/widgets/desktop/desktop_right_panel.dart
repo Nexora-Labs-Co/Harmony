@@ -8,6 +8,14 @@ import '../cached_artwork.dart';
 class DesktopRightPanel extends StatelessWidget {
   const DesktopRightPanel({super.key});
 
+  String _formatArtists(String raw) {
+    final parts = raw.split(RegExp(r'\s*/\s*'));
+    if (parts.length <= 1) return raw.trim();
+    final limited = parts.take(3).map((e) => e.trim()).toList();
+    final joined = limited.join(' · ');
+    return parts.length > 3 ? '$joined...' : joined;
+  }
+
   @override
   Widget build(BuildContext context) {
     final player = context.watch<PlayerProvider>();
@@ -101,7 +109,7 @@ class DesktopRightPanel extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          current.artist,
+                          _formatArtists(current.artist),
                           style: const TextStyle(
                             color: NexoraColors.mutedStrong,
                             fontSize: 14,
