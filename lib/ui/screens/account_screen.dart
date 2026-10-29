@@ -62,7 +62,7 @@ class AccountScreen extends StatelessWidget {
         children: [
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [Color(0xFF1A1A1A), Color(0xFF090C02)],
@@ -110,7 +110,7 @@ class AccountScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
