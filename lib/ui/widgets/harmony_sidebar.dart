@@ -32,7 +32,6 @@ class HarmonySidebar extends StatefulWidget {
 }
 
 class _HarmonySidebarState extends State<HarmonySidebar> {
-  String? _pinnedAlbumId;
   String? _selectedAlbumId;
 
   @override
@@ -73,9 +72,9 @@ class _HarmonySidebarState extends State<HarmonySidebar> {
               ),
               _gridTile(
                 context,
-                assetPath: 'assets/icons/Logo-Harmony-512.png',
+                assetPath: 'assets/icons/Logo-Local.png',
                 selected: widget.selectedIndex == 3,
-                onTap: () => _handlePinnedAlbum(context, playlistProvider),
+                onTap: () => widget.onItemSelected(3),
               ),
             ],
           ),
@@ -85,16 +84,16 @@ class _HarmonySidebarState extends State<HarmonySidebar> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Albumes',
+                'Álbumes',
                 style: TextStyle(
                   color: NexoraColors.foreground,
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
                 ),
               ),
-              const Spacer(),
               IconButton(
                 icon: FaIcon(FontAwesomeIcons.plus,
                     size: 22, color: NexoraColors.foreground),
@@ -117,8 +116,7 @@ class _HarmonySidebarState extends State<HarmonySidebar> {
                 )
               : GridView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
@@ -137,7 +135,8 @@ class _HarmonySidebarState extends State<HarmonySidebar> {
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 180),
                         curve: Curves.easeOut,
-                        transform: Matrix4.translationValues(0, selected ? -3 : 0, 0),
+                        transform:
+                            Matrix4.translationValues(0, selected ? -3 : 0, 0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: selected
@@ -163,14 +162,14 @@ class _HarmonySidebarState extends State<HarmonySidebar> {
                                     File(playlist.coverImagePath!),
                                     fit: BoxFit.cover,
                                     errorBuilder: (_, __, ___) => const Center(
-                                      child: FaIcon(FontAwesomeIcons.compactDisc,
+                                      child: FaIcon(
+                                          FontAwesomeIcons.compactDisc,
                                           size: 22,
                                           color: NexoraColors.mutedStrong),
                                     ),
                                   )
                                 : const Center(
-                                    child: FaIcon(
-                                        FontAwesomeIcons.compactDisc,
+                                    child: FaIcon(FontAwesomeIcons.compactDisc,
                                         size: 22,
                                         color: NexoraColors.mutedStrong),
                                   ),
@@ -243,25 +242,6 @@ class _HarmonySidebarState extends State<HarmonySidebar> {
         ),
       ),
     );
-  }
-
-  void _handlePinnedAlbum(BuildContext context, PlaylistProvider provider) {
-    if (provider.playlists.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No hay albumes para fijar.')),
-      );
-      return;
-    }
-    if (_pinnedAlbumId != null) {
-      final pinned = provider.playlists.firstWhere(
-        (p) => p.id == _pinnedAlbumId,
-        orElse: () => provider.playlists.first,
-      );
-      widget.onPlaylistSelected(pinned.id);
-      return;
-    }
-    setState(() => _pinnedAlbumId = provider.playlists.first.id);
-    widget.onPlaylistSelected(provider.playlists.first.id);
   }
 
   void _showCreatePlaylistDialog(

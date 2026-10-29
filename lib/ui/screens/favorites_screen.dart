@@ -54,19 +54,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AlbumHeaderView(
-            cover: Container(
-              width: 200,
-              height: 200,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFA50021), Color(0xFF500010)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Center(
-                child: FaIcon(FontAwesomeIcons.solidHeart, size: 80, color: Colors.white),
+            cover: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                'assets/icons/Logo-Favoritos.png',
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
               ),
             ),
             label: 'PLAYLIST',

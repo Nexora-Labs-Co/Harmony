@@ -14,6 +14,9 @@ import '../widgets/search_view.dart';
 import '../screens/notifications_screen.dart';
 import '../screens/favorites_screen.dart';
 import '../screens/account_screen.dart';
+import '../screens/home_screen.dart';
+import '../screens/library_screen.dart';
+import '../screens/cari_screen.dart';
 import '../widgets/desktop/desktop_bottombar.dart';
 import '../widgets/desktop/desktop_main_content.dart';
 import '../widgets/desktop/desktop_right_panel.dart';
@@ -62,6 +65,35 @@ class _DesktopShellState extends State<DesktopShell> {
       _showFavorites = index == 1;
       _showSearch = false;
     });
+  }
+
+
+  Widget _buildMainContent() {
+    if (_showNotifications) {
+      return NotificationsScreen(onClose: () => setState(() => _showNotifications = false));
+    }
+    if (_showAccount) {
+      return AccountScreen(onClose: () => setState(() => _showAccount = false));
+    }
+    if (_showSearch) {
+      return const SearchView();
+    }
+    if (_showFavorites) {
+      return const FavoritesScreen();
+    }
+    if (_selectedPlaylistId != null) {
+      return AlbumDetailContent(playlistId: _selectedPlaylistId!);
+    }
+    switch (_selectedIndex) {
+      case 0:
+        return const HomeScreen();
+      case 2:
+        return const CariScreen();
+      case 3:
+        return const LibraryScreen();
+      default:
+        return DesktopMainContent(selectedIndex: _selectedIndex);
+    }
   }
 
   @override
@@ -119,17 +151,7 @@ class _DesktopShellState extends State<DesktopShell> {
                   ),
                 Expanded(
                   flex: 3,
-                  child: _showNotifications
-                      ? NotificationsScreen(onClose: () => setState(() => _showNotifications = false))
-                      : (_showAccount
-                          ? AccountScreen(onClose: () => setState(() => _showAccount = false))
-                          : (_showSearch
-                              ? const SearchView()
-                              : (_showFavorites
-                                  ? FavoritesScreen()
-                                  : (_selectedPlaylistId != null
-                                      ? AlbumDetailContent(playlistId: _selectedPlaylistId!)
-                                      : DesktopMainContent(selectedIndex: _selectedIndex))))), 
+                  child: _buildMainContent(),
                 ),
                 if (_rightPanelVisible)
                   SizedBox(
