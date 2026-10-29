@@ -69,6 +69,8 @@ class AudioService extends ChangeNotifier {
     });
     try { ( _player.platform as dynamic).setProperty('ytdl', 'no'); } catch (_) {}
     try { ( _player.platform as dynamic).setProperty('ytdl-raw-options', ''); } catch (_) {}
+    try { (_player.platform as dynamic).setProperty('ytdl', 'no'); } catch (_) {}
+    try { (_player.platform as dynamic).setProperty('ytdl-raw-options', ''); } catch (_) {}
     _initialized = true;
     notifyListeners();
   }
@@ -128,6 +130,7 @@ class AudioService extends ChangeNotifier {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept': '*/*',
             'Accept-Language': 'en-US,en;q=0.9',
+            'Connection': 'keep-alive',
             'Referer': 'https://www.youtube.com/',
             'Range': 'bytes=0-',
           },
