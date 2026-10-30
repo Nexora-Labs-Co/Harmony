@@ -10,7 +10,6 @@ import '../../../providers/player_provider.dart';
 import '../../../providers/playlist_provider.dart';
 import '../../../bridge/bridge_generated.dart';
 import '../cached_artwork.dart';
-import 'album_header_view.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 
 class AlbumDetailContent extends StatefulWidget {
@@ -98,7 +97,8 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AlbumHeaderView(
+          NxPlaylistHeader(
+            height: 220,
             cover: GestureDetector(
               onTap: () async {
                 final result = await FilePicker.pickFiles(type: FileType.image);
@@ -145,8 +145,15 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
               ),
             ),
             title: playlist.name,
-            subtitle: 'Saaarmyx · ${tracks.length} canciones, ${_formatDuration(totalDur)}',
-            actions: _buildHeaderActions(context, tracks, playerProvider),
+            bottomMetadata: 'Saaarmyx · ${tracks.length} canciones, ${_formatDuration(totalDur)}',
+            onPlay: tracks.isNotEmpty ? () => playerProvider.setQueue(tracks) : null,
+            onShuffle: tracks.isNotEmpty
+                ? () {
+                    playerProvider.setQueue(tracks);
+                    playerProvider.toggleShuffle();
+                  }
+                : null,
+            onDownload: () {},
           ),
           const SizedBox(height: 16),
           Padding(
@@ -266,47 +273,4 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
     );
   }
 
-  Widget _iconButton(FaIconData icon, VoidCallback onPressed) {
-    return IconButton(
-      icon: FaIcon(icon, size: 16, color: NexoraColors.mutedStrong),
-      onPressed: onPressed,
-    );
-  }
-
-  Widget _buildHeaderActions(BuildContext context, List<Track> tracks, PlayerProvider playerProvider) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        ElevatedButton.icon(
-          onPressed: tracks.isNotEmpty ? () => playerProvider.setQueue(tracks) : null,
-          icon: const FaIcon(FontAwesomeIcons.play, size: 14),
-          label: const Text('Reproducir'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: NexoraColors.foreground,
-            foregroundColor: NexoraColors.background,
-          ),
-        ),
-        _iconButton(FontAwesomeIcons.shuffle, () {
-          if (tracks.isNotEmpty) {
-            playerProvider.setQueue(tracks);
-            playerProvider.toggleShuffle();
-          }
-        }),
-        _iconButton(FontAwesomeIcons.download, () {}),
-        IconButton(
-          icon: FaIcon(FontAwesomeIcons.userPlus, size: 16, color: NexoraColors.muted),
-          onPressed: null,
-        ),
-        IconButton(
-          icon: FaIcon(FontAwesomeIcons.plus, size: 16, color: NexoraColors.muted),
-          onPressed: null,
-        ),
-        IconButton(
-          icon: FaIcon(FontAwesomeIcons.magnifyingGlass, size: 16, color: NexoraColors.muted),
-          onPressed: null,
-        ),
-      ],
-    );
-  }
 }

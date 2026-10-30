@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../../providers/library_provider.dart';
 import '../../providers/player_provider.dart';
 import '../widgets/cached_artwork.dart';
-import '../widgets/desktop/album_header_view.dart';
 import 'package:nexora_ui_kit/nexora_ui_kit.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -39,49 +38,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return '${two(d.inMinutes.remainder(60))}:${two(d.inSeconds.remainder(60))}';
   }
 
-  Widget _buildHeaderActions(BuildContext context, List<dynamic> tracks, PlayerProvider player) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        ElevatedButton.icon(
-          onPressed: tracks.isNotEmpty ? () => player.setQueue(tracks.cast()) : null,
-          icon: const FaIcon(FontAwesomeIcons.play, size: 14),
-          label: const Text('Reproducir'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: NexoraColors.foreground,
-            foregroundColor: NexoraColors.background,
-          ),
-        ),
-        IconButton(
-          icon: FaIcon(FontAwesomeIcons.shuffle, size: 16, color: NexoraColors.mutedStrong),
-          onPressed: tracks.isNotEmpty
-              ? () {
-                  player.setQueue(tracks.cast());
-                  player.toggleShuffle();
-                }
-              : null,
-        ),
-        IconButton(
-          icon: FaIcon(FontAwesomeIcons.download, size: 16, color: NexoraColors.mutedStrong),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: FaIcon(FontAwesomeIcons.userPlus, size: 16, color: NexoraColors.muted),
-          onPressed: null,
-        ),
-        IconButton(
-          icon: FaIcon(FontAwesomeIcons.plus, size: 16, color: NexoraColors.muted),
-          onPressed: null,
-        ),
-        IconButton(
-          icon: FaIcon(FontAwesomeIcons.magnifyingGlass, size: 16, color: NexoraColors.muted),
-          onPressed: null,
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final library = context.watch<LibraryProvider>();
@@ -96,19 +52,20 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AlbumHeaderView(
-            cover: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
-                'assets/icons/Logo-Favoritos.png',
-                width: 200,
-                height: 200,
-                fit: BoxFit.cover,
-              ),
-            ),
+          NxPlaylistHeader(
+            height: 220,
+            coverImage: const AssetImage('assets/icons/Logo-Favoritos.png'),
             title: 'Favoritos',
-            subtitle: 'Saaarmyx · ${tracks.length} canciones, ${_formatDuration(totalDur)}',
-            actions: _buildHeaderActions(context, tracks, player),
+            bottomMetadata:
+                'Saaarmyx · ${tracks.length} canciones, ${_formatDuration(totalDur)}',
+            onPlay: tracks.isNotEmpty ? () => player.setQueue(tracks.cast()) : null,
+            onShuffle: tracks.isNotEmpty
+                ? () {
+                    player.setQueue(tracks.cast());
+                    player.toggleShuffle();
+                  }
+                : null,
+            onDownload: () {},
           ),
           const SizedBox(height: 24),
           Row(

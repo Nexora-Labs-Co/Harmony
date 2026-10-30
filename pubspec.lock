@@ -507,10 +507,10 @@ packages:
   nexora_ui_kit:
     dependency: "direct main"
     description:
-      path: "../NexoraUi-Kit"
+      path: "../../ui/NexoraUi-Kit"
       relative: true
     source: path
-    version: "0.1.1"
+    version: "26.10.28+1"
   objective_c:
     dependency: transitive
     description:

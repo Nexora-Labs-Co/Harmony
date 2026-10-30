@@ -86,14 +86,26 @@ class _HomeScreenState extends State<HomeScreen> {
               physics: const NeverScrollableScrollPhysics(),
               mainAxisExtent: 56,
               children: [
-                _quickAccessCard(
-                    context, 'Favoritos', 'assets/icons/Logo-Favoritos.png'),
-                _quickAccessCard(
-                    context, 'Biblioteca local', 'assets/icons/Logo-Local.png'),
-                _quickAccessCard(
-                    context, 'Cari Mixes', 'assets/icons/Logo-Cari.png'),
-                _quickAccessCard(context, 'Álbumes recientes',
-                    'assets/icons/Logo-Inicio.png'),
+                NxQuickAccessCard(
+                  title: 'Favoritos',
+                  height: 56,
+                  thumbnail: Image.asset('assets/icons/Logo-Favoritos.png', fit: BoxFit.cover),
+                ),
+                NxQuickAccessCard(
+                  title: 'Biblioteca local',
+                  height: 56,
+                  thumbnail: Image.asset('assets/icons/Logo-Local.png', fit: BoxFit.cover),
+                ),
+                NxQuickAccessCard(
+                  title: 'Cari Mixes',
+                  height: 56,
+                  thumbnail: Image.asset('assets/icons/Logo-Cari.png', fit: BoxFit.cover),
+                ),
+                NxQuickAccessCard(
+                  title: 'Álbumes recientes',
+                  height: 56,
+                  thumbnail: Image.asset('assets/icons/Logo-Inicio.png', fit: BoxFit.cover),
+                ),
               ],
             ),
             const SizedBox(height: 24),
@@ -142,42 +154,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _quickAccessCard(
-      BuildContext context, String title, String assetPath) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF161616),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Row(
-        children: [
-          SizedBox(
-            width: 56,
-            height: 56,
-            child: Image.asset(
-              assetPath,
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _mediaRow(BuildContext context, List items, PlayerProvider player,
       LibraryProvider library, Widget Function(dynamic) builder) {
     if (items.isEmpty) {
@@ -204,48 +180,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _trackCard(BuildContext context, dynamic track, PlayerProvider player,
       LibraryProvider library) {
-    return _HoverCard(
-      width: 160,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: CachedArtwork(
-              albumArt: track.albumArt,
-              width: 160,
-              height: 160,
-              borderRadius: BorderRadius.circular(8),
-              fallback: Container(
-                width: 160,
-                height: 160,
-                color: NexoraColors.surfaceAlt,
-                child:
-                    FaIcon(FontAwesomeIcons.music, color: NexoraColors.muted),
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            track.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
-          ),
-          Text(
-            track.artist,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: Color(0xFFA7A7A7), fontSize: 12),
-          ),
-        ],
+    return NxMediaCard(
+      size: 160,
+      title: track.title,
+      subtitle: track.artist,
+      cover: CachedArtwork(
+        albumArt: track.albumArt,
+        width: 160,
+        height: 160,
+        borderRadius: BorderRadius.circular(8),
+        fallback: Container(
+          width: 160,
+          height: 160,
+          color: NexoraColors.surfaceAlt,
+          child: FaIcon(FontAwesomeIcons.music, color: NexoraColors.muted),
+        ),
       ),
-      onTap: () => player.setQueue(library.allTracks,
-          startIndex: library.allTracks
-              .indexOf(track)
-              .clamp(0, library.allTracks.length - 1)),
+      onTap: () => player.setQueue(
+        library.allTracks,
+        startIndex: library.allTracks
+            .indexOf(track)
+            .clamp(0, library.allTracks.length - 1),
+      ),
     );
   }
 
@@ -263,49 +219,30 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
     }
-    return _HoverCard(
-      width: 160,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: (album.coverImagePath != null &&
-                    (album.coverImagePath as String).isNotEmpty)
-                ? Image.file(
-                    File(album.coverImagePath as String),
-                    width: 160,
-                    height: 160,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => _placeholderArt(),
-                  )
-                : (art != null && art.isNotEmpty)
-                    ? CachedArtwork(
-                        albumArt: art,
-                        width: 160,
-                        height: 160,
-                        borderRadius: BorderRadius.circular(8),
-                        fallback: _placeholderArt(),
-                      )
-                    : _placeholderArt(),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            album.name ?? 'Álbum',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
-          ),
-          Text(
-            'Álbum',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: Color(0xFFA7A7A7), fontSize: 12),
-          ),
-        ],
-      ),
+    final cover = (album.coverImagePath != null &&
+            (album.coverImagePath as String).isNotEmpty)
+        ? Image.file(
+            File(album.coverImagePath as String),
+            width: 160,
+            height: 160,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => _placeholderArt(),
+          )
+        : (art != null && art.isNotEmpty)
+            ? CachedArtwork(
+                albumArt: art,
+                width: 160,
+                height: 160,
+                borderRadius: BorderRadius.circular(8),
+                fallback: _placeholderArt(),
+              )
+            : _placeholderArt();
+
+    return NxMediaCard(
+      size: 160,
+      title: album.name ?? 'Álbum',
+      subtitle: 'Álbum',
+      cover: cover,
       onTap: () {},
     );
   }
@@ -321,34 +258,4 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class _HoverCard extends StatefulWidget {
-  final double width;
-  final Widget child;
-  final VoidCallback onTap;
-  const _HoverCard(
-      {required this.width, required this.child, required this.onTap});
 
-  @override
-  State<_HoverCard> createState() => _HoverCardState();
-}
-
-class _HoverCardState extends State<_HoverCard> {
-  bool _hovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          width: widget.width,
-          transform: Matrix4.translationValues(0, _hovered ? -4 : 0, 0),
-          child: widget.child,
-        ),
-      ),
-    );
-  }
-}

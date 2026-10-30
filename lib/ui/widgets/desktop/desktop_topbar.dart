@@ -35,9 +35,13 @@ class DesktopTopBar extends StatefulWidget {
 class _DesktopTopBarState extends State<DesktopTopBar> {
   @override
   Widget build(BuildContext context) {
-    return NexoraActionBar(
+    return NxTopNavigationBar(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      left: Row(
+      showBack: false,
+      showRefresh: false,
+      showSettings: false,
+      showProfile: false,
+      leading: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
@@ -68,8 +72,7 @@ class _DesktopTopBarState extends State<DesktopTopBar> {
           ),
         ],
       ),
-      center: null,
-      right: Row(
+      trailing: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
