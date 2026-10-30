@@ -144,35 +144,9 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
                           ),
               ),
             ),
-            label: 'ÁLBUM',
             title: playlist.name,
             subtitle: 'Saaarmyx · ${tracks.length} canciones, ${_formatDuration(totalDur)}',
-          ),
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  if (tracks.isNotEmpty) playerProvider.setQueue(tracks);
-                },
-                icon: FaIcon(FontAwesomeIcons.play, size: 18),
-                label: const Text('Reproducir todo'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: NexoraColors.foreground,
-                  foregroundColor: NexoraColors.background,
-                ),
-              ),
-              const SizedBox(width: 12),
-              _iconButton(FontAwesomeIcons.shuffle, () {
-                if (tracks.isNotEmpty) {
-                  playerProvider.setQueue(tracks);
-                  playerProvider.toggleShuffle();
-                }
-              }),
-              _iconButton(FontAwesomeIcons.download, () {}),
-              _iconButton(FontAwesomeIcons.userPlus, () {}),
-              _iconButton(FontAwesomeIcons.ellipsis, () {}),
-            ],
+            actions: _buildHeaderActions(context, tracks, playerProvider),
           ),
           const SizedBox(height: 16),
           Padding(
@@ -296,6 +270,43 @@ class _AlbumDetailContentState extends State<AlbumDetailContent> {
     return IconButton(
       icon: FaIcon(icon, size: 16, color: NexoraColors.mutedStrong),
       onPressed: onPressed,
+    );
+  }
+
+  Widget _buildHeaderActions(BuildContext context, List<Track> tracks, PlayerProvider playerProvider) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        ElevatedButton.icon(
+          onPressed: tracks.isNotEmpty ? () => playerProvider.setQueue(tracks) : null,
+          icon: const FaIcon(FontAwesomeIcons.play, size: 14),
+          label: const Text('Reproducir'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: NexoraColors.foreground,
+            foregroundColor: NexoraColors.background,
+          ),
+        ),
+        _iconButton(FontAwesomeIcons.shuffle, () {
+          if (tracks.isNotEmpty) {
+            playerProvider.setQueue(tracks);
+            playerProvider.toggleShuffle();
+          }
+        }),
+        _iconButton(FontAwesomeIcons.download, () {}),
+        IconButton(
+          icon: FaIcon(FontAwesomeIcons.userPlus, size: 16, color: NexoraColors.muted),
+          onPressed: null,
+        ),
+        IconButton(
+          icon: FaIcon(FontAwesomeIcons.plus, size: 16, color: NexoraColors.muted),
+          onPressed: null,
+        ),
+        IconButton(
+          icon: FaIcon(FontAwesomeIcons.magnifyingGlass, size: 16, color: NexoraColors.muted),
+          onPressed: null,
+        ),
+      ],
     );
   }
 }
