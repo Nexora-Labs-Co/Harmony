@@ -7,7 +7,6 @@ import 'package:xora/xora.dart';
 import 'package:harmony/src/screens/one/home_screen.dart';
 import 'package:harmony/src/screens/one/playlists_screen.dart';
 import 'package:harmony/src/screens/one/favorites_screen.dart';
-import 'package:harmony/src/screens/one/cari_screen.dart';
 import 'package:harmony/src/screens/one/search_screen.dart';
 import 'package:harmony/src/services/local_music_service.dart';
 import 'package:harmony/src/services/playlists_store.dart';
@@ -82,7 +81,6 @@ class _HarmonyHomeState extends State<HarmonyHome> {
       HomeScreen(userName: _userName),
       PlaylistsScreen(),
       FavoritesScreen(),
-      CariScreen(),
       SearchScreen(),
     ];
     return Scaffold(
@@ -132,9 +130,9 @@ class _HarmonyHomeState extends State<HarmonyHome> {
                 }),
               ),
               bottomBar: OneBottomBar(
-                selectedIndex: _index.clamp(0, 4),
+                selectedIndex: _index.clamp(0, 3),
                 onTap: (i) {
-                  if (i == 5) {
+                  if (i == 4) {
                     _showCreatePlaylistDialog(context);
                   } else {
                     setState(() => _index = i);
@@ -153,10 +151,6 @@ class _HarmonyHomeState extends State<HarmonyHome> {
                     icon: XoraIcon(XoraIcons.heart),
                     label: 'Favoritos',
                   ),
-                  // OneBottomBarItem(
-                  //   icon: XoraIcon(XoraIcons.magnifyingGlass),
-                  //   label: 'Cari',
-                  // ),
                   OneBottomBarItem(
                     icon: XoraIcon(XoraIcons.magnifyingGlass),
                     label: 'Buscar',
