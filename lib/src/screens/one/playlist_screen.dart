@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'package:harmony/src/models/local_track.dart';
+import 'package:harmony/src/shared/widgets/cached_artwork.dart';
+
 class PlaylistScreen extends StatefulWidget {
   const PlaylistScreen({
     super.key,
     required this.title,
     this.cover,
     this.totalDuration = Duration.zero,
+    this.tracks,
     this.onPlay,
     this.onShuffle,
     this.onDownload,
@@ -14,6 +18,7 @@ class PlaylistScreen extends StatefulWidget {
   final String title;
   final Widget? cover;
   final Duration totalDuration;
+  final List<LocalTrack>? tracks;
   final VoidCallback? onPlay;
   final VoidCallback? onShuffle;
   final VoidCallback? onDownload;
@@ -34,6 +39,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final tracks = widget.tracks;
+    final count = tracks != null ? tracks.length : 20;
     return Column(
       children: [
         Padding(
@@ -70,9 +77,40 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         const Divider(),
         Expanded(
           child: ListView.builder(
-            itemCount: 20,
+            itemCount: count,
             itemBuilder: (context, index) {
               final isFav = _favorites.contains(index);
+              if (tracks != null && tracks.isNotEmpty) {
+                final t = tracks[index];
+                return ListTile(
+                  leading: CachedArtwork(
+                    path: t.coverPath,
+                    width: 44,
+                    height: 44,
+                    borderRadius: BorderRadius.circular(6),
+                    fallback: Container(
+                      width: 44,
+                      height: 44,
+                      color: Colors.grey.shade300,
+                      child: const Icon(Icons.music_note),
+                    ),
+                  ),
+                  title: Text(t.title),
+                  subtitle: Text(t.artist),
+                  trailing: IconButton(
+                    icon: Icon(isFav ? Icons.favorite : Icons.favorite_border),
+                    onPressed: () {
+                      setState(() {
+                        if (isFav) {
+                          _favorites.remove(index);
+                        } else {
+                          _favorites.add(index);
+                        }
+                      });
+                    },
+                  ),
+                );
+              }
               return ListTile(
                 leading: Container(
                   width: 44,

@@ -1,55 +1,24 @@
 import 'package:flutter/material.dart';
 
-import 'package:xora/xora.dart';
+import 'package:harmony/src/screens/one/local_screen.dart';
+import 'package:harmony/src/screens/one/playlist_screen.dart';
 
-class PlaylistsScreen extends StatefulWidget {
+class PlaylistsScreen extends StatelessWidget {
   const PlaylistsScreen({super.key});
 
   @override
-  State<PlaylistsScreen> createState() => _PlaylistsScreenState();
-}
-
-class _PlaylistsScreenState extends State<PlaylistsScreen> {
-  final List<String> _playlists = ['Local'];
-
-  Future<void> _addPlaylist() async {
-    final controller = TextEditingController();
-    final name = await showDialog<String>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Nueva playlist'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          decoration: const InputDecoration(hintText: 'Nombre'),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancelar')),
-          TextButton(onPressed: () => Navigator.pop(ctx, controller.text.trim()), child: const Text('Crear')),
-        ],
-      ),
-    );
-    if (name == null || name.isEmpty) return;
-    setState(() => _playlists.add(name));
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final playlists = ['Local', 'Playlist 1', 'Playlist 2'];
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
           child: Row(
-            children: [
-              const Spacer(),
-              IconButton(
-                icon: XoraIcon(XoraIcons.magnifyingGlass),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: XoraIcon(XoraIcons.plus),
-                onPressed: _addPlaylist,
-              ),
+            children: const [
+              Spacer(),
+              Icon(Icons.search),
+              SizedBox(width: 12),
+              Icon(Icons.add),
             ],
           ),
         ),
@@ -62,15 +31,33 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
               crossAxisSpacing: 12,
               childAspectRatio: 1,
             ),
-            itemCount: _playlists.length,
+            itemCount: playlists.length,
             itemBuilder: (context, index) {
-              return XoraCard(
+              final name = playlists[index];
+              return GestureDetector(
+                onTap: () {
+                  if (name == 'Local') {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const LocalScreen()),
+                    );
+                  } else {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => PlaylistScreen(title: name, totalDuration: const Duration(minutes: 30)),
+                      ),
+                    );
+                  }
+                },
                 child: Container(
                   decoration: BoxDecoration(
-                    color: XoraColors.surfaceVariant,
+                    color: Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Center(child: Icon(Icons.queue_music, size: 48)),
+                  child: Center(
+                    child: name == 'Local'
+                        ? Image.asset('assets/Logo-Local.png', fit: BoxFit.cover)
+                        : const Icon(Icons.queue_music, size: 48),
+                  ),
                 ),
               );
             },

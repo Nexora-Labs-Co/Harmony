@@ -7,9 +7,10 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PlaylistScreen(
+    return PlaylistScreen(
       title: 'Favoritos',
-      totalDuration: Duration(minutes: 42),
+      cover: Image.asset('assets/Logo-Favoritos.png', fit: BoxFit.cover),
+      totalDuration: const Duration(minutes: 42),
     );
   }
 }
