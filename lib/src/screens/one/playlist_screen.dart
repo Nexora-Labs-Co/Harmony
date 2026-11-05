@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:harmony/src/models/local_track.dart';
 import 'package:harmony/src/services/favorites_store.dart';
 import 'package:harmony/src/services/player_service.dart';
-import 'package:harmony/src/shared/widgets/cached_artwork.dart';
+import 'package:xora/xora.dart';
 import 'package:harmony/src/shared/widgets/mini_player.dart';
 
 class PlaylistScreen extends StatelessWidget {
@@ -181,7 +181,7 @@ class _TrackRow extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(6),
-              child: CachedArtwork(
+              child: XoraArtwork(
                 path: track.coverPath,
                 width: 48,
                 height: 48,

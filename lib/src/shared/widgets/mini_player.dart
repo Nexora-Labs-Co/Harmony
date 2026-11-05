@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:harmony/src/models/local_track.dart';
 import 'package:harmony/src/services/player_service.dart';
 import 'package:harmony/src/services/playlists_store.dart';
-import 'package:harmony/src/shared/widgets/cached_artwork.dart';
+import 'package:xora/xora.dart';
 
 class MiniPlayer extends StatelessWidget {
   const MiniPlayer({super.key});
@@ -96,7 +96,7 @@ class MiniPlayer extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CachedArtwork(
+                  XoraArtwork(
                     path: track.coverPath,
                     width: 40,
                     height: 40,

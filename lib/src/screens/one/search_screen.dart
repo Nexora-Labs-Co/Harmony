@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:harmony/src/models/local_track.dart';
 import 'package:harmony/src/services/local_music_service.dart';
 import 'package:harmony/src/services/player_service.dart';
-import 'package:harmony/src/shared/widgets/cached_artwork.dart';
+import 'package:xora/xora.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -53,7 +53,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       itemBuilder: (context, index) {
                         final t = results[index];
                         return ListTile(
-                          leading: CachedArtwork(
+                          leading: XoraArtwork(
                             path: t.coverPath,
                             width: 44,
                             height: 44,
