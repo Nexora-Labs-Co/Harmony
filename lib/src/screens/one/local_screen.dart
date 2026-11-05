@@ -21,6 +21,7 @@ class LocalScreen extends StatelessWidget {
           cover: Image.asset('assets/Logo-Local.png', fit: BoxFit.cover),
           totalDuration: Duration(milliseconds: totalMs),
           tracks: tracks,
+          backgroundColor: const Color(0xFF1ED760),
         );
       },
     );
