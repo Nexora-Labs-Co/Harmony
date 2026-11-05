@@ -22,7 +22,11 @@ class PlayerService extends ChangeNotifier {
     if (track == null) return;
     if (track.path.isNotEmpty) {
       await _player.stop();
-      await _player.play(DeviceFileSource(track.path));
+      if (track.path.startsWith('http')) {
+        await _player.play(UrlSource(track.path));
+      } else {
+        await _player.play(DeviceFileSource(track.path));
+      }
     }
     _isPlaying = true;
     RecentTracksService.instance.record(track);
