@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:xora/xora.dart';
+import 'package:harmony/src/services/local_music_service.dart';
+import 'package:harmony/src/shared/widgets/cached_artwork.dart';
+import 'package:harmony/src/models/local_track.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, this.userName = 'Usuario'});
@@ -49,7 +52,7 @@ class HomeScreen extends StatelessWidget {
         _slide(),
         const SizedBox(height: 16),
         _section(context, 'Recientes'),
-        _slide(),
+        _realSlide(),
       ],
     );
   }
@@ -91,6 +94,53 @@ class HomeScreen extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  Widget _realSlide() {
+    return FutureBuilder<List<LocalTrack>>(
+      future: LocalMusicService.instance.scan(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const SizedBox(height: 150, child: Center(child: CircularProgressIndicator()));
+        }
+        final tracks = snapshot.data ?? [];
+        if (tracks.isEmpty) return _slide();
+        return SizedBox(
+          height: 150,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: tracks.take(20).length,
+            separatorBuilder: (_, _) => const SizedBox(width: 12),
+            itemBuilder: (context, i) {
+              final t = tracks[i];
+              return SizedBox(
+                width: 110,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: CachedArtwork(
+                        path: t.coverPath,
+                        width: double.infinity,
+                        height: double.infinity,
+                        borderRadius: BorderRadius.circular(12),
+                        fallback: Container(
+                          color: XoraColors.surfaceVariant,
+                          child: const Center(child: Icon(Icons.music_note)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(t.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
+                    Text(t.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, color: XoraColors.textSecondary)),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
