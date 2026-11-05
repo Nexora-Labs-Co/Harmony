@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:xora/xora.dart';
 import 'package:harmony/src/screens/one/home_screen.dart';
@@ -7,7 +10,11 @@ import 'package:harmony/src/screens/one/favorites_screen.dart';
 import 'package:harmony/src/screens/one/cari_screen.dart';
 import 'package:harmony/src/screens/one/search_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isAndroid) {
+    await [Permission.audio, Permission.photos, Permission.storage].request();
+  }
   runApp(const HarmonyApp());
 }
 

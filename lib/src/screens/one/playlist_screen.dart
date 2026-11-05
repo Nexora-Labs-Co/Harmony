@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:harmony/src/services/recent_tracks_service.dart';
 
 import 'package:harmony/src/models/local_track.dart';
 import 'package:harmony/src/shared/widgets/cached_artwork.dart';
@@ -104,6 +105,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
               if (tracks != null && tracks.isNotEmpty) {
                 final t = tracks[index];
                 return ListTile(
+                  onTap: () => RecentTracksService.instance.record(t),
                   leading: CachedArtwork(
                     path: t.coverPath,
                     width: 44,

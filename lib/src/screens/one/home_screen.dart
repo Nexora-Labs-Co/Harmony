@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:xora/xora.dart';
 import 'package:harmony/src/services/local_music_service.dart';
+import 'package:harmony/src/services/recent_tracks_service.dart';
 import 'package:harmony/src/models/local_track.dart';
 import 'package:harmony/src/shared/widgets/cached_artwork.dart';
 
@@ -149,16 +150,13 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _recentSlide() {
-    return FutureBuilder<List<LocalTrack>>(
-      future: LocalMusicService.instance.scan(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const SizedBox(height: 150, child: Center(child: CircularProgressIndicator()));
-        }
-        final tracks = snapshot.data ?? [];
-        if (tracks.isEmpty) return _slide();
-        // Most recently played first; without playback history, show last scanned first.
-        final items = tracks.reversed.take(20).toList();
+    final items = RecentTracksService.instance.recentTracks.take(20).toList();
+    if (items.isEmpty) {
+      return SizedBox(
+        height: 150,
+        child: Center(child: Text('Sin recientes', style: TextStyle(color: XoraColors.textSecondary))),
+      );
+    }
         return SizedBox(
           height: 150,
           child: ListView.separated(
@@ -190,7 +188,5 @@ class HomeScreen extends StatelessWidget {
             },
           ),
         );
-      },
-    );
   }
 }
