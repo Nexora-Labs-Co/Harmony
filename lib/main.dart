@@ -75,7 +75,7 @@ class _HarmonyHomeState extends State<HarmonyHome> {
           topBar: OneTopBar(
             appName: 'Harmony',
             avatar: _avatarPath == null
-                ? XoraAvatar(initials: _userName)
+                ? XoraAvatar(initials: _userName.isNotEmpty ? _userName.substring(0, 1) : 'H')
                 : null,
             accountAvatarPath: _avatarPath,
             accountName: _userName,
