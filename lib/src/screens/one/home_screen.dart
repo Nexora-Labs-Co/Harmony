@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:xora/xora.dart';
 import 'package:harmony/src/services/local_music_service.dart';
+import 'package:harmony/src/services/player_service.dart';
 import 'package:harmony/src/services/recent_tracks_service.dart';
 import 'package:harmony/src/models/local_track.dart';
 import 'package:harmony/src/shared/widgets/cached_artwork.dart';
@@ -122,7 +123,9 @@ class HomeScreen extends StatelessWidget {
             separatorBuilder: (_, _) => const SizedBox(width: 12),
             itemBuilder: (context, i) {
               final t = items[i];
-              return SizedBox(
+              return GestureDetector(
+                onTap: () => PlayerService.instance.play(t, queue: items),
+                child: SizedBox(
                 width: 110,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,6 +144,7 @@ class HomeScreen extends StatelessWidget {
                     Text(t.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, color: XoraColors.textSecondary)),
                   ],
                 ),
+              ),
               );
             },
           ),
@@ -165,7 +169,9 @@ class HomeScreen extends StatelessWidget {
             separatorBuilder: (_, _) => const SizedBox(width: 12),
             itemBuilder: (context, i) {
               final t = items[i];
-              return SizedBox(
+              return GestureDetector(
+                onTap: () => PlayerService.instance.play(t, queue: items),
+                child: SizedBox(
                 width: 110,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,6 +190,7 @@ class HomeScreen extends StatelessWidget {
                     Text(t.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, color: XoraColors.textSecondary)),
                   ],
                 ),
+              ),
               );
             },
           ),

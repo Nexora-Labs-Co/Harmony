@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:harmony/src/services/recent_tracks_service.dart';
 
 import 'package:harmony/src/models/local_track.dart';
+import 'package:harmony/src/services/player_service.dart';
 import 'package:harmony/src/shared/widgets/cached_artwork.dart';
 
 class PlaylistScreen extends StatefulWidget {
@@ -105,7 +105,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
               if (tracks != null && tracks.isNotEmpty) {
                 final t = tracks[index];
                 return ListTile(
-                  onTap: () => RecentTracksService.instance.record(t),
+                  onTap: () => PlayerService.instance.play(t, queue: tracks),
                   leading: CachedArtwork(
                     path: t.coverPath,
                     width: 44,
@@ -135,6 +135,13 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                 );
               }
               return ListTile(
+                onTap: () {
+                  final queue = List.generate(
+                    count,
+                    (i) => LocalTrack(path: '', title: 'Canción ${i + 1}', artist: 'Artista ${i + 1}'),
+                  );
+                  PlayerService.instance.playQueue(queue, index);
+                },
                 leading: Container(
                   width: 44,
                   height: 44,

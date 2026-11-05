@@ -9,6 +9,7 @@ import 'package:harmony/src/screens/one/playlists_screen.dart';
 import 'package:harmony/src/screens/one/favorites_screen.dart';
 import 'package:harmony/src/screens/one/cari_screen.dart';
 import 'package:harmony/src/screens/one/search_screen.dart';
+import 'package:harmony/src/shared/widgets/mini_player.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -116,7 +117,12 @@ class _HarmonyHomeState extends State<HarmonyHome> {
               ),
             ],
           ),
-          child: pages[_index.clamp(0, pages.length - 1)],
+          child: Column(
+            children: [
+              Expanded(child: pages[_index.clamp(0, pages.length - 1)]),
+              const MiniPlayer(),
+            ],
+          ),
         ),
         tablet: XoraSlate(child: pages[_index.clamp(0, pages.length - 1)]),
         desktop: XoraNexo(
