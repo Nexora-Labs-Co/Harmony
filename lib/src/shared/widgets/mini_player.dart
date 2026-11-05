@@ -13,47 +13,57 @@ class MiniPlayer extends StatelessWidget {
       builder: (context, _) {
         final track = PlayerService.instance.currentTrack;
         if (track == null) return const SizedBox.shrink();
-        return Container(
-          height: 64,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
-          ),
-          child: Row(
-            children: [
-              CachedArtwork(
-                path: track.coverPath,
-                width: 44,
-                height: 44,
-                borderRadius: BorderRadius.circular(6),
-                fallback: Container(
-                  width: 44,
-                  height: 44,
-                  color: Colors.grey.shade300,
-                  child: const Icon(Icons.music_note),
-                ),
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(999),
+                border: Border.all(color: Theme.of(context).colorScheme.outline),
+                boxShadow: const [
+                  BoxShadow(color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4)),
+                ],
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(track.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600)),
-                    Text(track.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12)),
-                  ],
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CachedArtwork(
+                    path: track.coverPath,
+                    width: 40,
+                    height: 40,
+                    borderRadius: BorderRadius.circular(20),
+                    fallback: Container(
+                      width: 40,
+                      height: 40,
+                      color: Colors.grey.shade300,
+                      child: const Icon(Icons.music_note),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Flexible(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(track.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600)),
+                        Text(track.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    icon: Icon(PlayerService.instance.isPlaying ? Icons.pause : Icons.play_arrow),
+                    onPressed: PlayerService.instance.togglePlay,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.skip_next),
+                    onPressed: PlayerService.instance.next,
+                  ),
+                ],
               ),
-              IconButton(
-                icon: Icon(PlayerService.instance.isPlaying ? Icons.pause : Icons.play_arrow),
-                onPressed: PlayerService.instance.togglePlay,
-              ),
-              IconButton(
-                icon: const Icon(Icons.skip_next),
-                onPressed: PlayerService.instance.next,
-              ),
-            ],
+            ),
           ),
         );
       },
