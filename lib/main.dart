@@ -26,8 +26,12 @@ class _HarmonyAppState extends State<HarmonyApp> {
     return MaterialApp(
       title: 'Harmony',
       debugShowCheckedModeBanner: false,
-      theme: XoraTheme.light(),
-      darkTheme: XoraTheme.dark(),
+      theme: XoraTheme.light().copyWith(
+        colorScheme: XoraTheme.light().colorScheme.copyWith(primary: const Color(0xFFDFFF00)),
+      ),
+      darkTheme: XoraTheme.dark().copyWith(
+        colorScheme: XoraTheme.dark().colorScheme.copyWith(primary: const Color(0xFFDFFF00)),
+      ),
       themeMode: _dark ? ThemeMode.dark : ThemeMode.light,
       home: HarmonyHome(
         dark: _dark,
@@ -152,3 +156,4 @@ class _HarmonyHomeState extends State<HarmonyHome> {
     );
   }
 }
+
