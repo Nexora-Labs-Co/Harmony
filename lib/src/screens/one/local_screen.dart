@@ -8,21 +8,23 @@ class LocalScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: LocalMusicService.instance.scan(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final tracks = snapshot.data ?? [];
-        final totalMs = tracks.fold<int>(0, (s, t) => s + t.durationMs);
-        return PlaylistScreen(
-          title: 'Local',
-          cover: Image.asset('assets/Logo-Local.png', fit: BoxFit.cover),
-          totalDuration: Duration(milliseconds: totalMs),
-          tracks: tracks,
-        );
-      },
+    return Scaffold(
+      body: FutureBuilder(
+        future: LocalMusicService.instance.scan(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final tracks = snapshot.data ?? [];
+          final totalMs = tracks.fold<int>(0, (s, t) => s + t.durationMs);
+          return PlaylistScreen(
+            title: 'Local',
+            cover: Image.asset('assets/Logo-Local.png', fit: BoxFit.cover),
+            totalDuration: Duration(milliseconds: totalMs),
+            tracks: tracks,
+          );
+        },
+      ),
     );
   }
 }

@@ -70,7 +70,9 @@ class _HarmonyHomeState extends State<HarmonyHome> {
         mobile: XoraOne(
           topBar: OneTopBar(
             appName: 'Harmony',
-            avatar: _avatarPath == null ? XoraAvatar(initials: _userName) : null,
+            avatar: _avatarPath == null
+                ? XoraAvatar(initials: _userName)
+                : null,
             accountAvatarPath: _avatarPath,
             accountName: _userName,
             accountStatus: 'Premium',
@@ -143,12 +145,10 @@ class _HarmonyHomeState extends State<HarmonyHome> {
           userInitials: 'U',
           rightPanel: const SizedBox.shrink(),
           appVersion: 'v0.1.0',
-          onToggleTheme: widget.onToggleTheme,
-          isDark: widget.dark,
+
           child: pages[_index.clamp(0, pages.length - 1)],
         ),
       ),
     );
   }
 }
-
