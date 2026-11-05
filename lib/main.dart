@@ -94,35 +94,36 @@ class _HarmonyHomeState extends State<HarmonyHome> {
               _avatarPath = path;
             }),
           ),
-          bottomBar: OneBottomBar(
-            selectedIndex: _index.clamp(0, 4),
-            onTap: (i) => setState(() => _index = i),
-            items: const [
-              OneBottomBarItem(icon: XoraIcon(XoraIcons.home), label: 'Inicio'),
-              OneBottomBarItem(
-                icon: XoraIcon(XoraIcons.music),
-                label: 'Librería',
-              ),
-              OneBottomBarItem(
-                icon: XoraIcon(XoraIcons.heart),
-                label: 'Favoritos',
-              ),
-              // OneBottomBarItem(
-              //   icon: XoraIcon(XoraIcons.magnifyingGlass),
-              //   label: 'Cari',
-              // ),
-              OneBottomBarItem(
-                icon: XoraIcon(XoraIcons.magnifyingGlass),
-                label: 'Buscar',
-              ),
-            ],
-          ),
-          child: Column(
+          bottomBar: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(child: pages[_index.clamp(0, pages.length - 1)]),
               const MiniPlayer(),
+              OneBottomBar(
+                selectedIndex: _index.clamp(0, 4),
+                onTap: (i) => setState(() => _index = i),
+                items: const [
+                  OneBottomBarItem(icon: XoraIcon(XoraIcons.home), label: 'Inicio'),
+                  OneBottomBarItem(
+                    icon: XoraIcon(XoraIcons.music),
+                    label: 'Librería',
+                  ),
+                  OneBottomBarItem(
+                    icon: XoraIcon(XoraIcons.heart),
+                    label: 'Favoritos',
+                  ),
+                  // OneBottomBarItem(
+                  //   icon: XoraIcon(XoraIcons.magnifyingGlass),
+                  //   label: 'Cari',
+                  // ),
+                  OneBottomBarItem(
+                    icon: XoraIcon(XoraIcons.magnifyingGlass),
+                    label: 'Buscar',
+                  ),
+                ],
+              ),
             ],
           ),
+          child: pages[_index.clamp(0, pages.length - 1)],
         ),
         tablet: XoraSlate(child: pages[_index.clamp(0, pages.length - 1)]),
         desktop: XoraNexo(
