@@ -17,3 +17,4 @@ class FavoritesStore {
     paths.value = next;
   }
 }
+

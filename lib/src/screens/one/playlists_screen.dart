@@ -1,3 +1,4 @@
+import 'package:xora/xora.dart';
 import 'package:flutter/material.dart';
 
 import 'package:harmony/src/models/local_track.dart';
@@ -59,7 +60,7 @@ class PlaylistsScreen extends StatelessWidget {
                       child: Center(
                         child: entry.name == 'Local'
                             ? Image.asset('assets/Logo-Local.png', fit: BoxFit.cover)
-                            : const Icon(Icons.queue_music, size: 40, color: Colors.white),
+                            : const XoraIcon(XoraIcons.queueMusic, size: 40, color: Colors.white),
                       ),
                     ),
                   ),
@@ -72,3 +73,4 @@ class PlaylistsScreen extends StatelessWidget {
     );
   }
 }
+

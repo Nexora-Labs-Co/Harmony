@@ -1,4 +1,5 @@
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'dart:convert';
+import 'dart:io';
 
 import '../models/yt_track.dart';
 
@@ -8,31 +9,31 @@ class YouTubeStreamingService {
 
   final Map<String, YtTrack> _cache = {};
 
+  static const _modulePath = '/home/saaarmyx/Desktop/NexoraLabsCo/Modules/harmony-media-streaming/stream.py';
+
   Future<YtTrack?> resolve(YtTrack track) async {
     final key = track.id.isNotEmpty ? track.id : track.title;
     if (_cache.containsKey(key)) return _cache[key];
-
-    final yt = YoutubeExplode();
-    try {
-      final video = track.id.isNotEmpty
-          ? await yt.videos.get(track.id)
-          : (await yt.search.search(track.title)).first;
-      final manifest = await yt.videos.streamsClient.getManifest(video.id);
-      final streamInfo = manifest.audioOnly.withHighestBitrate();
-      final resolved = YtTrack(
-        id: video.id.value,
-        title: video.title,
-        artist: video.author,
-        thumbnailUrl: video.thumbnails.highResUrl,
-        durationSeconds: video.duration?.inSeconds ?? 0,
-        streamUrl: streamInfo.url.toString(),
-      );
-      _cache[key] = resolved;
-      return resolved;
-    } catch (_) {
-      return null;
-    } finally {
-      yt.close();
+    final module = File(_modulePath);
+    if (module.existsSync()) {
+      try {
+        final res = await Process.run('python3', [module.path, track.id.isNotEmpty ? track.id : track.title]);
+        if (res.exitCode == 0) {
+          final data = jsonDecode(res.stdout as String) as Map<String, dynamic>;
+          final resolved = YtTrack(
+            id: data['id']?.toString() ?? track.id,
+            title: data['title']?.toString() ?? track.title,
+            artist: data['artist']?.toString() ?? track.artist,
+            thumbnailUrl: data['thumbnailUrl']?.toString() ?? track.thumbnailUrl,
+            durationSeconds: (data['duration'] is num) ? (data['duration'] as num).toInt() : track.durationSeconds,
+            streamUrl: data['streamUrl']?.toString(),
+          );
+          _cache[key] = resolved;
+          return resolved;
+        }
+      } catch (_) {}
     }
+    return null;
   }
 }
+

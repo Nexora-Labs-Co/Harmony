@@ -1,11 +1,15 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 
 import 'package:harmony/src/models/local_track.dart';
 import 'package:harmony/src/services/recent_tracks_service.dart';
 
 class PlayerService extends ChangeNotifier {
-  PlayerService._();
+  PlayerService._() {
+    _player.onPositionChanged.listen((d) { _position = d; notifyListeners(); });
+    _player.onDurationChanged.listen((d) { _duration = d; notifyListeners(); });
+    _player.onPlayerStateChanged.listen((s) { _isPlaying = s == PlayerState.playing; notifyListeners(); });
+  }
   static final instance = PlayerService._();
 
   final AudioPlayer _player = AudioPlayer();
@@ -13,6 +17,13 @@ class PlayerService extends ChangeNotifier {
   List<LocalTrack> _queue = [];
   int _index = 0;
   bool _isPlaying = false;
+  bool _shuffle = false;
+  bool get shuffle => _shuffle;
+  Duration _position = Duration.zero;
+  Duration _duration = Duration.zero;
+
+  Duration get position => _position;
+  Duration get duration => _duration;
 
   LocalTrack? get currentTrack => _queue.isEmpty ? null : _queue[_index.clamp(0, _queue.length - 1)];
   bool get isPlaying => _isPlaying;
@@ -21,29 +32,17 @@ class PlayerService extends ChangeNotifier {
     final track = currentTrack;
     if (track == null) return;
     if (track.path.isNotEmpty) {
-      try {
-        if (track.path.startsWith('http')) {
-          await _player.setAudioSource(
-            AudioSource.uri(
-              Uri.parse(track.path),
-              headers: const {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                'Referer': 'https://www.youtube.com/',
-              },
-            ),
-          );
-        } else {
-          await _player.setFilePath(track.path);
-        }
-        await _player.play();
-        _isPlaying = true;
-      } catch (e) {
-        _isPlaying = false;
+      await _player.stop();
+      if (track.path.startsWith('http')) {
+        await _player.play(UrlSource(track.path));
+      } else {
+        await _player.play(DeviceFileSource(track.path));
       }
-    } else {
-      _isPlaying = true;
     }
-    if (currentTrack != null) RecentTracksService.instance.record(currentTrack!);
+    _position = Duration.zero;
+    _duration = Duration.zero;
+    _isPlaying = true;
+    RecentTracksService.instance.record(track);
     notifyListeners();
   }
 
@@ -66,12 +65,20 @@ class PlayerService extends ChangeNotifier {
     _playCurrent();
   }
 
+  Future<void> seek(Duration d) async {
+    await _player.seek(d);
+    _position = d;
+    notifyListeners();
+  }
+
+  void togglePlayPause() => togglePlay();
+  void toggleShuffle() { _shuffle = !_shuffle; notifyListeners(); }
   void togglePlay() {
     if (_isPlaying) {
       _player.pause();
       _isPlaying = false;
     } else {
-      _player.play();
+      _player.resume();
       _isPlaying = true;
     }
     notifyListeners();
@@ -89,3 +96,4 @@ class PlayerService extends ChangeNotifier {
     _playCurrent();
   }
 }
+

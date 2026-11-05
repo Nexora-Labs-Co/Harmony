@@ -15,3 +15,4 @@ class LocalTrack {
   final int durationMs;
   final String? coverPath;
 }
+

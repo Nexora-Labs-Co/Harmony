@@ -46,3 +46,4 @@ class PlaylistsStore {
     if (!list.contains(trackPath)) list.add(trackPath);
   }
 }
+

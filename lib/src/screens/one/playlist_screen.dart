@@ -72,8 +72,8 @@ class PlaylistScreen extends StatelessWidget {
         elevation: 0,
         leading: const BackButton(),
         actions: [
-          IconButton(icon: const Icon(Icons.share), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
+          IconButton(icon: const XoraIcon(XoraIcons.share), onPressed: () {}),
+          IconButton(icon: const XoraIcon(XoraIcons.moreVert), onPressed: () {}),
         ],
       ),
       body: stacked,
@@ -100,7 +100,7 @@ class PlaylistScreen extends StatelessWidget {
                     child: cover ??
                         Container(
                           color: Colors.white24,
-                          child: const Icon(Icons.queue_music, size: 64, color: _textColor),
+                          child: const XoraIcon(XoraIcons.queueMusic, size: 64, color: _textColor),
                         ),
                   ),
                 ),
@@ -120,7 +120,7 @@ class PlaylistScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _CircleButton(icon: Icons.shuffle, onPressed: onShuffle),
+                    _CircleButton(icon: XoraIcons.shuffle, onPressed: onShuffle),
                     const SizedBox(width: 12),
                     _PlayPill(
                       color: backgroundColor,
@@ -128,7 +128,7 @@ class PlaylistScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     _CircleButton(
-                    icon: Icons.download_outlined,
+                    icon: XoraIcons.download,
                     onPressed: () async {
                       if (onDownload != null) {
                         onDownload!();
@@ -204,7 +204,7 @@ class _TrackRow extends StatelessWidget {
                   width: 48,
                   height: 48,
                   color: Colors.white24,
-                  child: const Icon(Icons.music_note, color: _textColor),
+                  child: const XoraIcon(XoraIcons.musicNote, color: _textColor),
                 ),
               ),
             ),
@@ -235,8 +235,8 @@ class _TrackRow extends StatelessWidget {
                   final fav = favs.contains(track.path);
                   return IconButton(
                     visualDensity: VisualDensity.compact,
-                    icon: Icon(
-                      fav ? Icons.favorite : Icons.favorite_border,
+                    icon: XoraIcon(
+                      fav ? XoraIcons.favorite : XoraIcons.heart,
                       color: fav ? _textColor : _mutedColor,
                       size: 20,
                     ),
@@ -244,7 +244,7 @@ class _TrackRow extends StatelessWidget {
                   );
                 },
               ),
-            const Icon(Icons.more_horiz, color: _mutedColor, size: 22),
+            const XoraIcon(XoraIcons.moreHoriz, color: _mutedColor, size: 22),
           ],
         ),
       ),
@@ -255,7 +255,7 @@ class _TrackRow extends StatelessWidget {
 class _CircleButton extends StatelessWidget {
   const _CircleButton({required this.icon, this.onPressed});
 
-  final IconData icon;
+  final dynamic icon;
   final VoidCallback? onPressed;
 
   @override
@@ -269,7 +269,7 @@ class _CircleButton extends StatelessWidget {
         child: SizedBox(
           width: 52,
           height: 52,
-          child: Icon(icon, color: PlaylistScreen._textColor, size: 24),
+          child: XoraIcon(icon, color: PlaylistScreen._textColor, size: 24),
         ),
       ),
     );
@@ -296,7 +296,7 @@ class _PlayPill extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.play_arrow_rounded, color: fg, size: 26),
+              XoraIcon(XoraIcons.playArrow, color: fg, size: 26),
               const SizedBox(width: 4),
               Text(
                 'Play',

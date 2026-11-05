@@ -15,3 +15,4 @@ class YtTrack {
   final int durationSeconds;
   final String? streamUrl;
 }
+

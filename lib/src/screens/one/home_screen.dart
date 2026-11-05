@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
             errorBuilder: (_, _, _) => Container(
               height: 200,
               color: XoraColors.surfaceVariant,
-              child: const Icon(Icons.image, size: 48),
+              child: const XoraIcon(XoraIcons.image, size: 48),
             ),
           ),
         ),
@@ -84,7 +84,7 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     child: Container(
                       color: XoraColors.surfaceVariant,
-                      child: const Center(child: Icon(Icons.music_note)),
+                      child: const Center(child: XoraIcon(XoraIcons.musicNote)),
                     ),
                   ),
                 ),
@@ -135,7 +135,7 @@ class HomeScreen extends StatelessWidget {
                         width: double.infinity,
                         height: double.infinity,
                         borderRadius: BorderRadius.circular(12),
-                        fallback: Container(color: XoraColors.surfaceVariant, child: const Center(child: Icon(Icons.music_note))),
+                        fallback: Container(color: XoraColors.surfaceVariant, child: const Center(child: XoraIcon(XoraIcons.musicNote))),
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -181,7 +181,7 @@ class HomeScreen extends StatelessWidget {
                         width: double.infinity,
                         height: double.infinity,
                         borderRadius: BorderRadius.circular(12),
-                        fallback: Container(color: XoraColors.surfaceVariant, child: const Center(child: Icon(Icons.music_note))),
+                        fallback: Container(color: XoraColors.surfaceVariant, child: const Center(child: XoraIcon(XoraIcons.musicNote))),
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -196,3 +196,4 @@ class HomeScreen extends StatelessWidget {
         );
   }
 }
+

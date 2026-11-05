@@ -24,3 +24,4 @@ class _RecentEntry {
   final LocalTrack track;
   final DateTime playedAt;
 }
+

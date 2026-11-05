@@ -8,3 +8,4 @@ class CariScreen extends StatelessWidget {
     return Center(child: Text('Cari'));
   }
 }
+

@@ -1,3 +1,4 @@
+import 'package:xora/xora.dart';
 import 'package:flutter/material.dart';
 
 import 'package:harmony/src/models/local_track.dart';
@@ -31,14 +32,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Future<void> _play(YtTrack t) async {
     final resolved = await YouTubeStreamingService.instance.resolve(t);
-    if (resolved == null || resolved.streamUrl == null) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Streaming no disponible en este dispositivo')),
-        );
-      }
-      return;
-    }
+    if (resolved == null || resolved.streamUrl == null) return;
     final track = LocalTrack(
       path: resolved.streamUrl!,
       title: resolved.title,
@@ -59,7 +53,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: TextField(
             decoration: const InputDecoration(
               hintText: 'Buscar en YouTube',
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: XoraIcon(XoraIcons.search),
               border: OutlineInputBorder(),
             ),
             onSubmitted: _search,
@@ -79,7 +73,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         width: 44,
                         height: 44,
                         borderRadius: BorderRadius.circular(6),
-                        fallback: const Icon(Icons.music_note),
+                        fallback: const XoraIcon(XoraIcons.musicNote),
                       ),
                       title: Text(t.title),
                       subtitle: Text(t.artist),
@@ -92,3 +86,4 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 }
+

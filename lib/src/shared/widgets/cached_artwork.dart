@@ -50,3 +50,4 @@ class CachedArtwork extends StatelessWidget {
     return child;
   }
 }
+
