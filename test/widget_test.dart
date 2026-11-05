@@ -5,6 +5,6 @@ void main() {
   testWidgets('harmony builds', (tester) async {
     await tester.pumpWidget(const HarmonyApp());
     await tester.pumpAndSettle();
-    expect(find.text('Biblioteca'), findsWidgets);
+    expect(find.text('Buenos días'), findsWidgets);
   });
 }
