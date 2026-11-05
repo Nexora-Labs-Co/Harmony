@@ -115,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       color: XoraColors.background,
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -381,27 +381,29 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _youtubeCard(BuildContext context, YouTubeTrack yt, PlayerProvider player) {
-    return InkWell(
-      onTap: () {},
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: CachedArtwork(
-                albumArt: yt.thumbnailUrl,
-                width: double.infinity,
-                height: double.infinity,
+    return XoraCard(
+      child: InkWell(
+        onTap: () {},
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                fallback: Container(color: XoraColors.surfaceVariant, child: const Icon(Icons.music_note)),
+                child: CachedArtwork(
+                  albumArt: yt.thumbnailUrl,
+                  width: double.infinity,
+                  height: double.infinity,
+                  borderRadius: BorderRadius.circular(8),
+                  fallback: Container(color: XoraColors.surfaceVariant, child: const Icon(Icons.music_note)),
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(yt.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600)),
-          Text(yt.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: XoraColors.textSecondary, fontSize: 12)),
-        ],
+            const SizedBox(height: 8),
+            Text(yt.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600)),
+            Text(yt.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: XoraColors.textSecondary, fontSize: 12)),
+          ],
+        ),
       ),
     );
   }
