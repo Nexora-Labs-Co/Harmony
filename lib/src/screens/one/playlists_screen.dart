@@ -9,7 +9,7 @@ class PlaylistsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<List<String>>(
+    return ValueListenableBuilder<List<PlaylistEntry>>(
       valueListenable: PlaylistsStore.instance.playlists,
       builder: (context, playlists, _) {
         return GridView.builder(
@@ -22,17 +22,21 @@ class PlaylistsScreen extends StatelessWidget {
           ),
           itemCount: playlists.length,
           itemBuilder: (context, index) {
-            final name = playlists[index];
+            final entry = playlists[index];
             return GestureDetector(
               onTap: () {
-                if (name == 'Local') {
+                if (entry.name == 'Local') {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (_) => const LocalScreen()),
                   );
                 } else {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => PlaylistScreen(title: name, totalDuration: const Duration(minutes: 30)),
+                      builder: (_) => PlaylistScreen(
+                        title: entry.name,
+                        totalDuration: const Duration(minutes: 30),
+                        backgroundColor: entry.color,
+                      ),
                     ),
                   );
                 }
@@ -40,11 +44,11 @@ class PlaylistsScreen extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Container(
-                  color: Colors.grey.shade300,
+                  color: entry.color,
                   child: Center(
-                    child: name == 'Local'
+                    child: entry.name == 'Local'
                         ? Image.asset('assets/Logo-Local.png', fit: BoxFit.cover)
-                        : const Icon(Icons.queue_music, size: 40),
+                        : const Icon(Icons.queue_music, size: 40, color: Colors.white),
                   ),
                 ),
               ),
