@@ -9,6 +9,7 @@ class FavoritesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlaylistScreen(
       title: 'Favoritos',
+      backgroundColor: const Color(0xFFFA3850),
       cover: Image.asset('assets/Logo-Favoritos.png', fit: BoxFit.cover),
       totalDuration: const Duration(minutes: 42),
       showAppBar: false,

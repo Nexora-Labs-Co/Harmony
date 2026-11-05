@@ -12,6 +12,7 @@ class PlaylistScreen extends StatefulWidget {
     this.totalDuration = Duration.zero,
     this.tracks,
     this.showAppBar = true,
+    this.backgroundColor,
     this.onPlay,
     this.onShuffle,
     this.onDownload,
@@ -22,6 +23,7 @@ class PlaylistScreen extends StatefulWidget {
   final Duration totalDuration;
   final List<LocalTrack>? tracks;
   final bool showAppBar;
+  final Color? backgroundColor;
   final VoidCallback? onPlay;
   final VoidCallback? onShuffle;
   final VoidCallback? onDownload;
@@ -43,8 +45,11 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   @override
   Widget build(BuildContext context) {
     final body = _buildBody(context);
-    if (!widget.showAppBar) return body;
+    if (!widget.showAppBar) {
+      return Container(color: widget.backgroundColor, child: body);
+    }
     return Scaffold(
+      backgroundColor: widget.backgroundColor,
       appBar: AppBar(
         leading: const BackButton(),
         actions: [
@@ -52,7 +57,10 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
           IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
         ],
       ),
-      body: body,
+      body: Container(
+        color: widget.backgroundColor,
+        child: body,
+      ),
     );
   }
 
