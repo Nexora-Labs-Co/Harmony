@@ -48,10 +48,18 @@ class _HarmonyHomeState extends State<HarmonyHome> {
   Widget build(BuildContext context) {
     final pages = <Widget>[
       const _HomePage(),
-      const _FavoritesPage(),
-      const _LocalPage(),
-      const _CariPage(),
       const _PlaylistsPage(),
+      const _FavoritesPage(),
+      const _CariPage(),
+      const _SearchPage(),
+      const _LocalPage(),
+    ];
+    final mobilePages = <Widget>[
+      const _MobileHomePage(),
+      const _PlaylistsPage(),
+      const _FavoritesPage(),
+      const _CariPage(),
+      const _SearchPage(),
     ];
 
     return Scaffold(
@@ -59,16 +67,17 @@ class _HarmonyHomeState extends State<HarmonyHome> {
         mobile: XoraOne(
           topBar: const OneTopBar(appName: 'Harmony', avatar: XoraAvatar(initials: 'H')),
           bottomBar: OneBottomBar(
-            selectedIndex: _index.clamp(0, 3),
+            selectedIndex: _index.clamp(0, 4),
             onTap: (i) => setState(() => _index = i),
             items: const [
               OneBottomBarItem(icon: XoraIcon(XoraIcons.home), label: 'Inicio'),
+              OneBottomBarItem(icon: XoraIcon(XoraIcons.music), label: 'Librería'),
               OneBottomBarItem(icon: XoraIcon(XoraIcons.heart), label: 'Favoritos'),
-              OneBottomBarItem(icon: XoraIcon(XoraIcons.locationDot), label: 'Local'),
               OneBottomBarItem(icon: XoraIcon(XoraIcons.magnifyingGlass), label: 'Cari'),
+              OneBottomBarItem(icon: XoraIcon(XoraIcons.magnifyingGlass), label: 'Buscar'),
             ],
           ),
-          child: pages[_index.clamp(0, pages.length - 1)],
+          child: mobilePages[_index.clamp(0, mobilePages.length - 1)],
         ),
         tablet: XoraSlate(child: pages[_index.clamp(0, pages.length - 1)]),
         desktop: XoraNexo(
@@ -82,17 +91,22 @@ class _HarmonyHomeState extends State<HarmonyHome> {
             NexoSidebarItem(
               label: 'Favoritos',
               icon: XoraIcons.heart,
-              onTap: () => setState(() => _index = 1),
+              onTap: () => setState(() => _index = 2),
             ),
             NexoSidebarItem(
               label: 'Local',
               icon: XoraIcons.locationDot,
-              onTap: () => setState(() => _index = 2),
+              onTap: () => setState(() => _index = 5),
             ),
             NexoSidebarItem(
               label: 'Cari',
-              icon: XoraIcons.magnifyingGlass,
+              imageAsset: 'packages/xora/assets/icons/Logo-Cari.png',
               onTap: () => setState(() => _index = 3),
+            ),
+            NexoSidebarItem(
+              label: 'Buscar',
+              icon: XoraIcons.magnifyingGlass,
+              onTap: () => setState(() => _index = 4),
             ),
           ],
           sidebarSections: [
@@ -102,17 +116,17 @@ class _HarmonyHomeState extends State<HarmonyHome> {
                 NexoSidebarItem(
                   label: 'Playlists',
                   icon: XoraIcons.music,
-                  onTap: () => setState(() => _index = 4),
+                  onTap: () => setState(() => _index = 1),
                 ),
                 NexoSidebarItem(
                   label: 'Playlist 1',
                   icon: XoraIcons.list,
-                  onTap: () => setState(() => _index = 4),
+                  onTap: () => setState(() => _index = 1),
                 ),
                 NexoSidebarItem(
                   label: 'Playlist 2',
                   icon: XoraIcons.list,
-                  onTap: () => setState(() => _index = 4),
+                  onTap: () => setState(() => _index = 1),
                 ),
               ],
             ),
@@ -170,6 +184,103 @@ class _HomePage extends StatelessWidget {
             trailing: XoraIcon(XoraIcons.heart),
           ),
       ],
+    );
+  }
+}
+
+class _MobileHomePage extends StatelessWidget {
+  const _MobileHomePage();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+      children: [
+        Text('Buenos días', style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 4),
+        Text('Tu música, a tu manera.', style: Theme.of(context).textTheme.bodyMedium),
+        const SizedBox(height: 20),
+        GridView.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisExtent: 64,
+          children: const [
+            _QuickTile(icon: XoraIcon(XoraIcons.heart), label: 'Favoritos'),
+            _QuickTile(icon: XoraIcon(XoraIcons.magnifyingGlass), label: 'DJ Cari'),
+            _QuickTile(icon: XoraIcon(XoraIcons.music), label: 'Biblioteca'),
+            _QuickTile(icon: XoraIcon(XoraIcons.list), label: 'Playlists'),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Text('Nuevos lanzamientos', style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 150,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: 6,
+            separatorBuilder: (_, _) => const SizedBox(width: 12),
+            itemBuilder: (context, i) => SizedBox(
+              width: 120,
+              child: XoraCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: XoraAvatar(initials: 'N${i + 1}', size: 96),
+                    ),
+                    const SizedBox(height: 8),
+                    Text('Lanzamiento ${i + 1}', maxLines: 1, overflow: TextOverflow.ellipsis),
+                    Text('Artista ${i + 1}', maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+        Text('Recomendado por Cari', style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: 12),
+        for (int i = 0; i < 4; i++)
+          XoraListTile(
+            leading: XoraAvatar(initials: 'R${i + 1}'),
+            title: Text('Canción ${i + 1}'),
+            subtitle: Text('Artista ${i + 1}'),
+            trailing: XoraIcon(XoraIcons.heart),
+          ),
+        const SizedBox(height: 24),
+        Text('Recientes', style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: 12),
+        for (int i = 0; i < 4; i++)
+          XoraListTile(
+            leading: XoraAvatar(initials: 'Q${i + 1}'),
+            title: Text('En cola ${i + 1}'),
+            subtitle: Text('Artista ${i + 1}'),
+          ),
+      ],
+    );
+  }
+}
+
+class _QuickTile extends StatelessWidget {
+  const _QuickTile({required this.icon, required this.label});
+
+  final Widget icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return XoraCard(
+      child: Row(
+        children: [
+          icon,
+          const SizedBox(width: 12),
+          Expanded(child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis)),
+        ],
+      ),
     );
   }
 }
@@ -256,6 +367,32 @@ class _PlaylistsPage extends StatelessWidget {
               title: Text('Playlist ${i + 1}'),
               subtitle: Text('${i + 3} pistas'),
             ),
+          ),
+      ],
+    );
+  }
+}
+
+class _SearchPage extends StatelessWidget {
+  const _SearchPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Text('Buscar', style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 16),
+        const XoraTextField(
+          hint: 'Buscar canciones, artistas o álbumes',
+          prefixIcon: XoraIcon(XoraIcons.magnifyingGlass),
+        ),
+        const SizedBox(height: 16),
+        for (int i = 0; i < 5; i++)
+          XoraListTile(
+            leading: XoraIcon(XoraIcons.magnifyingGlass),
+            title: Text('Resultado ${i + 1}'),
+            subtitle: Text('Artista ${i + 1}'),
           ),
       ],
     );
