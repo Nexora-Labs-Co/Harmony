@@ -68,6 +68,7 @@ class _HarmonyHomeState extends State<HarmonyHome> {
       const FavoritesScreen(),
       const CariScreen(),
       const SearchScreen(),
+      const LocalScreen(),
     ];
 
     return Scaffold(
@@ -90,14 +91,17 @@ class _HarmonyHomeState extends State<HarmonyHome> {
         tablet: XoraSlate(child: pages[_index.clamp(0, pages.length - 1)]),
         desktop: XoraNexo(
           appName: 'Harmony',
-          topItems: [
-            NexoSidebarItem(label: 'Inicio', icon: XoraIcons.home, onTap: () => setState(() => _index = 0)),
-            NexoSidebarItem(label: 'Favoritos', icon: XoraIcons.heart, onTap: () => setState(() => _index = 2)),
-            NexoSidebarItem(label: 'Local', icon: XoraIcons.locationDot, onTap: () => setState(() => _index = 5)),
-            NexoSidebarItem(label: 'Cari', icon: XoraIcons.magnifyingGlass, onTap: () => setState(() => _index = 3)),
-            NexoSidebarItem(label: 'Buscar', icon: XoraIcons.magnifyingGlass, onTap: () => setState(() => _index = 4)),
-          ],
           sidebarSections: [
+            NexoSidebarSection(
+              title: 'Menú',
+              items: [
+                NexoSidebarItem(label: 'Inicio', icon: XoraIcons.home, onTap: () => setState(() => _index = 0)),
+                NexoSidebarItem(label: 'Favoritos', icon: XoraIcons.heart, onTap: () => setState(() => _index = 2)),
+                NexoSidebarItem(label: 'Local', icon: XoraIcons.locationDot, onTap: () => setState(() => _index = 5)),
+                NexoSidebarItem(label: 'Cari', icon: XoraIcons.magnifyingGlass, onTap: () => setState(() => _index = 3)),
+                NexoSidebarItem(label: 'Buscar', icon: XoraIcons.magnifyingGlass, onTap: () => setState(() => _index = 4)),
+              ],
+            ),
             NexoSidebarSection(
               title: 'Librería',
               items: [
@@ -145,3 +149,4 @@ class _RightPanel extends StatelessWidget {
     );
   }
 }
+
