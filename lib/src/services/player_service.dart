@@ -1,5 +1,5 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 
 import 'package:harmony/src/models/local_track.dart';
 import 'package:harmony/src/services/recent_tracks_service.dart';
@@ -21,15 +21,29 @@ class PlayerService extends ChangeNotifier {
     final track = currentTrack;
     if (track == null) return;
     if (track.path.isNotEmpty) {
-      await _player.stop();
-      if (track.path.startsWith('http')) {
-        await _player.play(UrlSource(track.path));
-      } else {
-        await _player.play(DeviceFileSource(track.path));
+      try {
+        if (track.path.startsWith('http')) {
+          await _player.setAudioSource(
+            AudioSource.uri(
+              Uri.parse(track.path),
+              headers: const {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Referer': 'https://www.youtube.com/',
+              },
+            ),
+          );
+        } else {
+          await _player.setFilePath(track.path);
+        }
+        await _player.play();
+        _isPlaying = true;
+      } catch (e) {
+        _isPlaying = false;
       }
+    } else {
+      _isPlaying = true;
     }
-    _isPlaying = true;
-    RecentTracksService.instance.record(track);
+    if (currentTrack != null) RecentTracksService.instance.record(currentTrack!);
     notifyListeners();
   }
 
@@ -57,7 +71,7 @@ class PlayerService extends ChangeNotifier {
       _player.pause();
       _isPlaying = false;
     } else {
-      _player.resume();
+      _player.play();
       _isPlaying = true;
     }
     notifyListeners();
