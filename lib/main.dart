@@ -75,8 +75,8 @@ class _HarmonyHomeState extends State<HarmonyHome> {
               title: 'Menú',
               items: [
                 NexoSidebarItem(
-                  label: 'Biblioteca',
-                  icon: XoraIcons.palette,
+                  label: 'Inicio',
+                  icon: XoraIcons.home,
                   onTap: () => setState(() => _index = 0),
                 ),
                 NexoSidebarItem(
@@ -85,7 +85,32 @@ class _HarmonyHomeState extends State<HarmonyHome> {
                   onTap: () => setState(() => _index = 1),
                 ),
                 NexoSidebarItem(
-                  label: 'Playlists',
+                  label: 'Loca',
+                  icon: XoraIcons.locationDot,
+                  onTap: () => setState(() => _index = 0),
+                ),
+                NexoSidebarItem(
+                  label: 'Cari',
+                  icon: XoraIcons.magnifyingGlass,
+                  onTap: () => setState(() => _index = 0),
+                ),
+              ],
+            ),
+            NexoSidebarSection(
+              title: 'Librería',
+              items: [
+                NexoSidebarItem(
+                  label: 'Playlist 1',
+                  icon: XoraIcons.music,
+                  onTap: () => setState(() => _index = 2),
+                ),
+                NexoSidebarItem(
+                  label: 'Playlist 2',
+                  icon: XoraIcons.music,
+                  onTap: () => setState(() => _index = 2),
+                ),
+                NexoSidebarItem(
+                  label: 'Playlist 3',
                   icon: XoraIcons.list,
                   onTap: () => setState(() => _index = 2),
                 ),
