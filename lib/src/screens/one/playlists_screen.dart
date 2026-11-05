@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:harmony/src/screens/one/local_screen.dart';
 import 'package:harmony/src/screens/one/playlist_screen.dart';
-import 'package:harmony/src/services/playlist_store.dart';
+import 'package:harmony/src/services/playlists_store.dart';
 
 class PlaylistsScreen extends StatelessWidget {
   const PlaylistsScreen({super.key});
@@ -10,7 +10,7 @@ class PlaylistsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<List<String>>(
-      valueListenable: PlaylistStore.instance.playlists,
+      valueListenable: PlaylistsStore.instance.playlists,
       builder: (context, playlists, _) {
         return GridView.builder(
           padding: const EdgeInsets.all(16),
@@ -44,7 +44,7 @@ class PlaylistsScreen extends StatelessWidget {
                   child: Center(
                     child: name == 'Local'
                         ? Image.asset('assets/Logo-Local.png', fit: BoxFit.cover)
-                        : const Icon(Icons.queue_music, size: 48),
+                        : const Icon(Icons.queue_music, size: 40),
                   ),
                 ),
               ),

@@ -10,7 +10,7 @@ import 'package:harmony/src/screens/one/favorites_screen.dart';
 import 'package:harmony/src/screens/one/cari_screen.dart';
 import 'package:harmony/src/screens/one/search_screen.dart';
 import 'package:harmony/src/services/local_music_service.dart';
-import 'package:harmony/src/services/playlist_store.dart';
+import 'package:harmony/src/services/playlists_store.dart';
 import 'package:harmony/src/shared/widgets/mini_player.dart';
 
 Future<void> main() async {
@@ -100,42 +100,34 @@ class _HarmonyHomeState extends State<HarmonyHome> {
               _avatarPath = path;
             }),
           ),
-          bottomBar: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              OneBottomBar(
-                selectedIndex: _index.clamp(0, 4),
-                onTap: (i) => setState(() => _index = i),
-                items: const [
-                  OneBottomBarItem(icon: XoraIcon(XoraIcons.home), label: 'Inicio'),
-                  OneBottomBarItem(
-                    icon: XoraIcon(XoraIcons.music),
-                    label: 'Librería',
-                  ),
-                  OneBottomBarItem(
-                    icon: XoraIcon(XoraIcons.heart),
-                    label: 'Favoritos',
-                  ),
-                  // OneBottomBarItem(
-                  //   icon: XoraIcon(XoraIcons.magnifyingGlass),
-                  //   label: 'Cari',
-                  // ),
-                  OneBottomBarItem(
-                    icon: XoraIcon(XoraIcons.magnifyingGlass),
-                    label: 'Buscar',
-                  ),
-                ],
+          bottomBar: OneBottomBar(
+            selectedIndex: _index.clamp(0, 4),
+            onTap: (i) {
+              if (i == 5) {
+                _showCreatePlaylistDialog(context);
+              } else {
+                setState(() => _index = i);
+              }
+            },
+            items: const [
+              OneBottomBarItem(icon: XoraIcon(XoraIcons.home), label: 'Inicio'),
+              OneBottomBarItem(
+                icon: XoraIcon(XoraIcons.music),
+                label: 'Librería',
               ),
-              if (_index == 1)
-                Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: FloatingActionButton.small(
-                    onPressed: () {
-                      PlaylistStore.instance.add('Playlist ${PlaylistStore.instance.playlists.value.length + 1}');
-                    },
-                    child: const Icon(Icons.add),
-                  ),
-                ),
+              OneBottomBarItem(
+                icon: XoraIcon(XoraIcons.heart),
+                label: 'Favoritos',
+              ),
+              // OneBottomBarItem(
+              //   icon: XoraIcon(XoraIcons.magnifyingGlass),
+              //   label: 'Cari',
+              // ),
+              OneBottomBarItem(
+                icon: XoraIcon(XoraIcons.magnifyingGlass),
+                label: 'Buscar',
+              ),
+              OneBottomBarItem(icon: XoraIcon(XoraIcons.plus), label: '+'),
             ],
           ),
           child: pages[_index.clamp(0, pages.length - 1)],
@@ -191,6 +183,27 @@ class _HarmonyHomeState extends State<HarmonyHome> {
         ),
       ),
     );
+  }
+
+  Future<void> _showCreatePlaylistDialog(BuildContext context) async {
+    final controller = TextEditingController();
+    final name = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Nueva playlist'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: const InputDecoration(hintText: 'Nombre'),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancelar')),
+          TextButton(onPressed: () => Navigator.pop(ctx, controller.text.trim()), child: const Text('Crear')),
+        ],
+      ),
+    );
+    if (name == null || name.isEmpty) return;
+    PlaylistsStore.instance.add(name);
   }
 }
 
