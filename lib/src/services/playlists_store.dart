@@ -30,9 +30,19 @@ class PlaylistsStore {
     const PlaylistEntry(name: 'Local', color: Color(0xFF1ED760)),
   ]);
 
+  /// playlist name -> track paths
+  final Map<String, List<String>> _tracks = {};
+
+  List<String> tracksOf(String name) => List.unmodifiable(_tracks[name] ?? const []);
+
   void add(String name) {
     if (name.trim().isEmpty) return;
     final color = _softColors[Random().nextInt(_softColors.length)];
     playlists.value = [...playlists.value, PlaylistEntry(name: name.trim(), color: color)];
+  }
+
+  void addTrack(String playlistName, String trackPath) {
+    final list = _tracks.putIfAbsent(playlistName, () => []);
+    if (!list.contains(trackPath)) list.add(trackPath);
   }
 }

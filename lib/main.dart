@@ -87,11 +87,21 @@ class _HarmonyHomeState extends State<HarmonyHome> {
           children: [
             XoraOne(
           topBar: OneTopBar(
-            appName: 'Harmony',
-            avatar: _avatarPath == null
-                ? XoraAvatar(initials: _userName.isNotEmpty ? _userName.substring(0, 1) : 'H')
-                : null,
-            accountAvatarPath: _avatarPath,
+            appName: _index == 2 ? null : 'Harmony',
+            title: _index == 2 ? const Text('Favoritos', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)) : null,
+            backgroundColor: _index == 2 ? const Color(0xFFFA3850) : null,
+            avatar: _index == 2
+                ? CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: Text(
+                      _userName.isNotEmpty ? _userName.substring(0, 1).toUpperCase() : 'U',
+                      style: const TextStyle(color: Color(0xFFFA3850), fontWeight: FontWeight.bold),
+                    ),
+                  )
+                : (_avatarPath == null
+                    ? XoraAvatar(initials: _userName.isNotEmpty ? _userName.substring(0, 1) : 'H')
+                    : null),
+            accountAvatarPath: _index == 2 ? null : _avatarPath,
             accountName: _userName,
             accountStatus: 'Premium',
             accountInitials: _userName,
