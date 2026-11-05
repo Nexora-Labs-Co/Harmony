@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:http/http.dart' as http;
 
 import '../models/yt_track.dart';
 
@@ -26,6 +27,32 @@ class YouTubeSearchService {
         }
       } catch (_) {}
     }
-    return [];
+    // Fallback: scrape YouTube search results (works on mobile).
+    try {
+      final uri = Uri.parse('https://www.youtube.com/results?search_query=${Uri.encodeComponent(query)}');
+      final res = await http.get(uri, headers: {'User-Agent': 'Mozilla/5.0'});
+      if (res.statusCode != 200) return [];
+      final html = res.body;
+      final reg = RegExp(r'"videoId":"([A-Za-z0-9_-]{11})".*?"title":\{"runs":\[\{"text":"([^"]+)"', dotAll: true);
+      final matches = reg.allMatches(html);
+      final seen = <String>{};
+      final out = <YtTrack>[];
+      for (final m in matches) {
+        final id = m.group(1)!;
+        if (!seen.add(id)) continue;
+        final title = m.group(2)!;
+        out.add(YtTrack(
+          id: id,
+          title: title,
+          artist: '',
+          thumbnailUrl: 'https://i.ytimg.com/vi/$id/hqdefault.jpg',
+          durationSeconds: 0,
+        ));
+        if (out.length >= limit) break;
+      }
+      return out;
+    } catch (_) {
+      return [];
+    }
   }
 }

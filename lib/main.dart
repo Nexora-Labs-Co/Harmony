@@ -39,10 +39,14 @@ class _HarmonyAppState extends State<HarmonyApp> {
       title: 'Harmony',
       debugShowCheckedModeBanner: false,
       theme: XoraTheme.light().copyWith(
-        colorScheme: XoraTheme.light().colorScheme.copyWith(primary: const Color(0xFFDFFF00)),
+        colorScheme: XoraTheme.light().colorScheme.copyWith(
+          primary: const Color(0xFFDFFF00),
+        ),
       ),
       darkTheme: XoraTheme.dark().copyWith(
-        colorScheme: XoraTheme.dark().colorScheme.copyWith(primary: const Color(0xFFDFFF00)),
+        colorScheme: XoraTheme.dark().colorScheme.copyWith(
+          primary: const Color(0xFFDFFF00),
+        ),
       ),
       themeMode: _dark ? ThemeMode.dark : ThemeMode.light,
       home: HarmonyHome(
@@ -86,61 +90,81 @@ class _HarmonyHomeState extends State<HarmonyHome> {
         mobile: Stack(
           children: [
             XoraOne(
-          topBar: OneTopBar(
-            appName: _index == 2 ? null : 'Harmony',
-            title: _index == 2 ? const Text('Favoritos', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)) : null,
-            backgroundColor: _index == 2 ? const Color(0xFFFA3850) : null,
-            avatar: _index == 2
-                ? CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Text(
-                      _userName.isNotEmpty ? _userName.substring(0, 1).toUpperCase() : 'U',
-                      style: const TextStyle(color: Color(0xFFFA3850), fontWeight: FontWeight.bold),
-                    ),
-                  )
-                : (_avatarPath == null
-                    ? XoraAvatar(initials: _userName.isNotEmpty ? _userName.substring(0, 1) : 'H')
-                    : null),
-            accountAvatarPath: _index == 2 ? null : _avatarPath,
-            accountName: _userName,
-            accountStatus: 'Premium',
-            accountInitials: _userName,
-            onProfileChanged: (name, path) => setState(() {
-              _userName = name;
-              _avatarPath = path;
-            }),
-          ),
-          bottomBar: OneBottomBar(
-            selectedIndex: _index.clamp(0, 4),
-            onTap: (i) {
-              if (i == 5) {
-                _showCreatePlaylistDialog(context);
-              } else {
-                setState(() => _index = i);
-              }
-            },
-            items: const [
-              OneBottomBarItem(icon: XoraIcon(XoraIcons.home), label: 'Inicio'),
-              OneBottomBarItem(
-                icon: XoraIcon(XoraIcons.music),
-                label: 'Librería',
+              topBar: OneTopBar(
+                appName: _index == 2 ? null : 'Harmony',
+                title: _index == 2
+                    ? const Text(
+                        'Favoritos',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    : null,
+                backgroundColor: _index == 2 ? const Color(0xFFFA3850) : null,
+                avatar: _index == 2
+                    ? CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Text(
+                          _userName.isNotEmpty
+                              ? _userName.substring(0, 1).toUpperCase()
+                              : 'U',
+                          style: const TextStyle(
+                            color: Color(0xFFFA3850),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                    : (_avatarPath == null
+                          ? XoraAvatar(
+                              initials: _userName.isNotEmpty
+                                  ? _userName.substring(0, 1)
+                                  : 'H',
+                            )
+                          : null),
+                accountAvatarPath: _index == 2 ? null : _avatarPath,
+                accountName: _userName,
+                accountStatus: 'Premium',
+                accountInitials: _userName,
+                onProfileChanged: (name, path) => setState(() {
+                  _userName = name;
+                  _avatarPath = path;
+                }),
               ),
-              OneBottomBarItem(
-                icon: XoraIcon(XoraIcons.heart),
-                label: 'Favoritos',
+              bottomBar: OneBottomBar(
+                selectedIndex: _index.clamp(0, 4),
+                onTap: (i) {
+                  if (i == 5) {
+                    _showCreatePlaylistDialog(context);
+                  } else {
+                    setState(() => _index = i);
+                  }
+                },
+                items: const [
+                  OneBottomBarItem(
+                    icon: XoraIcon(XoraIcons.home),
+                    label: 'Inicio',
+                  ),
+                  OneBottomBarItem(
+                    icon: XoraIcon(XoraIcons.music),
+                    label: 'Librería',
+                  ),
+                  OneBottomBarItem(
+                    icon: XoraIcon(XoraIcons.heart),
+                    label: 'Favoritos',
+                  ),
+                  // OneBottomBarItem(
+                  //   icon: XoraIcon(XoraIcons.magnifyingGlass),
+                  //   label: 'Cari',
+                  // ),
+                  OneBottomBarItem(
+                    icon: XoraIcon(XoraIcons.magnifyingGlass),
+                    label: 'Buscar',
+                  ),
+                  OneBottomBarItem(icon: XoraIcon(XoraIcons.plus), label: '+'),
+                ],
               ),
-              OneBottomBarItem(
-                icon: XoraIcon(XoraIcons.magnifyingGlass),
-                label: 'Cari',
-              ),
-              OneBottomBarItem(
-                icon: XoraIcon(XoraIcons.magnifyingGlass),
-                label: 'Buscar',
-              ),
-              OneBottomBarItem(icon: XoraIcon(XoraIcons.plus), label: '+'),
-            ],
-          ),
-          child: pages[_index.clamp(0, pages.length - 1)],
+              child: pages[_index.clamp(0, pages.length - 1)],
             ),
             Positioned(
               left: 12,
@@ -207,8 +231,14 @@ class _HarmonyHomeState extends State<HarmonyHome> {
           decoration: const InputDecoration(hintText: 'Nombre'),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancelar')),
-          TextButton(onPressed: () => Navigator.pop(ctx, controller.text.trim()), child: const Text('Crear')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, controller.text.trim()),
+            child: const Text('Crear'),
+          ),
         ],
       ),
     );
@@ -216,4 +246,3 @@ class _HarmonyHomeState extends State<HarmonyHome> {
     PlaylistsStore.instance.add(name);
   }
 }
-
