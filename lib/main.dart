@@ -240,3 +240,4 @@ class _HarmonyHomeState extends State<HarmonyHome> {
     PlaylistsStore.instance.add(name);
   }
 }
+
