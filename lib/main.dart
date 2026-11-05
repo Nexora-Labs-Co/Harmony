@@ -9,6 +9,7 @@ import 'package:harmony/src/screens/one/playlists_screen.dart';
 import 'package:harmony/src/screens/one/favorites_screen.dart';
 import 'package:harmony/src/screens/one/cari_screen.dart';
 import 'package:harmony/src/screens/one/search_screen.dart';
+import 'package:harmony/src/services/local_music_service.dart';
 import 'package:harmony/src/shared/widgets/mini_player.dart';
 
 Future<void> main() async {
@@ -16,6 +17,8 @@ Future<void> main() async {
   if (Platform.isAndroid) {
     await [Permission.audio, Permission.photos, Permission.storage].request();
   }
+  // Preload local music cache (Rust-backed metadata) without blocking UI.
+  LocalMusicService.instance.scan();
   runApp(const HarmonyApp());
 }
 

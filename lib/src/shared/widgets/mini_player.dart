@@ -14,16 +14,22 @@ class MiniPlayer extends StatelessWidget {
         final track = PlayerService.instance.currentTrack;
         if (track == null) return const SizedBox.shrink();
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 13),
           child: Center(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(999),
-                border: Border.all(color: Theme.of(context).colorScheme.outline),
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
                 boxShadow: const [
-                  BoxShadow(color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 4)),
+                  BoxShadow(
+                    color: Color(0x14000000),
+                    blurRadius: 12,
+                    offset: Offset(0, 4),
+                  ),
                 ],
               ),
               child: Row(
@@ -33,7 +39,7 @@ class MiniPlayer extends StatelessWidget {
                     path: track.coverPath,
                     width: 40,
                     height: 40,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(10),
                     fallback: Container(
                       width: 40,
                       height: 40,
@@ -47,14 +53,28 @@ class MiniPlayer extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(track.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600)),
-                        Text(track.artist, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12)),
+                        Text(
+                          track.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          track.artist,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 12),
+                        ),
                       ],
                     ),
                   ),
                   const SizedBox(width: 8),
                   IconButton(
-                    icon: Icon(PlayerService.instance.isPlaying ? Icons.pause : Icons.play_arrow),
+                    icon: Icon(
+                      PlayerService.instance.isPlaying
+                          ? Icons.pause
+                          : Icons.play_arrow,
+                    ),
                     onPressed: PlayerService.instance.togglePlay,
                   ),
                   IconButton(

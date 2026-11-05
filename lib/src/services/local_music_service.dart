@@ -10,11 +10,24 @@ class LocalMusicService {
   LocalMusicService._();
   static final instance = LocalMusicService._();
 
+  List<LocalTrack>? _cached;
+  Future<List<LocalTrack>>? _inflight;
+
   static const _audioExtensions = {
     '.mp3', '.flac', '.wav', '.ogg', '.m4a', '.aac', '.opus', '.wma',
   };
 
   Future<List<LocalTrack>> scan() async {
+    if (_cached != null) return _cached!;
+    if (_inflight != null) return _inflight!;
+    _inflight = _doScan();
+    final result = await _inflight!;
+    _cached = result;
+    _inflight = null;
+    return result;
+  }
+
+  Future<List<LocalTrack>> _doScan() async {
     try {
       await MetadataGod.initialize();
     final roots = <String>['/home/saaarmyx/Music/Harmony'];
