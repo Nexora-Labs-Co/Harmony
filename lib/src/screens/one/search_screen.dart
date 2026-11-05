@@ -31,7 +31,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Future<void> _play(YtTrack t) async {
     final resolved = await YouTubeStreamingService.instance.resolve(t);
-    if (resolved == null || resolved.streamUrl == null) return;
+    if (resolved == null || resolved.streamUrl == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Streaming no disponible en este dispositivo')),
+        );
+      }
+      return;
+    }
     final track = LocalTrack(
       path: resolved.streamUrl!,
       title: resolved.title,

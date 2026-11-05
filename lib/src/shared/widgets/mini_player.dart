@@ -75,7 +75,7 @@ class MiniPlayer extends StatelessWidget {
         final track = PlayerService.instance.currentTrack;
         if (track == null) return const SizedBox.shrink();
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
           child: Center(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
