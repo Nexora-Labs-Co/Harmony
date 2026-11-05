@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:harmony/src/models/local_track.dart';
+import 'package:harmony/src/services/favorites_store.dart';
 import 'package:harmony/src/services/player_service.dart';
 import 'package:harmony/src/shared/widgets/cached_artwork.dart';
 
@@ -13,7 +14,6 @@ class PlaylistScreen extends StatelessWidget {
     this.tracks,
     this.showAppBar = true,
     this.backgroundColor,
-    this.onPlay,
     this.onShuffle,
     this.onDownload,
   });
@@ -21,10 +21,11 @@ class PlaylistScreen extends StatelessWidget {
   final String title;
   final Widget? cover;
   final Duration totalDuration;
+
+  /// Real tracks. When null, placeholder rows are shown.
   final List<LocalTrack>? tracks;
   final bool showAppBar;
   final Color? backgroundColor;
-  final VoidCallback? onPlay;
   final VoidCallback? onShuffle;
   final VoidCallback? onDownload;
 
@@ -39,7 +40,7 @@ class PlaylistScreen extends StatelessWidget {
   }
 
   List<LocalTrack> get _rows {
-    if (tracks != null && tracks!.isNotEmpty) return tracks!;
+    if (tracks != null) return tracks!;
     return List.generate(
       20,
       (i) => LocalTrack(path: '', title: 'Canción ${i + 1}', artist: 'Artista ${i + 1}'),
@@ -73,114 +74,156 @@ class PlaylistScreen extends StatelessWidget {
     final rows = _rows;
     final coverSize = (MediaQuery.sizeOf(context).width * 0.6).clamp(160.0, 260.0);
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: SizedBox(
-                  width: coverSize,
-                  height: coverSize,
-                  child: cover ?? Container(
-                    color: Colors.white24,
-                    child: const Icon(Icons.queue_music, size: 64, color: _textColor),
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: SizedBox(
+                    width: coverSize,
+                    height: coverSize,
+                    child: cover ??
+                        Container(
+                          color: Colors.white24,
+                          child: const Icon(Icons.queue_music, size: 64, color: _textColor),
+                        ),
                   ),
                 ),
+                const SizedBox(height: 20),
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: _textColor, fontSize: 22, fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  _formatDuration(totalDuration),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: _mutedColor, fontSize: 15),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _CircleButton(icon: Icons.shuffle, onPressed: onShuffle),
+                    const SizedBox(width: 12),
+                    _PlayPill(
+                      color: backgroundColor,
+                      onPressed: rows.isEmpty ? null : () => PlayerService.instance.playQueue(rows, 0),
+                    ),
+                    const SizedBox(width: 12),
+                    _CircleButton(icon: Icons.download_outlined, onPressed: onDownload),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (rows.isEmpty)
+          const SliverFillRemaining(
+            hasScrollBody: false,
+            child: Center(
+              child: Text('Sin canciones', style: TextStyle(color: _mutedColor, fontSize: 15)),
+            ),
+          )
+        else
+          SliverList.builder(
+            itemCount: rows.length,
+            itemBuilder: (context, index) => _TrackRow(
+              track: rows[index],
+              isReal: tracks != null,
+              onTap: () {
+                if (tracks != null) {
+                  PlayerService.instance.play(rows[index], queue: rows);
+                } else {
+                  PlayerService.instance.playQueue(rows, index);
+                }
+              },
+            ),
+          ),
+        const SliverToBoxAdapter(child: SizedBox(height: 24)),
+      ],
+    );
+  }
+}
+
+class _TrackRow extends StatelessWidget {
+  const _TrackRow({required this.track, required this.isReal, required this.onTap});
+
+  final LocalTrack track;
+  final bool isReal;
+  final VoidCallback onTap;
+
+  static const _textColor = PlaylistScreen._textColor;
+  static const _mutedColor = PlaylistScreen._mutedColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: CachedArtwork(
+                path: track.coverPath,
+                width: 48,
+                height: 48,
+                fallback: Container(
+                  width: 48,
+                  height: 48,
+                  color: Colors.white24,
+                  child: const Icon(Icons.music_note, color: _textColor),
+                ),
               ),
-              const SizedBox(height: 20),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: _textColor, fontSize: 22, fontWeight: FontWeight.w700),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                _formatDuration(totalDuration),
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: _mutedColor, fontSize: 15),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _CircleButton(icon: Icons.shuffle, onPressed: onShuffle),
-                  const SizedBox(width: 12),
-                  _PlayPill(onPressed: onPlay, color: backgroundColor),
-                  const SizedBox(width: 12),
-                  _CircleButton(icon: Icons.download_outlined, onPressed: onDownload),
+                  Text(
+                    track.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: _textColor, fontSize: 15, fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    track.artist,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: _mutedColor, fontSize: 13),
+                  ),
                 ],
               ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.only(bottom: 24),
-            itemCount: rows.length,
-            itemBuilder: (context, index) {
-              final t = rows[index];
-              final isReal = tracks != null && tracks!.isNotEmpty;
-              return InkWell(
-                onTap: () {
-                  if (isReal) {
-                    PlayerService.instance.play(t, queue: tracks);
-                  } else {
-                    PlayerService.instance.playQueue(rows, index);
-                  }
+            ),
+            if (isReal)
+              ValueListenableBuilder<Set<String>>(
+                valueListenable: FavoritesStore.instance.paths,
+                builder: (context, favs, _) {
+                  final fav = favs.contains(track.path);
+                  return IconButton(
+                    visualDensity: VisualDensity.compact,
+                    icon: Icon(
+                      fav ? Icons.favorite : Icons.favorite_border,
+                      color: fav ? _textColor : _mutedColor,
+                      size: 20,
+                    ),
+                    onPressed: () => FavoritesStore.instance.toggle(track),
+                  );
                 },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
-                        child: CachedArtwork(
-                          path: t.coverPath,
-                          width: 48,
-                          height: 48,
-                          fallback: Container(
-                            width: 48,
-                            height: 48,
-                            color: Colors.white24,
-                            child: const Icon(Icons.music_note, color: _textColor),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              t.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(color: _textColor, fontSize: 15, fontWeight: FontWeight.w600),
-                            ),
-                            Text(
-                              t.artist,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(color: _mutedColor, fontSize: 13),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Icon(Icons.download_outlined, color: _mutedColor, size: 20),
-                      const SizedBox(width: 12),
-                      const Icon(Icons.more_horiz, color: _mutedColor, size: 22),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
+              ),
+            const Icon(Icons.more_horiz, color: _mutedColor, size: 22),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -217,6 +260,7 @@ class _PlayPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fg = color ?? Colors.black;
     return Material(
       color: Colors.white,
       borderRadius: BorderRadius.circular(999),
@@ -228,11 +272,11 @@ class _PlayPill extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.play_arrow_rounded, color: color ?? Colors.black, size: 26),
+              Icon(Icons.play_arrow_rounded, color: fg, size: 26),
               const SizedBox(width: 4),
               Text(
                 'Play',
-                style: TextStyle(color: color ?? Colors.black, fontSize: 16, fontWeight: FontWeight.w700),
+                style: TextStyle(color: fg, fontSize: 16, fontWeight: FontWeight.w700),
               ),
             ],
           ),
