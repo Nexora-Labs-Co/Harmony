@@ -16,9 +16,13 @@
 - Run `flutter analyze && flutter test` before finishing. No other lint/typecheck tooling.
 
 ## Structure
-- Entry point: `lib/main.dart` (single file; all screens in `HarmonyApp`/`HarmonyHome`)
-- Uses `XoraTheme`, `XoraResponsive`, `XoraOne`/`XoraSlate`/`XoraNexo` layouts, and `XoraIcons` (FontAwesome) from `package:xora`
-- Tests: `test/widget_test.dart`
+- Entry point: `lib/main.dart` (`HarmonyApp` wires `MultiProvider` + `HarmonyHome`)
+- State: `lib/core/state/*_provider.dart` (Library, Playlist, Player, Profile)
+- Models: `lib/core/models/` (`Track`, `Playlist`, `ExternalTrackModel`)
+- Services: `lib/core/services/` (`YouTubeService`, `RecommendationService`)
+- Screens: `lib/ui/screens/{home,favorites,local,album,playlists,cari,search}/`
+- Shared widgets: `lib/ui/shared/widgets/cached_artwork.dart`
+- Mobile layout uses `XoraOne`; tablet `XoraSlate`; desktop `XoraNexo`
 
 ## Conventions
 - Branches: `feat/...`, `fix/...`, `docs/...`, `refactor/...`
@@ -33,3 +37,4 @@
 - `analysis_options.yaml` excludes platform dirs (`android/`, `web/`, etc.) from analysis.
 - SDK constraint `^3.13.7`; Xora requires Flutter `>=3.24.0`.
 - README/CONTRIBUTING still contain `{{TODO}}` placeholders; do not treat as authoritative.
+- Mobile home greeting is time-based; tests should not assert a specific greeting.
