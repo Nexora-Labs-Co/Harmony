@@ -51,6 +51,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     return Scaffold(
       backgroundColor: widget.backgroundColor,
       appBar: AppBar(
+        backgroundColor: widget.backgroundColor,
+        foregroundColor: Colors.white,
         leading: const BackButton(),
         actions: [
           IconButton(icon: const Icon(Icons.share), onPressed: () {}),
