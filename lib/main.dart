@@ -82,8 +82,29 @@ class _HarmonyHomeState extends State<HarmonyHome> {
         ),
         tablet: XoraSlate(child: pages[_index]),
         desktop: XoraNexo(
-          leftSidebar: const _HarmonySidebar(),
           appName: 'Harmony',
+          topItems: [
+            NexoSidebarItem(
+              label: 'Inicio',
+              icon: XoraIcons.home,
+              onTap: () => setState(() => _index = 0),
+            ),
+            NexoSidebarItem(
+              label: 'Favoritos',
+              icon: XoraIcons.heart,
+              onTap: () => setState(() => _index = 1),
+            ),
+            NexoSidebarItem(
+              label: 'Local',
+              icon: XoraIcons.locationDot,
+              onTap: () => setState(() => _index = 0),
+            ),
+            NexoSidebarItem(
+              label: 'Cari',
+              icon: XoraIcons.magnifyingGlass,
+              onTap: () => setState(() => _index = 0),
+            ),
+          ],
           sidebarSections: [
             NexoSidebarSection(
               title: 'Menú',
@@ -147,95 +168,6 @@ class _HarmonyHomeState extends State<HarmonyHome> {
   }
 }
 
-
-class _HarmonySidebar extends StatelessWidget {
-  const _HarmonySidebar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).colorScheme.surface,
-      child: Column(
-        children: [
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: GridView.count(
-              crossAxisCount: 2,
-              mainAxisSpacing: 8,
-              crossAxisSpacing: 8,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              childAspectRatio: 1.0,
-              children: const [
-                _SidebarTile(icon: XoraIcons.home, label: 'Inicio'),
-                _SidebarTile(icon: XoraIcons.heart, label: 'Favoritos'),
-                _SidebarTile(icon: XoraIcons.magnifyingGlass, label: 'Cari'),
-                _SidebarTile(icon: XoraIcons.locationDot, label: 'Local'),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          const Divider(height: 1),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Álbumes', style: Theme.of(context).textTheme.titleSmall),
-                XoraIconButton(
-                  icon: XoraIcon(XoraIcons.plus),
-                  onPressed: () {},
-                  size: 28,
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              children: const [
-                _PlaylistTile(name: 'Playlist 1'),
-                _PlaylistTile(name: 'Playlist 2'),
-                _PlaylistTile(name: 'Playlist 3'),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SidebarTile extends StatelessWidget {
-  const _SidebarTile({required this.icon, required this.label});
-
-  final dynamic icon;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return XoraCard(
-      padding: const EdgeInsets.all(8),
-      child: Center(child: XoraIcon(icon)),
-    );
-  }
-}
-
-class _PlaylistTile extends StatelessWidget {
-  const _PlaylistTile({required this.name});
-
-  final String name;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: XoraIcon(XoraIcons.music),
-      title: Text(name, style: const TextStyle(fontSize: 12)),
-      dense: true,
-    );
-  }
-}
 
 class _LibraryPage extends StatelessWidget {
   const _LibraryPage();
