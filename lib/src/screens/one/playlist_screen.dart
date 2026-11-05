@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:harmony/src/models/local_track.dart';
 import 'package:harmony/src/services/favorites_store.dart';
+import 'package:harmony/src/services/download_service.dart';
 import 'package:harmony/src/services/player_service.dart';
 import 'package:xora/xora.dart';
 import 'package:harmony/src/shared/widgets/mini_player.dart';
@@ -126,7 +127,21 @@ class PlaylistScreen extends StatelessWidget {
                       onPressed: rows.isEmpty ? null : () => PlayerService.instance.playQueue(rows, 0),
                     ),
                     const SizedBox(width: 12),
-                    _CircleButton(icon: Icons.download_outlined, onPressed: onDownload),
+                    _CircleButton(
+                    icon: Icons.download_outlined,
+                    onPressed: () async {
+                      if (onDownload != null) {
+                        onDownload!();
+                        return;
+                      }
+                      final files = await DownloadService.instance.downloadPlaylist(rows);
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(files.isEmpty ? 'No se pudo descargar' : 'Descargadas ${files.length} canciones')),
+                        );
+                      }
+                    },
+                  ),
                   ],
                 ),
               ],
