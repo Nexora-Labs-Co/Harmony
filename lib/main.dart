@@ -79,7 +79,9 @@ class _HarmonyHomeState extends State<HarmonyHome> {
     ];
     return Scaffold(
       body: XoraResponsive(
-        mobile: XoraOne(
+        mobile: Stack(
+          children: [
+            XoraOne(
           topBar: OneTopBar(
             appName: 'Harmony',
             avatar: _avatarPath == null
@@ -94,36 +96,38 @@ class _HarmonyHomeState extends State<HarmonyHome> {
               _avatarPath = path;
             }),
           ),
-          bottomBar: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const MiniPlayer(),
-              OneBottomBar(
-                selectedIndex: _index.clamp(0, 4),
-                onTap: (i) => setState(() => _index = i),
-                items: const [
-                  OneBottomBarItem(icon: XoraIcon(XoraIcons.home), label: 'Inicio'),
-                  OneBottomBarItem(
-                    icon: XoraIcon(XoraIcons.music),
-                    label: 'Librería',
-                  ),
-                  OneBottomBarItem(
-                    icon: XoraIcon(XoraIcons.heart),
-                    label: 'Favoritos',
-                  ),
-                  // OneBottomBarItem(
-                  //   icon: XoraIcon(XoraIcons.magnifyingGlass),
-                  //   label: 'Cari',
-                  // ),
-                  OneBottomBarItem(
-                    icon: XoraIcon(XoraIcons.magnifyingGlass),
-                    label: 'Buscar',
-                  ),
-                ],
+          bottomBar: OneBottomBar(
+            selectedIndex: _index.clamp(0, 4),
+            onTap: (i) => setState(() => _index = i),
+            items: const [
+              OneBottomBarItem(icon: XoraIcon(XoraIcons.home), label: 'Inicio'),
+              OneBottomBarItem(
+                icon: XoraIcon(XoraIcons.music),
+                label: 'Librería',
+              ),
+              OneBottomBarItem(
+                icon: XoraIcon(XoraIcons.heart),
+                label: 'Favoritos',
+              ),
+              // OneBottomBarItem(
+              //   icon: XoraIcon(XoraIcons.magnifyingGlass),
+              //   label: 'Cari',
+              // ),
+              OneBottomBarItem(
+                icon: XoraIcon(XoraIcons.magnifyingGlass),
+                label: 'Buscar',
               ),
             ],
           ),
           child: pages[_index.clamp(0, pages.length - 1)],
+            ),
+            Positioned(
+              left: 12,
+              right: 12,
+              bottom: 72,
+              child: const MiniPlayer(),
+            ),
+          ],
         ),
         tablet: XoraSlate(child: pages[_index.clamp(0, pages.length - 1)]),
         desktop: XoraNexo(
