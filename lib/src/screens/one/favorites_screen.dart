@@ -30,6 +30,7 @@ class FavoritesScreen extends StatelessWidget {
               totalDuration: Duration(milliseconds: totalMs),
               tracks: favorites,
               showAppBar: false,
+      showMiniPlayer: false,
             );
           },
         );

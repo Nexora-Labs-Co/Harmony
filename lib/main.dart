@@ -135,7 +135,7 @@ class _HarmonyHomeState extends State<HarmonyHome> {
             Positioned(
               left: 12,
               right: 12,
-              bottom: 88,
+              bottom: 72,
               child: const MiniPlayer(),
             ),
           ],

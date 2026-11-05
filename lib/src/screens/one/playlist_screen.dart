@@ -4,6 +4,7 @@ import 'package:harmony/src/models/local_track.dart';
 import 'package:harmony/src/services/favorites_store.dart';
 import 'package:harmony/src/services/player_service.dart';
 import 'package:harmony/src/shared/widgets/cached_artwork.dart';
+import 'package:harmony/src/shared/widgets/mini_player.dart';
 
 class PlaylistScreen extends StatelessWidget {
   const PlaylistScreen({
@@ -13,6 +14,7 @@ class PlaylistScreen extends StatelessWidget {
     this.totalDuration = Duration.zero,
     this.tracks,
     this.showAppBar = true,
+    this.showMiniPlayer = true,
     this.backgroundColor,
     this.onShuffle,
     this.onDownload,
@@ -25,6 +27,7 @@ class PlaylistScreen extends StatelessWidget {
   /// Real tracks. When null, placeholder rows are shown.
   final List<LocalTrack>? tracks;
   final bool showAppBar;
+  final bool showMiniPlayer;
   final Color? backgroundColor;
   final VoidCallback? onShuffle;
   final VoidCallback? onDownload;
@@ -53,7 +56,13 @@ class PlaylistScreen extends StatelessWidget {
       color: backgroundColor,
       child: _buildBody(context),
     );
-    if (!showAppBar) return body;
+    final stacked = Stack(
+      children: [
+        body,
+        if (showMiniPlayer) const Positioned(left: 12, right: 12, bottom: 12, child: MiniPlayer()),
+      ],
+    );
+    if (!showAppBar) return stacked;
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
@@ -66,7 +75,7 @@ class PlaylistScreen extends StatelessWidget {
           IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
         ],
       ),
-      body: body,
+      body: stacked,
     );
   }
 
