@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:harmony/src/models/local_track.dart';
@@ -13,6 +14,7 @@ class PlayerService extends ChangeNotifier {
   static final instance = PlayerService._();
 
   final AudioPlayer _player = AudioPlayer();
+  Timer? _pollTimer;
 
   List<LocalTrack> _queue = [];
   int _index = 0;
@@ -42,6 +44,7 @@ class PlayerService extends ChangeNotifier {
     _position = Duration.zero;
     _duration = Duration.zero;
     _isPlaying = true;
+    _startPolling();
     RecentTracksService.instance.record(track);
     notifyListeners();
   }
@@ -73,6 +76,17 @@ class PlayerService extends ChangeNotifier {
 
   void togglePlayPause() => togglePlay();
   void toggleShuffle() { _shuffle = !_shuffle; notifyListeners(); }
+  void _startPolling() {
+    _pollTimer?.cancel();
+    _pollTimer = Timer.periodic(const Duration(milliseconds: 500), (_) async {
+      final pos = await _player.getCurrentPosition();
+      final dur = await _player.getDuration();
+      if (pos != null) _position = pos;
+      if (dur != null) _duration = dur;
+      notifyListeners();
+    });
+  }
+
   void togglePlay() {
     if (_isPlaying) {
       _player.pause();
