@@ -85,7 +85,7 @@ class MiniPlayer extends StatelessWidget {
           onTap: () => Navigator.of(context)
               .push(MaterialPageRoute(builder: (_) => const PlayerScreen())),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 30),
             child: Center(
               child: Container(
                 padding: const EdgeInsets.symmetric(
@@ -121,7 +121,7 @@ class MiniPlayer extends StatelessWidget {
                         child: const XoraIcon(XoraIcons.musicNote),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
                     Flexible(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -131,18 +131,21 @@ class MiniPlayer extends StatelessWidget {
                             track.title,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontWeight: FontWeight.w600),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
+                            ),
                           ),
                           Text(
                             track.artist,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 8),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 5),
                     IconButton(
                       icon: const XoraIcon(XoraIcons.plus),
                       onPressed: () => _showAddToPlaylist(context, track),
