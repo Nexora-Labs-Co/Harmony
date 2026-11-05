@@ -10,6 +10,7 @@ import 'package:harmony/src/screens/one/favorites_screen.dart';
 import 'package:harmony/src/screens/one/cari_screen.dart';
 import 'package:harmony/src/screens/one/search_screen.dart';
 import 'package:harmony/src/services/local_music_service.dart';
+import 'package:harmony/src/services/playlist_store.dart';
 import 'package:harmony/src/shared/widgets/mini_player.dart';
 
 Future<void> main() async {
@@ -99,27 +100,42 @@ class _HarmonyHomeState extends State<HarmonyHome> {
               _avatarPath = path;
             }),
           ),
-          bottomBar: OneBottomBar(
-            selectedIndex: _index.clamp(0, 4),
-            onTap: (i) => setState(() => _index = i),
-            items: const [
-              OneBottomBarItem(icon: XoraIcon(XoraIcons.home), label: 'Inicio'),
-              OneBottomBarItem(
-                icon: XoraIcon(XoraIcons.music),
-                label: 'Librería',
+          bottomBar: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              OneBottomBar(
+                selectedIndex: _index.clamp(0, 4),
+                onTap: (i) => setState(() => _index = i),
+                items: const [
+                  OneBottomBarItem(icon: XoraIcon(XoraIcons.home), label: 'Inicio'),
+                  OneBottomBarItem(
+                    icon: XoraIcon(XoraIcons.music),
+                    label: 'Librería',
+                  ),
+                  OneBottomBarItem(
+                    icon: XoraIcon(XoraIcons.heart),
+                    label: 'Favoritos',
+                  ),
+                  // OneBottomBarItem(
+                  //   icon: XoraIcon(XoraIcons.magnifyingGlass),
+                  //   label: 'Cari',
+                  // ),
+                  OneBottomBarItem(
+                    icon: XoraIcon(XoraIcons.magnifyingGlass),
+                    label: 'Buscar',
+                  ),
+                ],
               ),
-              OneBottomBarItem(
-                icon: XoraIcon(XoraIcons.heart),
-                label: 'Favoritos',
-              ),
-              // OneBottomBarItem(
-              //   icon: XoraIcon(XoraIcons.magnifyingGlass),
-              //   label: 'Cari',
-              // ),
-              OneBottomBarItem(
-                icon: XoraIcon(XoraIcons.magnifyingGlass),
-                label: 'Buscar',
-              ),
+              if (_index == 1)
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: FloatingActionButton.small(
+                    onPressed: () {
+                      PlaylistStore.instance.add('Playlist ${PlaylistStore.instance.playlists.value.length + 1}');
+                    },
+                    child: const Icon(Icons.add),
+                  ),
+                ),
             ],
           ),
           child: pages[_index.clamp(0, pages.length - 1)],
