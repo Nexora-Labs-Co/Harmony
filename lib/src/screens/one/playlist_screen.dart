@@ -108,7 +108,7 @@ class PlaylistScreen extends StatelessWidget {
                 Text(
                   title,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: _textColor, fontSize: 22, fontWeight: FontWeight.w700),
+                  style: const TextStyle(color: _textColor, fontSize: 24, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -309,3 +309,4 @@ class _PlayPill extends StatelessWidget {
     );
   }
 }
+
