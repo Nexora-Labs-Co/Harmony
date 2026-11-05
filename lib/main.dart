@@ -57,7 +57,7 @@ class _HarmonyHomeState extends State<HarmonyHome> {
     return Scaffold(
       body: XoraResponsive(
         mobile: XoraOne(
-          topBar: const OneTopBar(title: Text('Harmony')),
+          topBar: const OneTopBar(appName: 'Harmony', avatar: XoraAvatar(initials: 'H')),
           bottomBar: OneBottomBar(
             selectedIndex: _index.clamp(0, 3),
             onTap: (i) => setState(() => _index = i),
