@@ -50,25 +50,46 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
             children: [
               SizedBox(
                 width: 220,
-                height: 220,
-                child: widget.cover ?? Container(
-                  color: Colors.grey.shade300,
-                  child: const Icon(Icons.queue_music, size: 64),
-                ),
+                height: 180,
+                child:
+                    widget.cover ??
+                    Container(
+                      color: Colors.grey.shade300,
+                      child: const Icon(Icons.queue_music, size: 64),
+                    ),
               ),
               const SizedBox(height: 16),
-              Text(widget.title, style: Theme.of(context).textTheme.headlineSmall, textAlign: TextAlign.center),
+              Text(
+                widget.title,
+                style: Theme.of(context).textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 8),
-              Text(_formatDuration(widget.totalDuration), style: Theme.of(context).textTheme.bodyMedium),
+              Text(
+                _formatDuration(widget.totalDuration),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
               const SizedBox(height: 24),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  IconButton(icon: const Icon(Icons.shuffle), iconSize: 36, onPressed: widget.onShuffle),
+                  IconButton(
+                    icon: const Icon(Icons.shuffle),
+                    iconSize: 36,
+                    onPressed: widget.onShuffle,
+                  ),
                   const SizedBox(width: 16),
-                  IconButton(icon: const Icon(Icons.play_arrow), iconSize: 48, onPressed: widget.onPlay),
+                  IconButton(
+                    icon: const Icon(Icons.play_arrow),
+                    iconSize: 48,
+                    onPressed: widget.onPlay,
+                  ),
                   const SizedBox(width: 16),
-                  IconButton(icon: const Icon(Icons.download), iconSize: 36, onPressed: widget.onDownload),
+                  IconButton(
+                    icon: const Icon(Icons.download),
+                    iconSize: 36,
+                    onPressed: widget.onDownload,
+                  ),
                 ],
               ),
             ],
