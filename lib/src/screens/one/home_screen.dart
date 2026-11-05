@@ -1,11 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import 'package:xora/xora.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, this.userName = 'Usuario'});
+
+  final String userName;
 
   String _greeting() {
     final h = DateTime.now().hour;
@@ -14,18 +14,13 @@ class HomeScreen extends StatelessWidget {
     return 'Buenas noches';
   }
 
-  String get _userName {
-    final env = Platform.environment;
-    return env['USER'] ?? env['USERNAME'] ?? 'Usuario';
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
       children: [
         Text(
-          '${_greeting()}, $_userName',
+          '${_greeting()}, $userName',
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),

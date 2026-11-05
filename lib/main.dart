@@ -53,23 +53,32 @@ class HarmonyHome extends StatefulWidget {
 
 class _HarmonyHomeState extends State<HarmonyHome> {
   int _index = 0;
-
-  final pages = const <Widget>[
-    HomeScreen(),
-    PlaylistsScreen(),
-    FavoritesScreen(),
-    CariScreen(),
-    SearchScreen(),
-  ];
+  String _userName = 'Usuario';
+  String? _avatarPath;
 
   @override
   Widget build(BuildContext context) {
+    final pages = <Widget>[
+      HomeScreen(userName: _userName),
+      PlaylistsScreen(),
+      FavoritesScreen(),
+      CariScreen(),
+      SearchScreen(),
+    ];
     return Scaffold(
       body: XoraResponsive(
         mobile: XoraOne(
-          topBar: const OneTopBar(
+          topBar: OneTopBar(
             appName: 'Harmony',
-            avatar: XoraAvatar(initials: 'H'),
+            avatar: _avatarPath == null ? XoraAvatar(initials: _userName) : null,
+            accountAvatarPath: _avatarPath,
+            accountName: _userName,
+            accountStatus: 'Premium',
+            accountInitials: _userName,
+            onProfileChanged: (name, path) => setState(() {
+              _userName = name;
+              _avatarPath = path;
+            }),
           ),
           bottomBar: OneBottomBar(
             selectedIndex: _index.clamp(0, 4),
@@ -142,3 +151,4 @@ class _HarmonyHomeState extends State<HarmonyHome> {
     );
   }
 }
+
