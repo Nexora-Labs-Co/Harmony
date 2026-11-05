@@ -32,7 +32,11 @@ class _HarmonyAppState extends State<HarmonyApp> {
 }
 
 class HarmonyHome extends StatefulWidget {
-  const HarmonyHome({super.key, required this.dark, required this.onToggleTheme});
+  const HarmonyHome({
+    super.key,
+    required this.dark,
+    required this.onToggleTheme,
+  });
 
   final bool dark;
   final VoidCallback onToggleTheme;
@@ -60,9 +64,18 @@ class _HarmonyHomeState extends State<HarmonyHome> {
             selectedIndex: _index,
             onTap: (i) => setState(() => _index = i),
             items: const [
-              OneBottomBarItem(icon: XoraIcon(XoraIcons.palette), label: 'Biblioteca'),
-              OneBottomBarItem(icon: XoraIcon(XoraIcons.heart), label: 'Favoritos'),
-              OneBottomBarItem(icon: XoraIcon(XoraIcons.list), label: 'Playlists'),
+              OneBottomBarItem(
+                icon: XoraIcon(XoraIcons.palette),
+                label: 'Biblioteca',
+              ),
+              OneBottomBarItem(
+                icon: XoraIcon(XoraIcons.heart),
+                label: 'Favoritos',
+              ),
+              OneBottomBarItem(
+                icon: XoraIcon(XoraIcons.list),
+                label: 'Playlists',
+              ),
             ],
           ),
           child: pages[_index],
@@ -85,7 +98,7 @@ class _HarmonyHomeState extends State<HarmonyHome> {
                   onTap: () => setState(() => _index = 1),
                 ),
                 NexoSidebarItem(
-                  label: 'Loca',
+                  label: 'Local',
                   icon: XoraIcons.locationDot,
                   onTap: () => setState(() => _index = 0),
                 ),
@@ -145,7 +158,10 @@ class _LibraryPage extends StatelessWidget {
           children: [
             XoraAvatar(initials: 'H', size: 72),
             const SizedBox(height: 16),
-            Text('Biblioteca', style: Theme.of(context).textTheme.headlineMedium),
+            Text(
+              'Biblioteca',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
           ],
         ),
       ),
@@ -170,4 +186,3 @@ class _PlaylistsPage extends StatelessWidget {
     return Center(child: Text('Playlists'));
   }
 }
-
