@@ -11,6 +11,7 @@ class PlaylistScreen extends StatefulWidget {
     this.cover,
     this.totalDuration = Duration.zero,
     this.tracks,
+    this.showAppBar = true,
     this.onPlay,
     this.onShuffle,
     this.onDownload,
@@ -20,6 +21,7 @@ class PlaylistScreen extends StatefulWidget {
   final Widget? cover;
   final Duration totalDuration;
   final List<LocalTrack>? tracks;
+  final bool showAppBar;
   final VoidCallback? onPlay;
   final VoidCallback? onShuffle;
   final VoidCallback? onDownload;
@@ -40,6 +42,21 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final body = _buildBody(context);
+    if (!widget.showAppBar) return body;
+    return Scaffold(
+      appBar: AppBar(
+        leading: const BackButton(),
+        actions: [
+          IconButton(icon: const Icon(Icons.share), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
+        ],
+      ),
+      body: body,
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
     final tracks = widget.tracks;
     final count = tracks != null ? tracks.length : 20;
     return Column(

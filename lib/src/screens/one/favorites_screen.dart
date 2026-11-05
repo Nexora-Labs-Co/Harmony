@@ -11,6 +11,7 @@ class FavoritesScreen extends StatelessWidget {
       title: 'Favoritos',
       cover: Image.asset('assets/Logo-Favoritos.png', fit: BoxFit.cover),
       totalDuration: const Duration(minutes: 42),
+      showAppBar: false,
     );
   }
 }
