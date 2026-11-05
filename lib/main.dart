@@ -119,10 +119,10 @@ class _HarmonyHomeState extends State<HarmonyHome> {
                 icon: XoraIcon(XoraIcons.heart),
                 label: 'Favoritos',
               ),
-              // OneBottomBarItem(
-              //   icon: XoraIcon(XoraIcons.magnifyingGlass),
-              //   label: 'Cari',
-              // ),
+              OneBottomBarItem(
+                icon: XoraIcon(XoraIcons.magnifyingGlass),
+                label: 'Cari',
+              ),
               OneBottomBarItem(
                 icon: XoraIcon(XoraIcons.magnifyingGlass),
                 label: 'Buscar',
